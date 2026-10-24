@@ -151,7 +151,7 @@ async function main() {
   // Admin product-form upgrade guards: honest <title>, size-tick grid 22-48, manual upload, variant-id resilience.
   {
     const idx = fs.readFileSync(path.join(root,'index.html'),'utf-8');
-    assert(idx.includes('<title>خرید اینترنتی کفش زنانه و مردانه | کفش طوبی</title>'), 'index.html <title> must target the store’s core Persian shoe-shopping searches');
+    assert(idx.includes('<title>کالکشن هرمس | کیف و کفش زنانه و مردانه</title>'), 'index.html <title> must identify the Hermes Collection storefront');
     assert(!/<title>[^<]*22342065/.test(idx), 'index.html <title> must not contain the enamad code');
     assert(!/og:title[^>]*22342065|twitter:title[^>]*22342065/.test(idx), 'social title tags must not contain the enamad code');
     assert(!fs.readFileSync(path.join(root,'services/seo.js'),'utf8').includes('22342065'), 'seo.js home title must use store name, not enamad code');
@@ -274,7 +274,7 @@ async function main() {
     assert(st4.includes('base.__catArrows'), 'render pipeline must refresh arrow state');
     assert(st4.includes("'chev-r':'") && st4.includes("'chev-l':'"), 'chevron glyphs registered in the icon set');
     assert(themeCss.includes('.cat-arrow{') && themeCss.includes('.cat-row-wrap.has-overflow .cat-arrow{display:grid}') && themeCss.includes('.cat-arrow-start{inset-inline-start:2px}'), 'arrows hidden until overflow, RTL-aware placement');
-    assert(html.includes('class="initial"') && html.includes('initial-ring') && html.includes('<img src="/touba-logo.png" alt="طوبی">'), 'splash must show the Touba logo in the ring');
+    assert(html.includes('class="initial"') && html.includes('initial-ring') && html.includes('<img src="/hermes-logo.jpg" alt="نشان کالکشن هرمس">'), 'splash must show the provided Hermes Collection logo in the ring');
     assert(baseCss.includes('.initial-ring:after') && baseCss.includes('@keyframes initial-spin') && baseCss.includes('prefers-reduced-motion'), 'splash spinner defined and motion-safe');
   }
 
@@ -436,7 +436,7 @@ async function main() {
   // Login mark + simplified product-entry flow guards.
   {
     const auth = fs.readFileSync(path.join(root,'services/auth-ui.js'),'utf8');
-    assert(auth.includes('touba-logo.png') && auth.includes('auth-touba-mark'), 'login/signup must show the calligraphic Touba chess-piece mark');
+    assert(auth.includes('hermes-logo.jpg') && auth.includes('auth-touba-mark'), 'login/signup must show the supplied Hermes Collection logo');
     assert(!/font-size:38px;color:#(83a74a|10b981)">♙/.test(auth), 'raw pawn glyph must be gone from auth pages');
     assert(!auth.includes('quickProductModal()') || auth.includes('function quickProductModal') === false, 'admin toolbar must offer one unified add-product button');
     assert(auth.includes('onclick="productModal()">＋'), 'admin catalog toolbar needs the unified add-product button');

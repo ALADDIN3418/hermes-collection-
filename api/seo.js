@@ -5,8 +5,8 @@ const path = require('node:path');
 const { serverConfiguration } = require('../lib/supabase-server');
 
 const CANONICAL_ORIGIN = 'https://toubashose.ir';
-const STORE_NAME = 'کفش طوبی';
-const DEFAULT_DESCRIPTION = 'خرید اینترنتی کفش از طوبی؛ مشخصات، قیمت، سایزبندی، رنگ و موجودی هر محصول را پیش از سفارش بررسی کنید.';
+const STORE_NAME = 'کالکشن هرمس';
+const DEFAULT_DESCRIPTION = 'کالکشن هرمس؛ انتخابی خاص از کیف و کفش زنانه و مردانه، با جزئیات محصول و موجودی شفاف.';
 const SITEMAP_STATIC_PATHS = ['/', '/about', '/contact', '/terms', '/privacy'];
 const SITEMAP_MAX_URLS = 50000;
 const PAGE_SIZE = 1000;
@@ -52,7 +52,7 @@ function trimText(value, max = 160) {
   return `${chars.slice(0, Math.max(0, max - 1)).join('').trimEnd()}…`;
 }
 
-function safeAssetUrl(value, fallback = '/touba-hero-editorial.jpg') {
+function safeAssetUrl(value, fallback = '/hermes-editorial-hero.jpg') {
   const candidate = String(value || fallback).trim();
   if (!candidate || candidate.startsWith('data:') || candidate.startsWith('//')) return new URL(fallback, CANONICAL_ORIGIN).href;
   try {
@@ -211,7 +211,7 @@ function readIndexHtml(provided) {
     const html = fs.readFileSync(INDEX_HTML_PATH, 'utf8');
     if (html.includes('<div id="app"></div>')) return html;
   } catch { /* Vercel includeFiles and the local checkout both provide index.html. */ }
-  return '<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><title>کفش طوبی</title></head><body><div id="app"></div></body></html>';
+  return '<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><title>کفش هرمس</title></head><body><div id="app"></div></body></html>';
 }
 
 function send(res, status, body, contentType, headers = {}, headOnly = false) {
@@ -269,7 +269,7 @@ function productImages(row) {
   const seen = new Set();
   return rows.map(image => ({
     url: safeAssetUrl(image.url, '/product-shoes.jpg'),
-    alt: trimText(image.alt || row.name || 'تصویر محصول کفش طوبی', 120)
+    alt: trimText(image.alt || row.name || 'تصویر محصول کفش هرمس', 120)
   })).filter(image => {
     if (seen.has(image.url)) return false;
     seen.add(image.url);
@@ -287,7 +287,7 @@ function productDescription(row) {
   const full = plainText(row.description);
   const candidate = short && short !== plainText(row.name) ? short : full;
   if (candidate) return trimText(candidate, 160);
-  return trimText(`قیمت، مشخصات، سایزبندی، رنگ و موجودی ${plainText(row.name)} را در فروشگاه کفش طوبی بررسی کنید.`, 160);
+  return trimText(`قیمت، مشخصات، سایزبندی، رنگ و موجودی ${plainText(row.name)} را در فروشگاه کفش هرمس بررسی کنید.`, 160);
 }
 
 function productTitle(row) {
@@ -382,14 +382,14 @@ function renderCategoryProducts(products) {
     const name = escapeHtml(plainText(row.name));
     const description = escapeHtml(plainText(row.short_description) || productDescription(row));
     const price = formatToman(row.price_toman);
-    return `<article class="lux-product-card seo-prerender-card"><a class="lux-product-image" href="${escapeHtml(href)}">${image ? `<img src="${escapeHtml(image.url)}" alt="${escapeHtml(image.alt || plainText(row.name))}" width="480" height="380" loading="lazy">` : `<span class="lux-product-placeholder" role="img" aria-label="${name}">کفش طوبی</span>`}</a><div class="lux-product-info"><h2><a href="${escapeHtml(href)}">${name}</a></h2><p>${description}</p>${price ? `<strong>${escapeHtml(price)}</strong>` : ''}<a class="product-view-link" href="${escapeHtml(href)}">مشاهده محصول</a></div></article>`;
+    return `<article class="lux-product-card seo-prerender-card"><a class="lux-product-image" href="${escapeHtml(href)}">${image ? `<img src="${escapeHtml(image.url)}" alt="${escapeHtml(image.alt || plainText(row.name))}" width="480" height="380" loading="lazy">` : `<span class="lux-product-placeholder" role="img" aria-label="${name}">کفش هرمس</span>`}</a><div class="lux-product-info"><h2><a href="${escapeHtml(href)}">${name}</a></h2><p>${description}</p>${price ? `<strong>${escapeHtml(price)}</strong>` : ''}<a class="product-view-link" href="${escapeHtml(href)}">مشاهده محصول</a></div></article>`;
   }).join('');
 }
 
 function categoryDescription(category) {
   const description = plainText(category.description);
   if (description) return trimText(description, 160);
-  return trimText(`مدل‌های ${plainText(category.name)} را در فروشگاه کفش طوبی ببینید؛ قیمت، سایزبندی، رنگ و موجودی هر محصول ثبت شده است.`, 160);
+  return trimText(`مدل‌های ${plainText(category.name)} را در فروشگاه کفش هرمس ببینید؛ قیمت، سایزبندی، رنگ و موجودی هر محصول ثبت شده است.`, 160);
 }
 
 function categoryEntity(category, products, canonical) {
@@ -494,7 +494,7 @@ async function loadShop(config, fetchImpl) {
       limit: 1000
     }, fetchImpl)
   ]);
-  const description = 'مدل‌های فعال کفش طوبی را ببینید و قیمت، سایزبندی، رنگ و موجودی ثبت‌شدهٔ هر محصول را بررسی کنید.';
+  const description = 'مدل‌های فعال کفش هرمس را ببینید و قیمت، سایزبندی، رنگ و موجودی ثبت‌شدهٔ هر محصول را بررسی کنید.';
   const populatedCategoryIds = new Set(activeProductCategories.map(product => product.category_id).filter(Boolean));
   const visibleCategories = categories.filter(category => populatedCategoryIds.has(category.id));
   const categoriesHtml = visibleCategories.length
@@ -503,7 +503,7 @@ async function loadShop(config, fetchImpl) {
   const productsHtml = products.length
     ? `<div class="lux-product-grid seo-shop-products">${renderCategoryProducts(products)}</div>`
     : '<p class="empty-state">محصول فعالی برای نمایش ثبت نشده است.</p>';
-  const appHtml = `<main class="page container seo-prerender"><nav class="breadcrumb" aria-label="مسیر صفحه"><a href="/">خانه</a>　/　<span>فروشگاه کفش</span></nav><h1>خرید اینترنتی کفش</h1><p>${escapeHtml(description)}</p>${categoriesHtml}<section class="products-section"><h2>محصولات فروشگاه کفش طوبی</h2>${productsHtml}</section></main>`;
+  const appHtml = `<main class="page container seo-prerender"><nav class="breadcrumb" aria-label="مسیر صفحه"><a href="/">خانه</a>　/　<span>فروشگاه کفش</span></nav><h1>خرید اینترنتی کفش</h1><p>${escapeHtml(description)}</p>${categoriesHtml}<section class="products-section"><h2>محصولات فروشگاه کفش هرمس</h2>${productsHtml}</section></main>`;
   const canonical = canonicalUrl('/shop');
   const entity = collectionEntity(`خرید اینترنتی کفش | ${STORE_NAME}`, products, canonical, description);
   const image = productImages(products[0] || {})[0]?.url;
@@ -513,7 +513,7 @@ async function loadShop(config, fetchImpl) {
     canonical: '/shop',
     robots: products.length ? INDEX_ROBOTS : 'noindex, follow',
     image,
-    imageAlt: 'محصولات فروشگاه کفش طوبی',
+    imageAlt: 'محصولات فروشگاه کفش هرمس',
     appHtml,
     jsonLd: products.length ? siteJsonLd(entity, [
       { name: 'خانه', path: '/' },
@@ -563,7 +563,7 @@ async function loadSitemap(config, fetchImpl) {
 
 function notFoundHtml(kind, slug) {
   const label = kind === 'product' ? 'محصول' : 'دسته‌بندی';
-  return `<main class="page container seo-prerender"><section class="panel empty"><h1>${label} پیدا نشد</h1><p>این صفحه در فروشگاه کفش طوبی در دسترس نیست.</p><a class="btn" href="/shop">بازگشت به فروشگاه</a></section></main>`;
+  return `<main class="page container seo-prerender"><section class="panel empty"><h1>${label} پیدا نشد</h1><p>این صفحه در فروشگاه کفش هرمس در دسترس نیست.</p><a class="btn" href="/shop">بازگشت به فروشگاه</a></section></main>`;
 }
 
 function privatePage(pathname) {
@@ -581,7 +581,7 @@ function privatePage(pathname) {
   const isPaymentResult = pathname.startsWith('/payment/result/');
   const title = `${labels[pathname] || (isAdmin ? 'مدیریت فروشگاه' : isPaymentResult ? 'نتیجه پرداخت' : 'صفحه خصوصی')} | ${STORE_NAME}`;
   const description = 'این صفحه برای خرید یا مدیریت حساب کاربری است و در نتایج جست‌وجو نمایش داده نمی‌شود.';
-  const body = '<main class="page container seo-prerender"><h1>در حال بارگذاری فروشگاه طوبی</h1></main>';
+  const body = '<main class="page container seo-prerender"><h1>در حال بارگذاری فروشگاه هرمس</h1></main>';
   return makeMeta({ title, description, canonical: pathname, robots: PRIVATE_ROBOTS, appHtml: body });
 }
 
@@ -666,7 +666,7 @@ function createHandler(options = {}) {
         const missingPath = canonicalPath(type, getPathSlug(slug) || '');
         const meta = makeMeta({
           title: `${type === 'product' ? 'محصول' : 'دسته‌بندی'} پیدا نشد | ${STORE_NAME}`,
-          description: 'این صفحه در فروشگاه کفش طوبی در دسترس نیست.',
+          description: 'این صفحه در فروشگاه کفش هرمس در دسترس نیست.',
           canonical: missingPath,
           robots: PRIVATE_ROBOTS,
           appHtml: notFoundHtml(type, slug)
@@ -719,7 +719,7 @@ function createHandler(options = {}) {
         if (!lookupFailed) {
           const meta = makeMeta({
             title: `دسته‌بندی پیدا نشد | ${STORE_NAME}`,
-            description: 'این دسته‌بندی در فروشگاه کفش طوبی در دسترس نیست.',
+            description: 'این دسته‌بندی در فروشگاه کفش هرمس در دسترس نیست.',
             canonical: '/shop',
             robots: PRIVATE_ROBOTS
           });

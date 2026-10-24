@@ -1,8 +1,8 @@
 /* Canonical, Persian storefront metadata and JSON-LD. Search engines must never inherit a Vercel preview host. */
 const SEO_ORIGIN = 'https://toubashose.ir';
-const SEO_STORE_NAME = 'کفش طوبی';
+const SEO_STORE_NAME = 'کالکشن هرمس';
 const SEO_HOME_TITLE = `خرید اینترنتی کفش زنانه و مردانه | ${SEO_STORE_NAME}`;
-const SEO_HOME_DESCRIPTION = 'خرید اینترنتی کفش از طوبی؛ مشخصات، قیمت، سایزبندی، رنگ و موجودی هر محصول را پیش از سفارش بررسی کنید.';
+const SEO_HOME_DESCRIPTION = 'کالکشن هرمس؛ انتخابی خاص از کیف و کفش زنانه و مردانه، با جزئیات محصول و موجودی شفاف.';
 
 const __beforeSeoRender = window.__stage3Render;
 
@@ -17,6 +17,10 @@ function setMeta(name, content, property = false) {
   element.setAttribute('content', content || '');
 }
 
+function seoBrandText(value) {
+  return String(value ?? '').replace(/کفش طوبی/g, 'کالکشن هرمس').replace(/طوبی/g, 'هرمس');
+}
+
 function seoText(value, max = 160) {
   const text = String(value ?? '')
     .replace(/<\s*br\s*\/?>/gi, ' ')
@@ -28,7 +32,7 @@ function seoText(value, max = 160) {
   return chars.length > max ? `${chars.slice(0, max - 1).join('').trimEnd()}…` : text;
 }
 
-function seoAbsoluteUrl(value, fallback = '/touba-hero-editorial.jpg') {
+function seoAbsoluteUrl(value, fallback = '/hermes-editorial-hero.jpg') {
   const candidate = String(value || fallback).trim();
   if (!candidate || candidate.startsWith('data:') || candidate.startsWith('//')) return new URL(fallback, SEO_ORIGIN).href;
   try {
@@ -136,15 +140,15 @@ function setPageJsonLd(value) {
 function updateSEO() {
   const currentPath = typeof path === 'function' ? path() : decodeURI(location.pathname);
   const currentUrl = new URL(location.href);
-  const storeName = seoText(db?.settings?.storeName || SEO_STORE_NAME, 80) || SEO_STORE_NAME;
+  const storeName = SEO_STORE_NAME;
   const products = Array.isArray(db?.products) ? db.products : [];
   const categories = Array.isArray(db?.categories) ? db.categories : [];
   let item = null;
   let category = null;
   let title = SEO_HOME_TITLE;
-  let description = seoText(db?.settings?.metaDescription || SEO_HOME_DESCRIPTION, 160);
-  let image = seoAbsoluteUrl('/touba-hero-editorial.jpg');
-  let imageAlt = 'فروشگاه آنلاین کفش طوبی';
+  let description = seoText(seoBrandText(db?.settings?.metaDescription || SEO_HOME_DESCRIPTION), 160);
+  let image = seoAbsoluteUrl('/hermes-editorial-hero.jpg');
+  let imageAlt = 'فروشگاه آنلاین کفش هرمس';
   let structured = null;
   let robots = 'index, follow';
 
@@ -154,7 +158,7 @@ function updateSEO() {
     if (item?.active !== false && item) {
       category = categories.find(entry => entry.id === item.category) || null;
       title = seoText(`خرید ${item.name} | ${storeName}`, 70);
-      description = seoText(item.shortDesc || item.longDesc || item.desc || `قیمت، سایزبندی، رنگ و موجودی ${item.name} را در فروشگاه کفش طوبی بررسی کنید.`, 160);
+      description = seoText(item.shortDesc || item.longDesc || item.desc || `قیمت، سایزبندی، رنگ و موجودی ${item.name} را در فروشگاه کفش هرمس بررسی کنید.`, 160);
       image = seoAbsoluteUrl(item.images?.[0] || '/product-shoes.jpg');
       imageAlt = seoText(item.name, 120);
       const canonical = new URL(seoCanonicalPath(currentPath, currentUrl, item, category), SEO_ORIGIN).href;
@@ -166,7 +170,7 @@ function updateSEO() {
       structured = { '@context': 'https://schema.org', '@graph': graph };
     } else {
       title = `محصول پیدا نشد | ${storeName}`;
-      description = 'این محصول در فروشگاه کفش طوبی در دسترس نیست.';
+      description = 'این محصول در فروشگاه کفش هرمس در دسترس نیست.';
       robots = 'noindex, nofollow';
     }
   } else if (currentPath.startsWith('/category/')) {
@@ -174,8 +178,8 @@ function updateSEO() {
     category = categories.find(entry => entry.slug === slug || entry.id === slug) || null;
     if (category?.active) {
       title = seoText(`خرید ${category.name} | ${storeName}`, 70);
-      description = seoText(category.description || `مدل‌های ${category.name} را در فروشگاه کفش طوبی ببینید؛ قیمت، سایزبندی، رنگ و موجودی هر محصول را بررسی کنید.`, 160);
-      image = seoAbsoluteUrl(category.imageUrl || '/touba-hero-editorial.jpg');
+      description = seoText(category.description || `مدل‌های ${category.name} را در فروشگاه کفش هرمس ببینید؛ قیمت، سایزبندی، رنگ و موجودی هر محصول را بررسی کنید.`, 160);
+      image = seoAbsoluteUrl(category.imageUrl || '/hermes-editorial-hero.jpg');
       imageAlt = seoText(category.name, 120);
       const canonical = new URL(seoCanonicalPath(currentPath, currentUrl, null, category), SEO_ORIGIN).href;
       const categoryProducts = products.filter(entry => entry.active && entry.category === category.id);
@@ -194,7 +198,7 @@ function updateSEO() {
       }
     } else {
       title = `دسته‌بندی پیدا نشد | ${storeName}`;
-      description = 'این دسته‌بندی در فروشگاه کفش طوبی در دسترس نیست.';
+      description = 'این دسته‌بندی در فروشگاه کفش هرمس در دسترس نیست.';
       robots = 'noindex, nofollow';
     }
   } else if (currentPath === '/shop' || currentPath === '/search') {
@@ -203,11 +207,11 @@ function updateSEO() {
     category = categories.find(entry => entry.id === categoryValue || entry.slug === categoryValue) || null;
     if (query) {
       title = `جستجوی ${seoText(query, 40)} | ${storeName}`;
-      description = `نتایج جستجوی محصولات برای «${seoText(query, 80)}» در فروشگاه کفش طوبی.`;
+      description = `نتایج جستجوی محصولات برای «${seoText(query, 80)}» در فروشگاه کفش هرمس.`;
       robots = 'noindex, follow';
     } else if (category?.active) {
       title = seoText(`خرید ${category.name} | ${storeName}`, 70);
-      description = seoText(category.description || `مدل‌های ${category.name} را در فروشگاه کفش طوبی ببینید؛ قیمت، سایزبندی، رنگ و موجودی هر محصول را بررسی کنید.`, 160);
+      description = seoText(category.description || `مدل‌های ${category.name} را در فروشگاه کفش هرمس ببینید؛ قیمت، سایزبندی، رنگ و موجودی هر محصول را بررسی کنید.`, 160);
       const canonical = new URL(seoCanonicalPath(currentPath, currentUrl, null, category), SEO_ORIGIN).href;
       structured = {
         '@context': 'https://schema.org',
@@ -239,16 +243,16 @@ function updateSEO() {
     if ([...currentUrl.searchParams.keys()].some(key => !['category'].includes(key))) robots = 'noindex, follow';
   } else if (currentPath === '/about') {
     title = `درباره ما | ${storeName}`;
-    description = seoText(db?.settings?.homepage?.aboutText || db?.settings?.about || 'با فروشگاه آنلاین کفش طوبی و راه‌های ارتباط با ما آشنا شوید.', 160);
+    description = seoText(seoBrandText(db?.settings?.homepage?.aboutText || db?.settings?.about || 'با کالکشن هرمس و راه‌های ارتباط با ما آشنا شوید.'), 160);
   } else if (currentPath === '/contact') {
     title = `تماس با ما | ${storeName}`;
-    description = 'راه‌های ارتباط با فروشگاه کفش طوبی را ببینید و برای پرسش درباره محصول یا سفارش با ما تماس بگیرید.';
+    description = 'راه‌های ارتباط با فروشگاه کفش هرمس را ببینید و برای پرسش درباره محصول یا سفارش با ما تماس بگیرید.';
   } else if (currentPath === '/terms') {
     title = `قوانین و شرایط خرید | ${storeName}`;
-    description = 'پیش از خرید، شرایط سفارش، پرداخت، ارسال و بازگشت کالا در فروشگاه کفش طوبی را بخوانید.';
+    description = 'پیش از خرید، شرایط سفارش، پرداخت، ارسال و بازگشت کالا در فروشگاه کفش هرمس را بخوانید.';
   } else if (currentPath === '/privacy') {
     title = `حریم خصوصی | ${storeName}`;
-    description = 'اطلاعات مربوط به حریم خصوصی و نحوه استفاده از داده‌های مشتریان فروشگاه کفش طوبی.';
+    description = 'اطلاعات مربوط به حریم خصوصی و نحوه استفاده از داده‌های مشتریان فروشگاه کفش هرمس.';
   } else if (currentPath === '/') {
     title = SEO_HOME_TITLE;
     description = SEO_HOME_DESCRIPTION;
@@ -270,7 +274,7 @@ function updateSEO() {
     title = `${privatePage ? 'صفحهٔ کاربری' : 'صفحه پیدا نشد'} | ${storeName}`;
     description = privatePage
       ? 'این صفحه برای خرید یا مدیریت حساب کاربری است و در نتایج جست‌وجو نمایش داده نمی‌شود.'
-      : 'صفحه موردنظر در فروشگاه کفش طوبی پیدا نشد.';
+      : 'صفحه موردنظر در فروشگاه کفش هرمس پیدا نشد.';
   }
 
   const canonicalPath = seoCanonicalPath(currentPath, currentUrl, item, category);

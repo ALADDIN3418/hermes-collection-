@@ -1,8 +1,8 @@
 {
-  "name": "touba-shoes-storefront",
+  "name": "hermes-collection-storefront",
   "version": "1.3.0",
   "private": true,
-  "description": "Persian RTL shoe storefront with Supabase auth and server-side BitPay direct-bank checkout",
+  "description": "Persian RTL Hermes Collection for footwear and bags with Supabase Auth and server-side BitPay direct-bank checkout",
   "engines": {
     "node": ">=22.0.0"
   },

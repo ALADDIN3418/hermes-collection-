@@ -1,6 +1,6 @@
 {
-  "name": "Touba Shoes",
-  "description": "فروشگاه تخصصی کفش و چرم طوبی با دیتابیس پایدار، درگاه امن و پنل مدیریت مدرن",
+  "name": "HERMES COLLECTION",
+  "description": "کالکشن کیف و کفش هرمس با ویترین فروشگاهی فارسی، پایگاه داده پایدار، پرداخت امن و پنل مدیریت مدرن",
   "capabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
   ],

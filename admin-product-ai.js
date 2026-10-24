@@ -1,5 +1,5 @@
-/* Touba Admin Product AI Studio & Description Assistant
- * «استودیو هوش مصنوعی محصول طوبی — چرخش مدل‌های Puter.js»
+/* Hermes Collection Admin Product AI Studio & Description Assistant
+ * «استودیو هوش مصنوعی محصول هرمس — چرخش مدل‌های Puter.js»
  * (Legacy compatibility markers: ComfyUI / Qwen-Image-Edit)
  *
  * Image generation uses the user's Puter.js browser session, rotates through the
@@ -518,9 +518,9 @@
 
   // Description Assistant Generator
   function generateLocalDescription({ name, category, brand, sizes, colors, features: providedFeatures, specifications: providedSpecifications }) {
-    const n = String(name || 'کفش طوبی').trim();
+    const n = String(name || 'کفش هرمس').trim();
     const c = String(category || '').toLowerCase();
-    const b = String(brand || 'طوبی').trim();
+    const b = String(brand || 'هرمس').trim();
     let styleDesc = 'طراحی متناسب برای استفاده روزمره';
     let usage = 'استفاده روزمره و استایل‌های متنوع';
     if (c.includes('sport') || c.includes('اسپرت') || n.includes('کتانی') || n.includes('اسپرت')) {
@@ -580,7 +580,7 @@
       const input = {
         name,
         category: form.elements.category?.value || '',
-        brand: form.elements.brand?.value || 'طوبی',
+        brand: form.elements.brand?.value || 'هرمس',
         sizes: form.elements.sizes?.value || '',
         colors: form.elements.colors?.value || '',
         features: form.elements.features?.value || '',
@@ -809,7 +809,7 @@
           <div class="ai-studio-hero-content">
             <div class="ai-studio-badge-pill">
               <span class="ai-spark-icon">✨</span>
-              <span>استودیو هوش مصنوعی محصول طوبی</span>
+              <span>استودیو هوش مصنوعی محصول هرمس</span>
               <span class="ai-version-tag">Puter.js · مدل‌های چرخشی</span>
             </div>
             <h1 class="ai-studio-title">تبدیل عکس محصول به تصویر تجاری آتلیه‌ای</h1>

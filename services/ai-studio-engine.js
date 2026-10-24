@@ -1,6 +1,6 @@
 /**
  * Product AI Studio Engine
- * «موتور استودیوی هوش مصنوعی محصول طوبی — چرخش مدل‌های Puter.js»
+ * «موتور استودیوی هوش مصنوعی محصول هرمس — چرخش مدل‌های Puter.js»
  *
  * Image generation is performed with the signed-in browser user's Puter.js session.
  * The server exposes the supported model catalog and never substitutes the original

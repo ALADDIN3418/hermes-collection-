@@ -188,7 +188,7 @@ function testBrowserSeo() {
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../services/seo.js'), 'utf8'), context, { filename: 'services/seo.js' });
 
   context.render();
-  assert.equal(document.title, 'خرید کفش آزمایشی زنانه | کفش طوبی');
+  assert.equal(document.title, 'خرید کفش آزمایشی زنانه | کالکشن هرمس');
   assert.equal(document.querySelector('link[rel="canonical"]').href, 'https://toubashose.ir/product/%DA%A9%D9%81%D8%B4-%D8%A2%D8%B2%D9%85%D8%A7%DB%8C%D8%B4%DB%8C');
   assert.equal(document.querySelector('meta[name="robots"]').getAttribute('content'), 'index, follow');
   assert.equal(document.querySelector('meta[property="og:url"]').getAttribute('content'), document.querySelector('link[rel="canonical"]').href);
@@ -226,7 +226,7 @@ async function run() {
   const productPage = await request(handler, `/api/seo?type=product&slug=${encodeURIComponent(PRODUCT.slug)}`);
   assert.equal(productPage.statusCode, 200);
   assert.match(productPage.headers['Content-Type'], /text\/html/);
-  assert.match(productPage.body, /<title>خرید کفش آزمایشی زنانه &amp; خاص \| کفش طوبی<\/title>/);
+  assert.match(productPage.body, /<title>خرید کفش آزمایشی زنانه &amp; خاص \| کالکشن هرمس<\/title>/);
   assert.match(productPage.body, /href="https:\/\/toubashose\.ir\/product\/%DA%A9%D9%81%D8%B4-%D8%A2%D8%B2%D9%85%D8%A7%DB%8C%D8%B4%DB%8C"/);
   assert.match(productPage.body, /<h1>کفش آزمایشی زنانه &amp; خاص<\/h1>/);
   assert.doesNotMatch(productPage.body, /arena-preview\.vercel\.app|toubashoes\.vercel\.app/);

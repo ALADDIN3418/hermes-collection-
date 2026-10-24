@@ -131,7 +131,7 @@ const path = require('path');
   assert.match(uiApp.innerHTML,/پنل امن Supabase/);
   uiWindow.location.pathname='/admin';uiWindow.location.search='';uiWindow.render();
   assert.match(uiApp.innerHTML,/پنل امن Supabase/);
-  assert.match(uiApp.innerHTML,/مدیریت طوبی/);
+  assert.match(uiApp.innerHTML,/مدیریت هرمس/);
   uiAuthenticatedUser=null;
   uiWindow.render();
   assert.match(uiApp.innerHTML,/ورود به حساب کاربری/,'cached demo-admin state alone must not unlock the Supabase admin panel');
