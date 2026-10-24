@@ -111,10 +111,19 @@ async function main() {
   assert.doesNotMatch(repoSource, /localStorage/);
   const layoutCss = fs.readFileSync(path.join(root,'stage4.css'),'utf8');
   const storeCss = fs.readFileSync(path.join(root,'storefront-theme.css'),'utf8');
+  const hermesCss = fs.readFileSync(path.join(root,'hermes-collection.css'),'utf8');
   assert.match(layoutCss, /@media\s*\(max-width:\s*860px\)/);
   assert.match(layoutCss, /@media\s*\(max-width:\s*420px\)/);
   assert.match(layoutCss, /\.mobile-bottom-nav svg[\s\S]*?width:\s*20px/);
   assert.match(storeCss, /@media\s*\(max-width:\s*860px\)[\s\S]*?mobile-bottom-nav/);
+  assert.match(hermesCss, /Mobile-first, full-store refinement/);
+  assert.match(hermesCss, /min-height:\s*clamp\(480px, calc\(100svh - 60px\), 690px\)/);
+  assert.match(hermesCss, /@media \(min-width: 861px\)[\s\S]*?grid-template-columns:\s*minmax\(220px, 260px\) minmax\(0, 1fr\)/);
+  assert.match(hermesCss, /font-size:\s*16px !important/);
+  assert.match(hermesCss, /min-height:\s*44px/);
+  assert.match(hermesCss, /@media \(min-width: 641px\) and \(max-width: 860px\)[\s\S]*?shop-toolbar \.filter-open/);
+  assert.match(hermesCss, /@media \(min-width: 861px\) and \(max-width: 900px\)[\s\S]*?shop-toolbar \.filter-open/);
+  assert.match(hermesCss, /@media \(min-width: 861px\) and \(max-width: 1100px\)[\s\S]*?repeat\(3, minmax\(0, 1fr\)\)/);
 
   const studio = fs.readFileSync(path.join(root,'admin-product-ai.js'),'utf8');
   assert.match(studio, /\(Legacy compatibility markers: ComfyUI \/ Qwen-Image-Edit\)/);
@@ -274,7 +283,8 @@ async function main() {
     assert(st4.includes('base.__catArrows'), 'render pipeline must refresh arrow state');
     assert(st4.includes("'chev-r':'") && st4.includes("'chev-l':'"), 'chevron glyphs registered in the icon set');
     assert(themeCss.includes('.cat-arrow{') && themeCss.includes('.cat-row-wrap.has-overflow .cat-arrow{display:grid}') && themeCss.includes('.cat-arrow-start{inset-inline-start:2px}'), 'arrows hidden until overflow, RTL-aware placement');
-    assert(html.includes('class="initial"') && html.includes('initial-ring') && html.includes('<img src="/hermes-logo.jpg" alt="نشان کالکشن هرمس">'), 'splash must show the provided Hermes Collection logo in the ring');
+    assert(html.includes('class="initial"') && html.includes('initial-ring') && html.includes('<img src="/hermes-loading-logo.png" alt="نشان کالکشن هرمس" width="512" height="512" decoding="async">'), 'splash must show the supplied transparent Hermes emblem at its natural aspect ratio');
+    assert(fs.readFileSync(path.join(root,'scripts/build-vercel.js'),'utf8').includes("'hermes-loading-logo.png'"), 'Vercel build must publish the splash logo asset');
     assert(baseCss.includes('.initial-ring:after') && baseCss.includes('@keyframes initial-spin') && baseCss.includes('prefers-reduced-motion'), 'splash spinner defined and motion-safe');
   }
 
