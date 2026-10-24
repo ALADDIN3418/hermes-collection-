@@ -61,28 +61,51 @@ function header(){
       <span class="brand-emblem">${brandLogoImg()}</span>
       ${brandWordmark()}
     </a>
-    <nav class="store-nav" id="store-nav" aria-label="منوی اصلی">
-      <a class="${navActive('/')?'active':''}" href="/" onclick="closeMobileNav()">صفحه اصلی</a>
-      <a class="${categoryNavActive('women')?'active':''}" href="/shop?category=women" onclick="closeMobileNav()">کفش زنانه</a>
-      <a class="${categoryNavActive('men')?'active':''}" href="/shop?category=men" onclick="closeMobileNav()">کفش مردانه</a>
-      <a class="${categoryNavActive('accessories')?'active':''}" href="/shop?category=accessories" onclick="closeMobileNav()">کیف‌ها</a>
-      <a class="${location.search.includes('sort=newest')?'active':''}" href="/shop?sort=newest" onclick="closeMobileNav()">جدیدترین‌ها</a>
+    <nav class="store-nav desktop-store-nav" aria-label="منوی اصلی">
+      <a class="${navActive('/')?'active':''}" href="/">صفحه اصلی</a>
+      <a class="${categoryNavActive('women')?'active':''}" href="/shop?category=women">کفش زنانه</a>
+      <a class="${categoryNavActive('men')?'active':''}" href="/shop?category=men">کفش مردانه</a>
+      <a class="${categoryNavActive('accessories')?'active':''}" href="/shop?category=accessories">کیف‌ها</a>
+      <a class="${location.search.includes('sort=newest')?'active':''}" href="/shop?sort=newest">تازه‌ها</a>
       <div class="nav-categories">
-        <a class="${path().startsWith('/category/')?'active':''}" href="/shop" onclick="toggleMobileCategories(event,this)">دسته‌ها <span class="cat-chevron">⌄</span></a>
-        <div class="nav-dropdown">${db.categories.filter(c=>c.active).map(c=>`<a href="/category/${encodeURIComponent(c.slug||c.id)}" onclick="closeMobileNav()">${esc(c.name)}</a>`).join('')}</div>
+        <a class="${path().startsWith('/category/')?'active':''}" href="/shop">دسته‌ها <span class="cat-chevron">⌄</span></a>
+        <div class="nav-dropdown">${db.categories.filter(c=>c.active).map(c=>`<a href="/category/${encodeURIComponent(c.slug||c.id)}">${esc(c.name)}</a>`).join('')}</div>
       </div>
-      <a href="/shop?category=sale" onclick="closeMobileNav()">پیشنهادها</a>
-      <a class="${navActive('/contact')?'active':''}" href="/contact" onclick="closeMobileNav()">تماس با ما</a>
-      <a class="nav-mobile-secondary ${navActive('/shop')?'active':''}" href="/shop" onclick="closeMobileNav()">همه محصولات</a>
-      <a class="nav-mobile-secondary ${navActive('/about')?'active':''}" href="/about" onclick="closeMobileNav()">درباره ما</a>
-      <a class="nav-mobile-secondary ${navActive('/tracking')?'active':''}" href="/tracking" onclick="closeMobileNav()">پیگیری سفارش</a>
-      <a class="nav-mobile-secondary" href="/account/orders" onclick="closeMobileNav()">سفارش‌های من</a>
-      <a class="nav-mobile-secondary" href="/wishlist" onclick="closeMobileNav()">علاقه‌مندی‌ها</a>
-      <div class="nav-divider-mobile"></div>
-      <div class="mobile-theme-row"><span>پوسته فروشگاه</span>${themeToggleMarkup()}</div>
-      <a class="mobile-drawer-user ${navActive(userLink)?'active':''}" href="${userLink}" onclick="closeMobileNav()">
-        <span class="user-icon-slot">${uiIcon('user')}</span> <span>${esc(userText)}</span>
-      </a>
+      <a href="/shop?category=sale">پیشنهادهای منتخب</a>
+      <a class="${navActive('/contact')?'active':''}" href="/contact">ارتباط با ما</a>
+    </nav>
+    <nav class="mobile-store-nav" id="store-nav" aria-label="منوی موبایل فروشگاه" aria-hidden="true">
+      <div class="mobile-nav-head">
+        <span class="mobile-nav-monogram" aria-hidden="true">H</span>
+        <span class="mobile-nav-brandcopy"><b dir="ltr">HERMES COLLECTION</b><small>کالکشن هرمس</small></span>
+        <button type="button" class="mobile-nav-close" onclick="closeMobileNav(true)" aria-label="بستن منو">×</button>
+      </div>
+      <div class="mobile-nav-content">
+        <span class="mobile-nav-eyebrow">کالکشن را کشف کنید</span>
+        <a class="mobile-nav-feature ${navActive('/shop')?'active':''}" href="/shop" onclick="closeMobileNav()">
+          <span><b>تمام محصولات</b><small>مشاهده ویترین هرمس</small></span><i aria-hidden="true">↙</i>
+        </a>
+        <span class="mobile-nav-label">انتخاب بر اساس کالکشن</span>
+        <a class="mobile-nav-link ${categoryNavActive('women')?'active':''}" href="/shop?category=women" onclick="closeMobileNav()"><span>کفش زنانه</span><small>01</small></a>
+        <a class="mobile-nav-link ${categoryNavActive('men')?'active':''}" href="/shop?category=men" onclick="closeMobileNav()"><span>کفش مردانه</span><small>02</small></a>
+        <a class="mobile-nav-link ${categoryNavActive('accessories')?'active':''}" href="/shop?category=accessories" onclick="closeMobileNav()"><span>کیف‌ها و اکسسوری‌ها</span><small>03</small></a>
+        <a class="mobile-nav-link ${location.search.includes('sort=newest')?'active':''}" href="/shop?sort=newest" onclick="closeMobileNav()"><span>تازه‌های کالکشن</span><small>04</small></a>
+        <a class="mobile-nav-link" href="/shop?category=sale" onclick="closeMobileNav()"><span>پیشنهادهای منتخب</span><small>05</small></a>
+        ${(()=>{let extra=db.categories.filter(c=>c.active&&!['women','men','accessories','sale'].includes(c.id));return extra.length?`<div class="mobile-nav-accordion">
+          <button type="button" class="mobile-nav-link mobile-nav-accordion-trigger" aria-controls="mobile-nav-categories" aria-expanded="false" onclick="toggleMobileCategories(event,this)"><span>دسته‌های بیشتر</span><small aria-hidden="true">⌄</small></button>
+          <div class="mobile-nav-categories-list" id="mobile-nav-categories" hidden>${extra.map(c=>`<a href="/category/${encodeURIComponent(c.slug||c.id)}" onclick="closeMobileNav()">${esc(c.name)}</a>`).join('')}</div>
+        </div>`:''})()}
+        <div class="mobile-nav-divider"></div>
+        <div class="mobile-nav-utility">
+          <a href="/about" onclick="closeMobileNav()">داستان هرمس</a>
+          <a href="/tracking" onclick="closeMobileNav()">پیگیری سفارش</a>
+          <a href="/contact" onclick="closeMobileNav()">ارتباط با ما</a>
+        </div>
+      </div>
+      <div class="mobile-nav-footer">
+        <a class="mobile-nav-account" href="${userLink}" onclick="closeMobileNav()">${uiIcon('user')}<span><b>${esc(userText)}</b><small>${db.currentUser?'مشاهده حساب کاربری':'ورود یا ثبت‌نام'}</small></span><i aria-hidden="true">←</i></a>
+        <span class="mobile-nav-signature" dir="ltr">HERMES COLLECTION · EST. IN STYLE</span>
+      </div>
     </nav>
     <div class="store-actions minimal-actions">
       <form class="store-search minimal-search" role="search" onsubmit="submitHeaderSearch(event,this)">
@@ -104,7 +127,7 @@ function header(){
         </span>
       </a>
     </div>
-  </div></header><div id="mobile-nav-backdrop" class="mobile-nav-backdrop" onclick="closeMobileNav()"></div></div>`;
+  </div></header></div><div id="mobile-nav-backdrop" class="mobile-nav-backdrop" aria-hidden="true" onclick="closeMobileNav()"></div>`;
 }
 
 function submitHeaderSearch(e,form){
@@ -130,32 +153,63 @@ function toggleMobileNav(button){
   let nav=$('#store-nav');
   let backdrop=$('#mobile-nav-backdrop');
   if(!nav)return;
-  let open=nav.classList.toggle('nav-open');
+  let open=!nav.classList.contains('nav-open');
+  nav.classList.toggle('nav-open',open);
+  nav.setAttribute('aria-hidden',String(!open));
+  document.body.classList.toggle('mobile-nav-open',open);
   if(button){
     button.setAttribute('aria-expanded',String(open));
+    button.setAttribute('aria-label',open?'بستن منو':'باز کردن منو');
     button.classList.toggle('is-open',open);
   }
   if(backdrop){
     backdrop.classList.toggle('show',open);
+    backdrop.setAttribute('aria-hidden',String(!open));
+  }
+  if(open){
+    try{nav.querySelector('.mobile-nav-close')?.focus({preventScroll:true})}catch(error){nav.querySelector('.mobile-nav-close')?.focus()}
   }
 }
-function closeMobileNav(){
+function closeMobileNav(restoreFocus=false){
   let nav=$('#store-nav');
   let btn=$('.mobile-menu-toggle');
   let backdrop=$('#mobile-nav-backdrop');
-  if(nav)nav.classList.remove('nav-open');
+  let wasOpen=!!nav?.classList.contains('nav-open');
+  if(nav){
+    nav.classList.remove('nav-open');
+    nav.setAttribute('aria-hidden','true');
+    nav.querySelectorAll('.mobile-nav-accordion.open').forEach(section=>{
+      section.classList.remove('open');
+      let trigger=section.querySelector('.mobile-nav-accordion-trigger');
+      let list=section.querySelector('.mobile-nav-categories-list');
+      trigger?.setAttribute('aria-expanded','false');
+      if(list)list.hidden=true;
+    });
+  }
+  document.body?.classList.remove('mobile-nav-open');
   if(btn){
     btn.setAttribute('aria-expanded','false');
+    btn.setAttribute('aria-label','باز کردن منو');
     btn.classList.remove('is-open');
   }
-  if(backdrop)backdrop.classList.remove('show');
+  if(backdrop){
+    backdrop.classList.remove('show');
+    backdrop.setAttribute('aria-hidden','true');
+  }
+  if(wasOpen&&(restoreFocus||nav?.contains(document.activeElement))){
+    try{btn?.focus({preventScroll:true})}catch(error){btn?.focus()}
+  }
 }
-function toggleMobileCategories(e,link){
-  if(window.innerWidth <= 1280){
+function toggleMobileCategories(e,trigger){
+  if(window.innerWidth<=1280){
     e.preventDefault();
     e.stopPropagation();
-    let parent=link.closest('.nav-categories');
-    if(parent)parent.classList.toggle('open');
+    let parent=trigger.closest('.mobile-nav-accordion')||trigger.closest('.nav-categories');
+    if(!parent)return;
+    let open=parent.classList.toggle('open');
+    trigger.setAttribute('aria-expanded',String(open));
+    let list=parent.querySelector('.mobile-nav-categories-list')||parent.querySelector('.nav-dropdown');
+    if(list&&list.classList.contains('mobile-nav-categories-list'))list.hidden=!open;
   }
 }
 if(typeof window !== 'undefined' && typeof document !== 'undefined' && typeof document.addEventListener === 'function' && !window.__navDismissListener){
@@ -163,12 +217,24 @@ if(typeof window !== 'undefined' && typeof document !== 'undefined' && typeof do
   document.addEventListener('click', function(e){
     let nav=document.querySelector('#store-nav');
     let toggle=document.querySelector('.mobile-menu-toggle');
-    if(nav && nav.classList.contains('nav-open')){
-      if(!nav.contains(e.target) && !toggle?.contains(e.target)){
-        closeMobileNav();
-      }
-    }
+    if(nav?.classList.contains('nav-open')&&!nav.contains(e.target)&&!toggle?.contains(e.target))closeMobileNav();
   });
+  document.addEventListener('keydown',function(e){
+    let nav=document.querySelector('#store-nav');
+    if(!nav?.classList.contains('nav-open'))return;
+    if(e.key==='Escape'){
+      e.preventDefault();
+      closeMobileNav(true);
+      return;
+    }
+    if(e.key!=='Tab')return;
+    let focusable=Array.from(nav.querySelectorAll('a[href],button:not([disabled])')).filter(el=>!el.closest('[hidden]'));
+    if(!focusable.length)return;
+    let first=focusable[0],last=focusable[focusable.length-1],active=document.activeElement;
+    if(e.shiftKey&&(active===first||!nav.contains(active))){e.preventDefault();last.focus()}
+    else if(!e.shiftKey&&(active===last||!nav.contains(active))){e.preventDefault();first.focus()}
+  });
+  window.addEventListener('resize',function(){if(window.innerWidth>1280)closeMobileNav(false)});
 }
 
 function footer(){
