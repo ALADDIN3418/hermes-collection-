@@ -124,6 +124,13 @@ async function main() {
   assert.match(hermesCss, /@media \(min-width: 641px\) and \(max-width: 860px\)[\s\S]*?shop-toolbar \.filter-open/);
   assert.match(hermesCss, /@media \(min-width: 861px\) and \(max-width: 900px\)[\s\S]*?shop-toolbar \.filter-open/);
   assert.match(hermesCss, /@media \(min-width: 861px\) and \(max-width: 1100px\)[\s\S]*?repeat\(3, minmax\(0, 1fr\)\)/);
+  assert.match(storefrontSource, /class="mobile-store-nav" id="store-nav"[\s\S]*?aria-hidden="true"/);
+  assert.match(storefrontSource, /mobile-nav-feature[\s\S]*?mobile-nav-accordion-trigger/);
+  assert.doesNotMatch(storefrontSource.slice(storefrontSource.indexOf('function header()'), storefrontSource.indexOf('function submitHeaderSearch')), /nav-mobile-secondary|mobile-theme-row/);
+  assert.match(storefrontSource, /e\.key==='Escape'[\s\S]*?closeMobileNav\(true\)/);
+  assert.match(storefrontSource, /classList\.toggle\('mobile-nav-open',open\)/);
+  assert.match(hermesCss, /width: min\(370px, calc\(100vw - 28px\)\)/);
+  assert.match(hermesCss, /A consistent antique-gold finish carries through product, cart and checkout flows/);
 
   const studio = fs.readFileSync(path.join(root,'admin-product-ai.js'),'utf8');
   assert.match(studio, /\(Legacy compatibility markers: ComfyUI \/ Qwen-Image-Edit\)/);
