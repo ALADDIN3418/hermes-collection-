@@ -1,0 +1,19 @@
+# Local secrets and environment overrides
+.env
+.env.local
+.env.*.local
+*.env.local
+.vercel/
+
+# Runtime uploads and user-generated product media
+/uploads/
+
+# Node.js and Vercel build output
+/public/
+node_modules/
+.npm/
+.cache/
+coverage/
+npm-debug.log*
+/.ssh/
+/touba-shoes-github-ready.zip
