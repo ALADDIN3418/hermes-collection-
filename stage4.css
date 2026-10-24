@@ -1,4 +1,4 @@
-/* Touba Shoes Luxury Design System 2026 — Modern Iranian E-Commerce UI */
+/* Hermes Collection Luxury Design System 2026 — Modern Iranian E-Commerce UI */
 :root {
   --ink: #142018;
   --ink-secondary: #475a4e;
@@ -6972,7 +6972,7 @@ html, body, #app, main {
 .manual-upload-row .muted{font-size:11px;line-height:1.8}
 .file-sr{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;clip-path:inset(50%)}
 
-/* ═══ نشانِ مهره‌ای لوگوی طوبی در فرم‌های ورود/ثبت‌نام/حساب ═══ */
+/* ═══ نشانِ مهره‌ای لوگوی هرمس در فرم‌های ورود/ثبت‌نام/حساب ═══ */
 .auth-touba-mark{display:block;width:76px;height:auto;margin:0 auto 10px;filter:drop-shadow(0 10px 22px rgba(18,40,18,.28))}
 .auth-touba-mark.big{width:96px;margin:0 auto 14px}
 .panel .auth-touba-mark,.panel.empty .auth-touba-mark{margin-inline:auto}
@@ -7017,7 +7017,7 @@ details.pf-adv[open]>summary:after{content:"▲"}
 .chf input[type=color]::-webkit-color-swatch{border:0;border-radius:4px}
 #cat-image-preview{object-fit:cover}
 
-/* ═══════════════════ کنسول مدیریت طوبی — پوستۀ حرفه‌ای v1.0.1 (فقط body.admin-body) ═══════════════════
+/* ═══════════════════ کنسول مدیریت هرمس — پوستۀ حرفه‌ای v1.0.1 (فقط body.admin-body) ═══════════════════
    چیدمان و منطق دست‌نخورده؛ فقط پوسته: ذغال سبز‌ته‌رنگ، شیشه‌افکت، جدول‌های چسبان،
    فرم‌های تیره، مودال/توست هماهنگ و کشوی ناوبری پولیش‌شده. */
 body.admin-body{

@@ -11,8 +11,8 @@ function compactText(value, maxLength) {
 }
 
 function generateLocalShoeDescription(input = {}) {
-  const name = String(input.name || 'کفش طوبی').trim().slice(0, 160);
-  const brand = String(input.brand || 'طوبی').trim().slice(0, 100);
+  const name = String(input.name || 'کفش هرمس').trim().slice(0, 160);
+  const brand = String(input.brand || 'هرمس').trim().slice(0, 100);
   const category = String(input.category || '').trim().toLowerCase();
   const usage = category.includes('sport') || category.includes('اسپرت') || name.includes('اسپرت') || name.includes('کتانی')
     ? 'استفاده روزمره و استایل‌های کژوال'
@@ -52,7 +52,7 @@ async function describeShoeWithGemini(input = {}) {
       apiKey,
       httpOptions: { headers: { 'User-Agent': 'aistudio-build' } }
     });
-    const prompt = `شما نویسندهٔ توضیحات محصول فروشگاه کفش طوبی هستید. یک پیش‌نویس دقیق و خوش‌خوان فارسی تولید کنید.
+    const prompt = `شما نویسندهٔ توضیحات محصول فروشگاه کفش هرمس هستید. یک پیش‌نویس دقیق و خوش‌خوان فارسی تولید کنید.
 فقط اطلاعات موجود در ورودی را به‌عنوان واقعیت بیان کنید. دربارهٔ جنس چرم، زیره، کفی طبی، راحتی، دوام، سلامت پا، کشور سازنده یا مزایای فنی چیزی را حدس نزنید. اگر مشخصه‌ای وارد نشده، آن را حذف کنید و از مشتری بخواهید جزئیات را پیش از انتشار بررسی کند.
 نام: ${input.name || ''}
 دسته‌بندی: ${input.category || ''}

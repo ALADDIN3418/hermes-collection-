@@ -37,6 +37,6 @@ module.exports = async function aiStatus(req, res) {
     backendHealth: health,
     billingModel: 'Puter user-pays; usage depends on the signed-in Puter account',
     referenceMaxSide: 1280,
-    note: 'استودیو طوبی از فهرست مدل‌های تصویر Puter.js استفاده می‌کند؛ مدل‌های دارای پشتیبانی ویرایش عکس به‌صورت چرخشی و با جایگزینی خودکار امتحان می‌شوند.'
+    note: 'استودیو هرمس از فهرست مدل‌های تصویر Puter.js استفاده می‌کند؛ مدل‌های دارای پشتیبانی ویرایش عکس به‌صورت چرخشی و با جایگزینی خودکار امتحان می‌شوند.'
   });
 };

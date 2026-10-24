@@ -15,7 +15,7 @@
     return {
       products: [], categories: [], cart: [], orders: [], customers: [], coupons: [],
       reviews: [], banners: [], media: [], settings: {
-        storeName: 'کفش طوبی', phone: '', address: '', shipping: 0, freeShipping: 0,
+        storeName: 'کالکشن هرمس', phone: '', address: '', shipping: 0, freeShipping: 0,
         shippingOptions: { normal: 0, express: 0, freeFrom: 0 },
         homepage: { categoryIds: [], featuredProductIds: [], bestSellerProductIds: [], advantages: [] },
         favorites: []

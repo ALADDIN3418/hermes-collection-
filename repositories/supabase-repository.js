@@ -225,7 +225,7 @@
     return row;
   }
   function couponFromRow(x) { return { id:x.id, code:x.code, type:x.discount_type==='percent'?'درصدی':'مبلغ ثابت', amount:Number(x.amount), start:x.starts_at||'', end:x.ends_at||'', min:Number(x.minimum_order_toman||0), limit:x.usage_limit===null?0:Number(x.usage_limit), used:Number(x.usage_count||0), active:Boolean(x.is_active), createdAt:x.created_at }; }
-  function reviewFromRow(x, products) { const p=products.find(v=>v.id===x.product_id); return { id:x.id, userId:x.user_id, productId:x.product_id, product:p?.name||'', name:'مشتری طوبی', rating:Number(x.rating), text:x.body, status:REVIEW_STATUS[x.status]||'در انتظار تأیید', createdAt:x.created_at }; }
+  function reviewFromRow(x, products) { const p=products.find(v=>v.id===x.product_id); return { id:x.id, userId:x.user_id, productId:x.product_id, product:p?.name||'', name:'مشتری هرمس', rating:Number(x.rating), text:x.body, status:REVIEW_STATUS[x.status]||'در انتظار تأیید', createdAt:x.created_at }; }
   function bannerToRow(x) {
     const row={ title:String(x.title||'').trim(), subtitle:x.subtitle||null, image_url:safePublicUrl(x.imageUrl,{optional:false}), link_url:safePublicUrl(x.linkUrl), button_text:x.buttonText||null, placement:x.position||'home-promo', sort_order:Number(x.sortOrder||0), is_active:x.active!==false };
     if (isUuid(x.id)) row.id=x.id;
@@ -279,7 +279,7 @@
     const mappedImages=images.map(x=>({ id:x.id,productId:x.product_id,url:x.url,alt:x.alt||'',sortOrder:Number(x.sort_order||0),createdAt:x.created_at }));
     const mappedProducts=products.map(row=>productFromRow(row,mappedVariants.filter(v=>v.product_id===row.id),mappedImages.filter(v=>v.productId===row.id)));
     const mappedCategories=categories.map(categoryFromRow);
-    const mappedSettings={ storeName:'کفش طوبی',phone:'',address:'',shipping:0,freeShipping:0,shippingOptions:{normal:0,express:0,freeFrom:0},homepage:{categoryIds:[],featuredProductIds:[],bestSellerProductIds:[],advantages:[]},favorites:[] };
+    const mappedSettings={ storeName:'کالکشن هرمس',phone:'',address:'',shipping:0,freeShipping:0,shippingOptions:{normal:0,express:0,freeFrom:0},homepage:{categoryIds:[],featuredProductIds:[],bestSellerProductIds:[],advantages:[]},favorites:[] };
     for(const row of settings) mappedSettings[row.key]=row.value;
     if(typeof mappedSettings.shipping==='string') mappedSettings.shipping=Number(mappedSettings.shipping)||0;
     if(typeof mappedSettings.freeShipping==='string') mappedSettings.freeShipping=Number(mappedSettings.freeShipping)||0;

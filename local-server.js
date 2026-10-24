@@ -187,7 +187,7 @@ const server = http.createServer(async (req, res) => {
       backendHealth: comfyHealth,
       localDailyLimit: 'unlimited',
       referenceMaxSide: 1280,
-      note: 'استودیو هوش مصنوعی محصول طوبی: ویرایش بر پایه عکس مرجع با Qwen-Image-Edit، FLUX و SDXL بدون وابستگی به کلیدهای شخص ثالث.'
+      note: 'استودیو هوش مصنوعی محصول هرمس: ویرایش بر پایه عکس مرجع با Qwen-Image-Edit، FLUX و SDXL بدون وابستگی به کلیدهای شخص ثالث.'
     });
   }
   if (pathname === '/api/ai/comfy-health' && req.method === 'GET') {
@@ -349,4 +349,4 @@ function serveFile(file, res) {
   if (size === 0) return res.end('');
   fs.createReadStream(file).pipe(res);
 }
-server.listen(process.env.PORT || 3000, '0.0.0.0', () => console.log(`طوبی storefront listening on ${server.address().port} · پایگاه داده فروشگاه کفش طوبی`));
+server.listen(process.env.PORT || 3000, '0.0.0.0', () => console.log(`هرمس storefront listening on ${server.address().port} · پایگاه داده فروشگاه کالکشن هرمس`));

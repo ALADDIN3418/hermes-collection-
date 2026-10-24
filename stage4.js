@@ -1,6 +1,8 @@
-/* Touba Luxury Storefront Presentation Layer 2026 */
+/* Hermes Collection Luxury Storefront Presentation Layer 2026 */
 function leafMark(){return `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 39C8 34 9 15 34 8c3 13-1 25-10 31Z"/><path d="M14 34 31 16M22 27c-1-6 0-10 4-14"/></svg>`}
-function brandLogoImg(){return `<img src="/touba-logo.png" alt="" width="285" height="426" onerror="this.outerHTML=leafMark()">`}
+function brandLogoImg(){return `<img src="/hermes-logo.jpg" alt="" width="128" height="128" decoding="async" onerror="this.outerHTML=leafMark()">`}
+function brandWordmark(){return `<span class="brand-wordmark" dir="ltr"><b>HERMES</b><small>COLLECTION</small></span>`}
+function hermesCopy(value){return String(value??'').replace(/کفش طوبی/g,'کالکشن هرمس').replace(/طوبی/g,'هرمس')}
 function uiIcon(name){
   let p={
     search:'<circle cx="11" cy="11" r="6.5"/><path d="m16 16 5 5"/>',
@@ -42,11 +44,10 @@ function applyStoreTheme(theme,persist=true){
   return activeStoreTheme;
 }
 function toggleStoreTheme(){return applyStoreTheme(activeStoreTheme==='dark'?'light':'dark',true)}
-try{let savedStoreTheme=localStorage.getItem('touba-store-theme');applyStoreTheme(savedStoreTheme==='light'?'light':'dark',false)}catch(error){applyStoreTheme('dark',false)}
+try{applyStoreTheme('dark',false)}catch(error){applyStoreTheme('dark',false)}
 
 /* Minimal, borderless header with clean touch targets */
 function header(){
-  let storeName=db.settings.storeName||'کفش طوبی';
   let userText=db.currentUser?(db.currentUser.name||'حساب کاربری'):'ورود / ثبت‌نام';
   let userLink=(db.currentUser?.role==='admin'||db.currentUser?.role==='super_admin')?'/admin':(db.currentUser?'/account':'/login');
   let cCount=cartCount();
@@ -56,21 +57,21 @@ function header(){
       <span class="bar bar-2"></span>
       <span class="bar bar-3"></span>
     </button>
-    <a href="/" class="store-brand" aria-label="صفحه اصلی کفش طوبی">
+    <a href="/" class="store-brand" aria-label="صفحه اصلی کالکشن هرمس">
       <span class="brand-emblem">${brandLogoImg()}</span>
-      <span>${esc(storeName)}</span>
+      ${brandWordmark()}
     </a>
     <nav class="store-nav" id="store-nav" aria-label="منوی اصلی">
-      <a class="${navActive('/')?'active':''}" href="/" onclick="closeMobileNav()">خانه</a>
-      <a class="${categoryNavActive('women')?'active':''}" href="/shop?category=women" onclick="closeMobileNav()">زنانه</a>
-      <a class="${categoryNavActive('men')?'active':''}" href="/shop?category=men" onclick="closeMobileNav()">مردانه</a>
-      <a class="${categoryNavActive('accessories')?'active':''}" href="/shop?category=accessories" onclick="closeMobileNav()">کیف و اکسسوری</a>
+      <a class="${navActive('/')?'active':''}" href="/" onclick="closeMobileNav()">صفحه اصلی</a>
+      <a class="${categoryNavActive('women')?'active':''}" href="/shop?category=women" onclick="closeMobileNav()">کفش زنانه</a>
+      <a class="${categoryNavActive('men')?'active':''}" href="/shop?category=men" onclick="closeMobileNav()">کفش مردانه</a>
+      <a class="${categoryNavActive('accessories')?'active':''}" href="/shop?category=accessories" onclick="closeMobileNav()">کیف‌ها</a>
       <a class="${location.search.includes('sort=newest')?'active':''}" href="/shop?sort=newest" onclick="closeMobileNav()">جدیدترین‌ها</a>
       <div class="nav-categories">
         <a class="${path().startsWith('/category/')?'active':''}" href="/shop" onclick="toggleMobileCategories(event,this)">دسته‌ها <span class="cat-chevron">⌄</span></a>
         <div class="nav-dropdown">${db.categories.filter(c=>c.active).map(c=>`<a href="/category/${encodeURIComponent(c.slug||c.id)}" onclick="closeMobileNav()">${esc(c.name)}</a>`).join('')}</div>
       </div>
-      <a href="/shop?category=sale" onclick="closeMobileNav()">تخفیف‌ها</a>
+      <a href="/shop?category=sale" onclick="closeMobileNav()">پیشنهادها</a>
       <a class="${navActive('/contact')?'active':''}" href="/contact" onclick="closeMobileNav()">تماس با ما</a>
       <a class="nav-mobile-secondary ${navActive('/shop')?'active':''}" href="/shop" onclick="closeMobileNav()">همه محصولات</a>
       <a class="nav-mobile-secondary ${navActive('/about')?'active':''}" href="/about" onclick="closeMobileNav()">درباره ما</a>
@@ -172,7 +173,7 @@ if(typeof window !== 'undefined' && typeof document !== 'undefined' && typeof do
 
 function footer(){
   let cms=db.settings.homepage||{},categories=db.categories.filter(c=>c.active&&c.id!=='sale').slice(0,5);
-  return `<footer class="store-footer"><div class="container"><div class="footer-main"><div class="footer-brand-col"><a class="store-brand footer-brand" href="/"><span class="brand-emblem">${brandLogoImg()}</span><span>${esc(db.settings.storeName||'کفش طوبی')}</span></a><p>قدم‌هایی مطمئن، با انتخابی که هر روز همراه شماست. کیفیت، راحتی و طراحی ماندگار؛ امضای طوبی.</p></div><div><h3>دسترسی سریع</h3><a href="/shop">فروشگاه</a><a href="/about">درباره ما</a><a href="/contact">تماس با ما</a><a href="/tracking">پیگیری سفارش</a></div><div><h3>دسته‌بندی‌ها</h3>${categories.map(c=>`<a href="/category/${encodeURIComponent(c.slug||c.id)}">${esc(c.name)}</a>`).join('')}</div><div><h3>راهنمای مشتریان</h3><a href="/terms">قوانین و شرایط</a><a href="/privacy">حریم خصوصی</a><a href="/account/orders">سفارش‌های من</a><a href="/login">ورود به حساب</a></div><div><h3>با ما در ارتباط باشید</h3>${db.settings.phone?`<p dir="ltr">${esc(db.settings.phone)}</p>`:''}${db.settings.email?`<p dir="ltr">${esc(db.settings.email)}</p>`:''}${db.settings.address?`<p>${esc(db.settings.address)}</p>`:''}${db.settings.phone||db.settings.email||db.settings.address?'':'<p>اطلاعات تماس پس از ثبت در تنظیمات فروشگاه نمایش داده می‌شود.</p>'}<span class="footer-trust">${uiIcon('shield')} خرید از طوبی</span></div></div>${(()=>{let em=db.settings.enamad||{},eId=String(em.id||'').trim()||'8043803',eCode=String(em.code||'').trim()||'KwnE0Oqncs7Kf5559g7IyC9IHDlTnDEE';return `<div class="footer-enamad" role="group" aria-label="نمادهای اعتماد فروشگاه"><div class="footer-trust-pair"><div class="footer-trust-item footer-enamad-item"><a class="enamad-seal" referrerpolicy="origin" target="_blank" href="https://trustseal.enamad.ir/?id=${esc(eId)}&amp;Code=${esc(eCode)}" title="نماد اعتماد الکترونیکی — طوبی در اینماد" aria-label="استعلام نماد اعتماد الکترونیکی فروشگاه طوبی"><img referrerpolicy="origin" src="https://trustseal.enamad.ir/logo.aspx?id=${esc(eId)}&amp;Code=${esc(eCode)}" alt="" code="${esc(eCode)}" loading="lazy" style="cursor:pointer" onerror="this.onerror=null;this.src='/enamad-logo.png'"></a><span class="footer-trust-caption">نماد اعتماد الکترونیکی (اینماد)</span></div><div class="footer-trust-item footer-bitpay-item"><a class="bitpay-seal" href="https://bitpay.ir/certificate-119478-toubashose.ir" target="_blank" aria-label="مشاهده گواهی اعتماد بیت‌پی فروشگاه طوبی" title="گواهی اعتماد بیت‌پی"><img src="https://bitpay.ir/theme/public/images/trusted-logo.svg" alt="لوگوی اعتماد بیت‌پی" loading="lazy"></a><span class="footer-trust-caption">گواهی اعتماد بیت‌پی</span></div></div></div>`})()}<div class="footer-bottom"><span>${esc(cms.footerText||'تمامی حقوق برای فروشگاه کفش طوبی محفوظ است.')}</span><span>© ۱۴۰۵　·　ساخته‌شده با توجه به هر قدم</span></div></div></footer><nav class="mobile-bottom-nav" aria-label="میانبرهای فروشگاه"><a class="${navActive('/')?'active':''}" ${navActive('/')?'aria-current="page"':''} href="/">${uiIcon('home')}<span>خانه</span></a><a class="${navActive('/shop')||path().startsWith('/category/')?'active':''}" ${navActive('/shop')||path().startsWith('/category/')?'aria-current="page"':''} href="/shop">${uiIcon('grid')}<span>دسته‌ها</span></a><a class="${navActive('/wishlist')?'active':''}" ${navActive('/wishlist')?'aria-current="page"':''} href="/wishlist">${uiIcon('heart')}<span>علاقه‌مندی</span></a><a class="${navActive('/account')||navActive('/login')?'active':''}" ${navActive('/account')||navActive('/login')?'aria-current="page"':''} href="${db.currentUser?'/account':'/login'}">${uiIcon('user')}<span>حساب من</span></a></nav>`;
+  return `<footer class="store-footer"><div class="container"><div class="footer-main"><div class="footer-brand-col"><a class="store-brand footer-brand" href="/"><span class="brand-emblem">${brandLogoImg()}</span>${brandWordmark()}</a><p>قدم‌هایی مطمئن، با انتخابی که هر روز همراه شماست. کیفیت، راحتی و طراحی ماندگار؛ امضای هرمس.</p></div><div><h3>دسترسی سریع</h3><a href="/shop">فروشگاه</a><a href="/about">درباره ما</a><a href="/contact">تماس با ما</a><a href="/tracking">پیگیری سفارش</a></div><div><h3>دسته‌بندی‌ها</h3>${categories.map(c=>`<a href="/category/${encodeURIComponent(c.slug||c.id)}">${esc(c.name)}</a>`).join('')}</div><div><h3>راهنمای مشتریان</h3><a href="/terms">قوانین و شرایط</a><a href="/privacy">حریم خصوصی</a><a href="/account/orders">سفارش‌های من</a><a href="/login">ورود به حساب</a></div><div><h3>با ما در ارتباط باشید</h3>${db.settings.phone?`<p dir="ltr">${esc(db.settings.phone)}</p>`:''}${db.settings.email?`<p dir="ltr">${esc(db.settings.email)}</p>`:''}${db.settings.address?`<p>${esc(db.settings.address)}</p>`:''}${db.settings.phone||db.settings.email||db.settings.address?'':'<p>اطلاعات تماس پس از ثبت در تنظیمات فروشگاه نمایش داده می‌شود.</p>'}<span class="footer-trust">${uiIcon('shield')} خرید از هرمس</span></div></div>${(()=>{let em=db.settings.enamad||{},eId=String(em.id||'').trim()||'8043803',eCode=String(em.code||'').trim()||'KwnE0Oqncs7Kf5559g7IyC9IHDlTnDEE';return `<div class="footer-enamad" role="group" aria-label="نمادهای اعتماد فروشگاه"><div class="footer-trust-pair"><div class="footer-trust-item footer-enamad-item"><a class="enamad-seal" referrerpolicy="origin" target="_blank" href="https://trustseal.enamad.ir/?id=${esc(eId)}&amp;Code=${esc(eCode)}" title="نماد اعتماد الکترونیکی" aria-label="استعلام نماد اعتماد الکترونیکی فروشگاه"><img referrerpolicy="origin" src="https://trustseal.enamad.ir/logo.aspx?id=${esc(eId)}&amp;Code=${esc(eCode)}" alt="" code="${esc(eCode)}" loading="lazy" style="cursor:pointer" onerror="this.onerror=null;this.src='/enamad-logo.png'"></a><span class="footer-trust-caption">نماد اعتماد الکترونیکی (اینماد)</span></div><div class="footer-trust-item footer-bitpay-item"><a class="bitpay-seal" href="https://bitpay.ir/certificate-119478-toubashose.ir" target="_blank" aria-label="مشاهده گواهی اعتماد بیت‌پی" title="گواهی اعتماد بیت‌پی"><img src="https://bitpay.ir/theme/public/images/trusted-logo.svg" alt="لوگوی اعتماد بیت‌پی" loading="lazy"></a><span class="footer-trust-caption">گواهی اعتماد بیت‌پی</span></div></div></div>`})()}<div class="footer-bottom"><span>${esc(hermesCopy(cms.footerText||'تمامی حقوق برای کالکشن هرمس محفوظ است.'))}</span><span>© ۱۴۰۵　·　ساخته‌شده با توجه به هر قدم</span></div></div></footer><nav class="mobile-bottom-nav" aria-label="میانبرهای فروشگاه"><a class="${navActive('/')?'active':''}" ${navActive('/')?'aria-current="page"':''} href="/">${uiIcon('home')}<span>خانه</span></a><a class="${navActive('/shop')||path().startsWith('/category/')?'active':''}" ${navActive('/shop')||path().startsWith('/category/')?'aria-current="page"':''} href="/shop">${uiIcon('grid')}<span>دسته‌ها</span></a><a class="${navActive('/wishlist')?'active':''}" ${navActive('/wishlist')?'aria-current="page"':''} href="/wishlist">${uiIcon('heart')}<span>علاقه‌مندی</span></a><a class="${navActive('/account')||navActive('/login')?'active':''}" ${navActive('/account')||navActive('/login')?'aria-current="page"':''} href="${db.currentUser?'/account':'/login'}">${uiIcon('user')}<span>حساب من</span></a></nav>`;
 }
 
 /* Category cards styled with the same beauty and structure as luxury Product Cards */
@@ -240,7 +241,7 @@ function card(p){
     : stock > 1
     ? `<span class="stock-indicator in-stock"><i></i>موجود</span>`
     : `<span class="stock-indicator out-stock"><i></i>ناموجود</span>`;
-  return `<article class="lux-product-card"><button class="favorite-button ${isFavorite?'is-favorite':''}" aria-label="${isFavorite?'حذف':'افزودن'} ${esc(p.name)} ${isFavorite?'از':'به'} علاقه‌مندی‌ها" aria-pressed="${isFavorite}" onclick="toggleFav(this,'${p.id}')">${uiIcon('heart')}</button>${off?`<span class="product-discount">${off}٪ تخفیف</span>`:''}<a class="lux-product-image" href="/product/${encodeURIComponent(url)}">${visual}<span class="image-overlay">مشاهده جزئیات　←</span></a><div class="lux-product-info"><div style="display:flex;justify-content:space-between;align-items:center"><span class="product-category">${esc(category?.name||'کفش طوبی')}</span><div style="display:flex;gap:4px">${colorDots}</div></div><a href="/product/${encodeURIComponent(url)}" class="lux-product-name">${esc(p.name)}</a><div class="product-rating" aria-label="${reviews.length?`امتیاز ${rating.toLocaleString('fa-IR',{minimumFractionDigits:1,maximumFractionDigits:1})} از ۵`:'هنوز امتیازی ثبت نشده است'}"><span>${reviews.length?'★'.repeat(Math.round(rating))+'☆'.repeat(Math.max(0,5-Math.round(rating))):'☆☆☆☆☆'}</span><small>${reviews.length?rating.toLocaleString('fa-IR',{minimumFractionDigits:1,maximumFractionDigits:1}):'بدون امتیاز'}</small></div><div class="lux-price-row">${p.oldPrice>p.price?`<del>${toman(p.oldPrice)}</del>`:''}<strong>${toman(p.price)}</strong></div><div class="product-card-bottom">${stockMarkup}<a class="product-view-link" href="/product/${encodeURIComponent(url)}">مشاهده محصول</a><button class="quick-add-button" ${stock>0?'':'disabled'} onclick="quickAdd('${p.id}')" aria-label="افزودن سریع ${esc(p.name)} به سبد">+</button></div></div></article>`;
+  return `<article class="lux-product-card"><button class="favorite-button ${isFavorite?'is-favorite':''}" aria-label="${isFavorite?'حذف':'افزودن'} ${esc(p.name)} ${isFavorite?'از':'به'} علاقه‌مندی‌ها" aria-pressed="${isFavorite}" onclick="toggleFav(this,'${p.id}')">${uiIcon('heart')}</button>${off?`<span class="product-discount">${off}٪ تخفیف</span>`:''}<a class="lux-product-image" href="/product/${encodeURIComponent(url)}">${visual}<span class="image-overlay">مشاهده جزئیات　←</span></a><div class="lux-product-info"><div style="display:flex;justify-content:space-between;align-items:center"><span class="product-category">${esc(category?.name||'کالکشن هرمس')}</span><div style="display:flex;gap:4px">${colorDots}</div></div><a href="/product/${encodeURIComponent(url)}" class="lux-product-name">${esc(p.name)}</a><div class="product-rating" aria-label="${reviews.length?`امتیاز ${rating.toLocaleString('fa-IR',{minimumFractionDigits:1,maximumFractionDigits:1})} از ۵`:'هنوز امتیازی ثبت نشده است'}"><span>${reviews.length?'★'.repeat(Math.round(rating))+'☆'.repeat(Math.max(0,5-Math.round(rating))):'☆☆☆☆☆'}</span><small>${reviews.length?rating.toLocaleString('fa-IR',{minimumFractionDigits:1,maximumFractionDigits:1}):'بدون امتیاز'}</small></div><div class="lux-price-row">${p.oldPrice>p.price?`<del>${toman(p.oldPrice)}</del>`:''}<strong>${toman(p.price)}</strong></div><div class="product-card-bottom">${stockMarkup}<a class="product-view-link" href="/product/${encodeURIComponent(url)}">مشاهده محصول</a><button class="quick-add-button" ${stock>0?'':'disabled'} onclick="quickAdd('${p.id}')" aria-label="افزودن سریع ${esc(p.name)} به سبد">+</button></div></div></article>`;
 }
 
 /* Shopping Cart designed specifically for mobile: compact items, scroll container, sticky action bar */
@@ -259,7 +260,7 @@ function cartPage(){
     return `${header()}<main class="page container"><div class="panel empty-cart-box">
       <div class="empty-cart-icon">${uiIcon('cart')}</div>
       <h2>سبد خرید شما خالی است</h2>
-      <p>محصولات باکیفیت و راحت طوبی را بررسی کنید و با چند کلیک سفارش دهید.</p>
+      <p>کالکشن کیف و کفش هرمس را ببینید و جزئیات هر انتخاب را بررسی کنید.</p>
       <a class="btn" href="/shop">مشاهده فروشگاه و محصولات</a>
     </div></main>${footer()}`;
   }
@@ -327,7 +328,7 @@ function cartPage(){
 
         <!-- Coupon Row -->
         <div class="compact-coupon-bar">
-          <input id="coupon-code" placeholder="کد تخفیف (مثال: TOUBA10)" class="select compact-coupon-input" value="${esc(db.coupon?.code||'')}">
+          <input id="coupon-code" placeholder="کد تخفیف (مثال: HERMES10)" class="select compact-coupon-input" value="${esc(db.coupon?.code||'')}">
           <button class="btn small" type="button" onclick="applyCoupon()">اعمال کد</button>
         </div>
         ${db.coupon?`<div class="notice compact-notice">✓ کد تخفیف با موفقیت کسر شد (${toman(discount)}).</div>`:''}
@@ -374,18 +375,18 @@ function home(){
   if(!featured.length)featured=products.filter(p=>p.featured).slice(0,5);
   if(!best.length)best=products.filter(p=>p.bestSeller).slice(0,5);
   const defaultHeroTitle='خرید اینترنتی کفش زنانه و مردانه';
-  let heroTitle=(!cms.heroTitle||cms.heroTitle==='قدم‌هایی مطمئن با کفش طوبی'||cms.heroTitle==='راحتی، استایل و کیفیت در هر قدم')?defaultHeroTitle:cms.heroTitle;
+  let heroTitle=(!cms.heroTitle||cms.heroTitle==='قدم‌هایی مطمئن با کفش هرمس'||cms.heroTitle==='راحتی، استایل و کیفیت در هر قدم')?defaultHeroTitle:cms.heroTitle;
   let heroTitleMarkup=heroTitle===defaultHeroTitle?'خرید اینترنتی کفش<br><em>زنانه و مردانه</em>':esc(heroTitle);
   const defaultHeroText='مدل‌های متنوع کفش را بر اساس سایز، رنگ و موجودی بررسی کنید و آگاهانه انتخاب کنید.';
   let heroText=(!cms.heroText||cms.heroText==='کفش‌های شیک، راحت و بادوام')?defaultHeroText:cms.heroText;
   let heroImage=(!cms.heroImage||cms.heroImage==='/hero-shoe.jpg'||cms.heroImage==='hero-shoe.jpg'||cms.heroImage==='/touba-hero.jpg')?'/touba-hero-editorial.jpg':cms.heroImage,banner=promo[0],bannerImage=(!banner?.imageUrl||banner.imageUrl==='/hero-shoe.jpg'||banner.imageUrl==='/touba-hero.jpg')?heroImage:banner.imageUrl;
   let freeShippingThreshold=Number(db.settings.shippingOptions?.freeFrom??db.settings.freeShipping??0),freeShippingActive=Number.isFinite(freeShippingThreshold)&&freeShippingThreshold>0;
   const categoryRows=db.categories.filter(category=>category.active&&category.id!=='sale');
-  const categorySection=categoryRows.length?`<section class="category-section container" id="categories"><div class="section-heading"><div><span class="section-eyebrow">کالکشن‌های فروشگاه</span><h2>دسته‌بندی‌های طوبی</h2><p>برای دیدن محصولات و جزئیات هر دسته‌بندی، انتخاب کنید.</p></div><a href="/shop">مشاهده همه محصولات <span>←</span></a></div><div class="cat-row-wrap"><button class="cat-arrow cat-arrow-start" type="button" aria-label="دسته‌بندی‌های قبلی" title="دسته‌بندی‌های قبلی" onclick="scrollCatRow(-1)">${uiIcon('chev-r')}</button><div class="cat-tile-row" id="cat-tile-row">${categoryCards()}</div><button class="cat-arrow cat-arrow-end" type="button" aria-label="دیدن دسته‌بندی‌های بیشتر" title="دیدن دسته‌بندی‌های بیشتر" onclick="scrollCatRow(1)">${uiIcon('chev-l')}</button></div></section>`:'';
+  const categorySection=categoryRows.length?`<section class="category-section container" id="categories"><div class="section-heading"><div><span class="section-eyebrow">کالکشن‌های فروشگاه</span><h2>دسته‌بندی‌های هرمس</h2><p>برای دیدن محصولات و جزئیات هر دسته‌بندی، انتخاب کنید.</p></div><a href="/shop">مشاهده همه محصولات <span>←</span></a></div><div class="cat-row-wrap"><button class="cat-arrow cat-arrow-start" type="button" aria-label="دسته‌بندی‌های قبلی" title="دسته‌بندی‌های قبلی" onclick="scrollCatRow(-1)">${uiIcon('chev-r')}</button><div class="cat-tile-row" id="cat-tile-row">${categoryCards()}</div><button class="cat-arrow cat-arrow-end" type="button" aria-label="دیدن دسته‌بندی‌های بیشتر" title="دیدن دسته‌بندی‌های بیشتر" onclick="scrollCatRow(1)">${uiIcon('chev-l')}</button></div></section>`:'';
 
   return `${header()}<main>
   <section class="lux-hero" aria-label="${esc(heroTitle)}">
-    <img class="lux-hero-image" src="${esc(heroImage)}" alt="کفش اسپرت زیتونی کالکشن طوبی روی سکوی سنگی در فضای سبز" width="1536" height="1024" fetchpriority="high">
+    <img class="lux-hero-image" src="${esc(heroImage)}" alt="کفش اسپرت زیتونی کالکشن هرمس روی سکوی سنگی در فضای سبز" width="1536" height="1024" fetchpriority="high">
     <div class="lux-hero-shade"></div>
     <div class="lux-hero-glow" aria-hidden="true"></div>
 
@@ -420,13 +421,13 @@ function home(){
             <span>${esc(cms.heroButtonText||'مشاهده محصولات')}</span>
             <span class="lux-pill-chevron">‹</span>
           </a>
-          <a class="hero-secondary auth-home-cta lux-auth-mini" href="/login" aria-label="ورود یا ثبت‌نام در حساب طوبی">ورود / ثبت‌نام <span>←</span></a>
+          <a class="hero-secondary auth-home-cta lux-auth-mini" href="/login" aria-label="ورود یا ثبت‌نام در حساب هرمس">ورود / ثبت‌نام <span>←</span></a>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="trust-section lux-cream-trust" aria-label="مزایای خرید از طوبی">
+  <section class="trust-section lux-cream-trust" aria-label="مزایای خرید از هرمس">
     <div class="container trust-grid lux-cream-trust-grid">
       <div class="trust-item lux-cream-trust-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><circle cx="12" cy="16" r="1"/></svg>
@@ -453,8 +454,8 @@ function home(){
 
   ${categorySection}
 
-  <section class="products-section container latest-products-section"><div class="section-heading"><div><span class="section-eyebrow">تازه‌های طوبی</span><h2>جدیدترین محصولات</h2><p>مدل‌های تازه‌رسیده برای قدم بعدی شما.</p></div><a href="/shop?sort=newest">همهٔ تازه‌رسیده‌ها <span>←</span></a></div><div class="lux-product-grid">${newest.map(card).join('')||'<div class="empty-state">به‌زودی مدل‌های تازه در اینجا قرار می‌گیرند.</div>'}</div></section>
-  <section class="products-section container"><div class="section-heading"><div><span class="section-eyebrow">منتخب برای شما</span><h2>انتخاب‌های ویژه طوبی</h2><p>مدل‌هایی که راحتی، کیفیت و سادگی را کنار هم می‌آورند.</p></div><a href="/shop">مشاهده همه محصولات <span>←</span></a></div><div class="lux-product-grid">${featured.slice(0,5).map(card).join('')||'<div class="empty-state">به‌زودی انتخاب‌های ویژه در اینجا قرار می‌گیرند.</div>'}</div></section><section class="collection-banner container"><div class="collection-visual"><img src="${esc(bannerImage)}" alt="کالکشن کفش‌های طوبی" loading="lazy" width="800" height="520"></div><div class="collection-content"><span class="section-eyebrow">از کالکشن تازه دیدن کنید</span><h2>قدم بعدی را<br><em>متفاوت بردار</em></h2><p>${esc(banner?.subtitle||'کفش مناسب استایل و روزهای شما؛ با کیفیتی که ارزش انتخاب دارد.')}</p><a class="btn collection-button" href="${esc(banner?.linkUrl||'/shop')}">${esc(banner?.buttonText||'مشاهده کالکشن')} ${uiIcon('arrow')}</a><span class="collection-watermark">TOUBA</span></div></section><section class="products-section container bestseller-section"><div class="section-heading"><div><span class="section-eyebrow">محبوب همراهان طوبی</span><h2>پرفروش‌های این روزها</h2></div><a href="/shop">رفتن به فروشگاه <span>←</span></a></div><div class="lux-product-grid">${best.slice(0,5).map(card).join('')}</div></section><section class="why-section"><div class="container"><div class="section-heading light-heading"><div><span class="section-eyebrow">چرا طوبی؟</span><h2>کیفیت را در هر قدم حس کنید</h2></div><p>از انتخاب مواد اولیه تا لحظه‌ای که سفارش به دست شما می‌رسد، به جزئیات اهمیت می‌دهیم.</p></div><div class="why-grid">${(cms.advantages||[]).slice(0,4).map((x,i)=>`<article class="why-card"><span class="why-number">۰${i+1}</span><span class="why-icon">${[uiIcon('shield'),uiIcon('heart'),uiIcon('support'),uiIcon('truck')][i]}</span><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p></article>`).join('')}</div></div></section><section class="about-section container"><div class="about-photo-wrap"><img src="${esc(heroImage)}" alt="جزئیات کیفیت کفش طوبی" loading="lazy" width="760" height="650"><span class="about-photo-caption">کیفیت؛ از اولین قدم</span></div><div class="about-copy"><span class="section-eyebrow">آشنایی با ما</span><h2>درباره کفش طوبی</h2><p>${esc(cms.aboutText||db.settings.about||'اطلاعات معرفی فروشگاه هنوز ثبت نشده است.')}</p><a class="btn about-button" href="/about">بیشتر درباره ما ${uiIcon('arrow')}</a><div class="about-signature">طوبی <span>· قدم‌هایی مطمئن</span></div></div></section>${approved.length?`<section class="reviews-section"><div class="container"><div class="section-heading"><div><span class="section-eyebrow">از زبان همراهان ما</span><h2>تجربه خرید مشتریان</h2></div><span class="review-summary">${'★'.repeat(Math.round(averageReviewRating))+'☆'.repeat(Math.max(0,5-Math.round(averageReviewRating)))} <small>${averageReviewRating.toLocaleString('fa-IR',{minimumFractionDigits:1,maximumFractionDigits:1})} از ۵ · ${approved.length.toLocaleString('fa-IR')} دیدگاه تأییدشده</small></span></div><div class="review-grid">${approved.slice(0,3).map(r=>`<article class="customer-review"><div class="review-top"><span class="review-avatar">${esc((r.name||'م').trim().slice(0,1))}</span><div><b>${esc(r.name)}</b><span>${esc(r.product||'خریدار طوبی')}</span></div><div class="review-stars" aria-label="${Number(r.rating)||0} از ۵ ستاره">${'★'.repeat(Number(r.rating)||0)}${'☆'.repeat(Math.max(0,5-(Number(r.rating)||0)))}</div></div><p>«${esc(r.text)}»</p><time>${r.createdAt?new Intl.DateTimeFormat('fa-IR',{year:'numeric',month:'long',day:'numeric'}).format(new Date(r.createdAt)):'خریدار کفش طوبی'}</time></article>`).join('')}</div></div></section>`:''}<section class="newsletter-section"><div class="container newsletter-card"><div class="newsletter-leaf">${brandLogoImg()}</div><div class="newsletter-copy"><span class="section-eyebrow">همراه طوبی باشید</span><h2>از تخفیف‌های ویژه باخبر شوید</h2><p>خبر کالکشن‌های تازه و پیشنهادهای ویژه را زودتر دریافت کنید.</p></div><form class="newsletter-form" onsubmit="event.preventDefault();subscribeNewsletter(this)"><label class="sr-only" for="newsletter-contact">موبایل یا ایمیل</label><input id="newsletter-contact" name="contact" required placeholder="شماره موبایل یا ایمیل شما"><button type="submit">عضویت <span>←</span></button></form></div></section></main>${footer()}`;
+  <section class="products-section container latest-products-section"><div class="section-heading"><div><span class="section-eyebrow">تازه‌های هرمس</span><h2>جدیدترین محصولات</h2><p>مدل‌های تازه‌رسیده برای قدم بعدی شما.</p></div><a href="/shop?sort=newest">همهٔ تازه‌رسیده‌ها <span>←</span></a></div><div class="lux-product-grid">${newest.map(card).join('')||'<div class="empty-state">به‌زودی مدل‌های تازه در اینجا قرار می‌گیرند.</div>'}</div></section>
+  <section class="products-section container"><div class="section-heading"><div><span class="section-eyebrow">منتخب برای شما</span><h2>انتخاب‌های ویژه هرمس</h2><p>مدل‌هایی که راحتی، کیفیت و سادگی را کنار هم می‌آورند.</p></div><a href="/shop">مشاهده همه محصولات <span>←</span></a></div><div class="lux-product-grid">${featured.slice(0,5).map(card).join('')||'<div class="empty-state">به‌زودی انتخاب‌های ویژه در اینجا قرار می‌گیرند.</div>'}</div></section><section class="collection-banner container"><div class="collection-visual"><img src="${esc(bannerImage)}" alt="کالکشن کفش‌های هرمس" loading="lazy" width="800" height="520"></div><div class="collection-content"><span class="section-eyebrow">از کالکشن تازه دیدن کنید</span><h2>قدم بعدی را<br><em>متفاوت بردار</em></h2><p>${esc(banner?.subtitle||'کفش مناسب استایل و روزهای شما؛ با کیفیتی که ارزش انتخاب دارد.')}</p><a class="btn collection-button" href="${esc(banner?.linkUrl||'/shop')}">${esc(banner?.buttonText||'مشاهده کالکشن')} ${uiIcon('arrow')}</a><span class="collection-watermark">HERMES</span></div></section><section class="products-section container bestseller-section"><div class="section-heading"><div><span class="section-eyebrow">محبوب همراهان هرمس</span><h2>پرفروش‌های این روزها</h2></div><a href="/shop">رفتن به فروشگاه <span>←</span></a></div><div class="lux-product-grid">${best.slice(0,5).map(card).join('')}</div></section><section class="why-section"><div class="container"><div class="section-heading light-heading"><div><span class="section-eyebrow">چرا هرمس؟</span><h2>کیفیت را در هر قدم حس کنید</h2></div><p>از انتخاب مواد اولیه تا لحظه‌ای که سفارش به دست شما می‌رسد، به جزئیات اهمیت می‌دهیم.</p></div><div class="why-grid">${(cms.advantages||[]).slice(0,4).map((x,i)=>`<article class="why-card"><span class="why-number">۰${i+1}</span><span class="why-icon">${[uiIcon('shield'),uiIcon('heart'),uiIcon('support'),uiIcon('truck')][i]}</span><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p></article>`).join('')}</div></div></section><section class="about-section container"><div class="about-photo-wrap"><img src="${esc(heroImage)}" alt="جزئیات کیفیت کفش هرمس" loading="lazy" width="760" height="650"><span class="about-photo-caption">کیفیت؛ از اولین قدم</span></div><div class="about-copy"><span class="section-eyebrow">آشنایی با ما</span><h2>درباره کفش هرمس</h2><p>${esc(cms.aboutText||db.settings.about||'اطلاعات معرفی فروشگاه هنوز ثبت نشده است.')}</p><a class="btn about-button" href="/about">بیشتر درباره ما ${uiIcon('arrow')}</a><div class="about-signature">هرمس <span>· قدم‌هایی مطمئن</span></div></div></section>${approved.length?`<section class="reviews-section"><div class="container"><div class="section-heading"><div><span class="section-eyebrow">از زبان همراهان ما</span><h2>تجربه خرید مشتریان</h2></div><span class="review-summary">${'★'.repeat(Math.round(averageReviewRating))+'☆'.repeat(Math.max(0,5-Math.round(averageReviewRating)))} <small>${averageReviewRating.toLocaleString('fa-IR',{minimumFractionDigits:1,maximumFractionDigits:1})} از ۵ · ${approved.length.toLocaleString('fa-IR')} دیدگاه تأییدشده</small></span></div><div class="review-grid">${approved.slice(0,3).map(r=>`<article class="customer-review"><div class="review-top"><span class="review-avatar">${esc((r.name||'م').trim().slice(0,1))}</span><div><b>${esc(r.name)}</b><span>${esc(r.product||'خریدار هرمس')}</span></div><div class="review-stars" aria-label="${Number(r.rating)||0} از ۵ ستاره">${'★'.repeat(Number(r.rating)||0)}${'☆'.repeat(Math.max(0,5-(Number(r.rating)||0)))}</div></div><p>«${esc(r.text)}»</p><time>${r.createdAt?new Intl.DateTimeFormat('fa-IR',{year:'numeric',month:'long',day:'numeric'}).format(new Date(r.createdAt)):'خریدار کفش هرمس'}</time></article>`).join('')}</div></div></section>`:''}<section class="newsletter-section"><div class="container newsletter-card"><div class="newsletter-leaf">${brandLogoImg()}</div><div class="newsletter-copy"><span class="section-eyebrow">همراه هرمس باشید</span><h2>از تخفیف‌های ویژه باخبر شوید</h2><p>خبر کالکشن‌های تازه و پیشنهادهای ویژه را زودتر دریافت کنید.</p></div><form class="newsletter-form" onsubmit="event.preventDefault();subscribeNewsletter(this)"><label class="sr-only" for="newsletter-contact">موبایل یا ایمیل</label><input id="newsletter-contact" name="contact" required placeholder="شماره موبایل یا ایمیل شما"><button type="submit">عضویت <span>←</span></button></form></div></section></main>${footer()}`;
 }
 
 async function subscribeNewsletter(form){
@@ -462,7 +463,7 @@ async function subscribeNewsletter(form){
   if(!/^09\d{9}$/.test(normalized)&&!/^\S+@\S+\.\S+$/.test(value)){toast('شماره موبایل یا ایمیل معتبر وارد کنید');return}
   try{
     await DataRepositories.newsletterSubscribers.create({contact:/^09\d{9}$/.test(normalized)?normalized:value});
-    form.reset();toast('عضویت شما در پایگاه داده ثبت شد؛ ممنون که همراه طوبی هستید');
+    form.reset();toast('عضویت شما در پایگاه داده ثبت شد؛ ممنون که همراه هرمس هستید');
   }catch(error){toast(error.message||'ثبت عضویت خبرنامه انجام نشد.')}
 }
 
@@ -482,7 +483,7 @@ async function toggleFav(el,id){
   if(path()==='/wishlist')render();
 }
 
-function showModal(content,title='کفش طوبی'){
+function showModal(content,title='کالکشن هرمس'){
   let root=$('#modal-root');
   root.innerHTML=`<div class="modal-back" role="presentation" onclick="if(event.target===this)closeModal()"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="dialog-title" tabindex="-1"><div class="modal-head"><h2 id="dialog-title">${esc(title)}</h2><button class="close" aria-label="بستن پنجره" onclick="closeModal()">×</button></div>${content}</div></div>`;
   root.querySelector('[role="dialog"]')?.focus();
@@ -632,13 +633,13 @@ function smoothGo(url,replace=false){
   }else{
     history.pushState({},'',url);
   }
-  animatedRender(true);
+  if(typeof window.render==='function')window.render(true);else animatedRender(true);
 }
 
-// Popstate for browser back/forward buttons
+// Popstate honors the final auth/database guard installed after this presentation layer.
 if(typeof window!=='undefined'&&typeof window.addEventListener==='function'){
   window.addEventListener('popstate',()=>{
-    animatedRender(true);
+    if(typeof window.render==='function')window.render(true);else animatedRender(true);
   });
 }
 
@@ -692,8 +693,68 @@ window.scrollCatRow=scrollCatRow;
     wrapped.__catArrows=1;window.render=wrapped;
   }
 })();
+function hermesHome(){
+  const allProducts=(db.products||[]).filter(item=>item.active);
+  const cms=db.settings?.homepage||{};
+  const featuredIds=Array.isArray(cms.featuredProductIds)?cms.featuredProductIds:[];
+  let featured=featuredIds.map(product).filter(item=>item?.active);
+  if(!featured.length)featured=allProducts.filter(item=>item.featured||item.bestSeller);
+  if(!featured.length)featured=allProducts.slice().sort((a,b)=>(Date.parse(b.createdAt||b.updatedAt||'')||0)-(Date.parse(a.createdAt||a.updatedAt||'')||0)).slice(0,4);
+  const categoryUrl=(fallback,pattern)=>{
+    const match=(db.categories||[]).find(category=>category.active&&pattern.test(`${category.id||''} ${category.slug||''} ${category.name||''}`));
+    return match?`/category/${encodeURIComponent(match.slug||match.id)}`:`/shop?category=${encodeURIComponent(fallback)}`;
+  };
+  const collections=[
+    {id:'women',label:'کفش زنانه',en:'WOMEN’S SHOES',note:'ظرافتی با حضوری ماندگار',image:'/hermes-editorial-hero.jpg',pos:'78% center',pattern:/زنانه|خانم|women|ladies|heel/i},
+    {id:'accessories',label:'کیف‌های دستی',en:'LEATHER BAGS',note:'جزئیاتی که استایل را کامل می‌کنند',image:'/touba-bag-editorial.jpg',pos:'50% 54%',pattern:/کیف|bag|accessor/i},
+    {id:'men',label:'کفش مردانه',en:'MEN’S SHOES',note:'خطوط کلاسیک، انتخابی امروز',image:'/touba-hero-editorial.jpg',pos:'28% center',pattern:/مردانه|آقایان|men|gentleman/i},
+    {id:'sneakers',label:'کالکشن روزمره',en:'EVERYDAY EDIT',note:'برای قدم‌های بی‌تکلف',image:'/touba-hero.jpg',pos:'72% center',pattern:/روزمره|اسپرت|sneaker|sport|daily/i}
+  ];
+  const collectionCards=collections.map((item,index)=>`<a class="hm-category-card hm-category-card-${index+1}" href="${categoryUrl(item.id,item.pattern)}" aria-label="دیدن ${esc(item.label)}"><img src="${item.image}" alt="${esc(item.label)} — کالکشن هرمس" loading="lazy" style="object-position:${item.pos}"><span class="hm-category-shade"></span><span class="hm-category-number">0${index+1}</span><span class="hm-category-copy"><small>${item.en}</small><b>${item.label}</b><em>${item.note}</em></span><span class="hm-category-arrow" aria-hidden="true">↙</span></a>`).join('');
+  const productSection=allProducts.length?`<section class="hm-products-section container" id="new-arrivals"><div class="hm-section-heading"><div><span class="hm-eyebrow">THE HERMES EDIT</span><h2>تازه‌های کالکشن</h2><p>مدل‌های ثبت‌شده در ویترین فروشگاه</p></div><a class="hm-text-link" href="/shop">مشاهده همه <span>←</span></a></div><div class="lux-product-grid hm-product-grid">${featured.slice(0,4).map(card).join('')}</div></section>`:`<section class="hm-products-section container" id="new-arrivals"><div class="hm-empty-catalog"><div class="hm-empty-seal">H</div><div><span class="hm-eyebrow">THE COLLECTION</span><h2>ویترین محصولات</h2><p>محصولات و موجودی واقعی فروشگاه پس از اتصال کاتالوگ نمایش داده می‌شوند.</p></div><a class="hm-button hm-button-outline" href="/shop">رفتن به فروشگاه <span>←</span></a></div></section>`;
+  return `${header()}<main class="hermes-home">
+    <section class="hm-hero" aria-label="HERMES COLLECTION — کالکشن هرمس">
+      <img class="hm-hero-image" src="/hermes-editorial-hero.jpg" alt="کیف دستی و کفش پاشنه‌بلند در قاب طلایی، کالکشن هرمس" width="1536" height="864" fetchpriority="high">
+      <div class="hm-hero-shade" aria-hidden="true"></div><div class="hm-hero-glow" aria-hidden="true"></div>
+      <div class="container hm-hero-inner" dir="ltr">
+        <div class="hm-hero-copy" dir="rtl">
+          <div class="hm-hero-lockup"><span class="hm-hero-seal">${brandLogoImg()}</span><span class="hm-hero-wordmark" dir="ltr"><b>HERMES</b><small>COLLECTION</small></span></div>
+          <div class="hm-hero-kicker"><i></i><span>کیف و کفش؛ با نگاهی متمایز</span><i></i></div>
+          <h1>انتخابی خاص،<br><em>برای هر قدم</em></h1>
+          <p>کالکشن هرمس؛ جایی برای سلیقه‌های خاص و انتخاب‌هایی که در خاطر می‌مانند.</p>
+          <div class="hm-hero-actions"><a class="hm-button hm-button-gold" href="/shop">مشاهده کالکشن <span>←</span></a><a class="hm-button hm-button-outline" href="/about">داستان هرمس</a></div>
+          <div class="hm-hero-note"><span></span> HERMES · EST. IN STYLE <span></span></div>
+        </div>
+      </div>
+      <a class="hm-scroll-cue" href="#hermes-collections" aria-label="رفتن به کالکشن‌ها"><span></span></a>
+      <div class="hm-hero-index" dir="ltr">01 <i></i> 04</div>
+    </section>
+
+    <section class="hm-promise-bar" aria-label="ویژگی‌های کالکشن هرمس"><div class="container hm-promise-grid">
+      <div class="hm-promise"><span class="hm-promise-icon">✧</span><div><b>انتخابی برای هر سلیقه</b><small>کالکشن‌های زنانه و مردانه</small></div></div>
+      <div class="hm-promise"><span class="hm-promise-icon">◇</span><div><b>جزئیات شفاف</b><small>مشخصات و موجودی هر محصول</small></div></div>
+      <div class="hm-promise"><span class="hm-promise-icon">⌁</span><div><b>خرید آسان</b><small>مسیر ساده از انتخاب تا سفارش</small></div></div>
+      <div class="hm-promise"><span class="hm-promise-icon">↗</span><div><b>همراه شما</b><small>راهنمایی در مسیر انتخاب</small></div></div>
+    </div></section>
+
+    <section class="hm-collections container" id="hermes-collections">
+      <div class="hm-section-heading"><div><span class="hm-eyebrow">A CURATED COLLECTION</span><h2>دنیای هرمس را کشف کنید</h2><p>از کفش‌های شاخص تا اکسسوری‌های تکمیل‌کننده؛ انتخاب از شماست.</p></div><span class="hm-heading-mark" aria-hidden="true">H</span></div>
+      <div class="hm-categories-grid">${collectionCards}</div>
+    </section>
+
+    ${productSection}
+
+    <section class="hm-story-section"><div class="container hm-story-grid">
+      <div class="hm-story-image"><img src="/touba-bag-editorial.jpg" alt="نمای نزدیک کیف چرمی با جزئیات ظریف" loading="lazy" width="1254" height="1254"><span class="hm-story-image-caption" dir="ltr">HERMES COLLECTION · 01</span></div>
+      <div class="hm-story-copy"><span class="hm-eyebrow">THE ART OF CHOICE</span><h2>فراتر از یک انتخاب؛<br><em>امضای استایل شما</em></h2><span class="hm-story-rule"></span><p>هر قطعه از کالکشن، روایتی از فرم، بافت و نگاه شخصی شماست. با دقت انتخاب کنید؛ برای روزهایی که جزئیات، تفاوت می‌سازند.</p><a class="hm-text-link" href="/shop">کالکشن را ببینید <span>←</span></a><div class="hm-story-watermark" dir="ltr">HERMES</div></div>
+    </div></section>
+
+    <section class="hm-signature container"><span class="hm-signature-ornament">✳</span><span class="hm-eyebrow">HERMES COLLECTION</span><h2>زیبایی در جزئیات است.</h2><p>یک انتخاب خوب، هر روز با شما قدم برمی‌دارد.</p><a href="/shop" class="hm-button hm-button-outline">پیدا کردن انتخاب شما <span>←</span></a></section>
+  </main>${footer()}`;
+}
+
 window.header=header;
-window.home=home;
+window.home=hermesHome;
 window.toggleFav=toggleFav;
 window.toggleStoreTheme=toggleStoreTheme;
 window.showSizeGuide=showSizeGuide;
@@ -756,7 +817,7 @@ function modernShop(forceCategory = "") {
 
     <div class="shop-hero-bar">
       <div>
-        <h1 class="page-title">${shopState.q ? `نتایج جستجو برای: «${esc(shopState.q)}»` : activeCatName ? `خرید ${esc(activeCatName)}` : "خرید اینترنتی کفش از طوبی"}</h1>
+        <h1 class="page-title">${shopState.q ? `نتایج جستجو برای: «${esc(shopState.q)}»` : activeCatName ? `خرید ${esc(activeCatName)}` : "خرید اینترنتی کفش از هرمس"}</h1>
         <p class="shop-hero-sub">قیمت، سایزبندی، رنگ و موجودی ثبت‌شدهٔ هر مدل را پیش از سفارش بررسی کنید.</p>
       </div>
       <div class="shop-hero-badges">
@@ -1175,20 +1236,20 @@ async function submitContactMessage(form){
 
 function modernContentPage(type) {
   const defaults={
-    about:['درباره کفش طوبی',db.settings.homepage?.aboutText||db.settings.about||'اطلاعات معرفی فروشگاه هنوز ثبت نشده است.'],
+    about:['درباره کفش هرمس',db.settings.homepage?.aboutText||db.settings.about||'اطلاعات معرفی فروشگاه هنوز ثبت نشده است.'],
     contact:['تماس با ما',''],
     terms:['شرایط و قوانین','شرایط خرید و ارسال را پیش از ثبت سفارش بررسی کنید. در صورت نیاز به راهنمایی، از فرم تماس با پشتیبانی استفاده کنید.'],
     privacy:['حریم خصوصی کاربران','اطلاعاتی که هنگام ثبت‌نام، سفارش یا ارسال پیام وارد می‌کنید برای ارائه خدمات فروشگاه در پایگاه داده نگهداری می‌شود. اطلاعات پرداخت کارت در صفحهٔ رسمی درگاه وارد می‌شود و در این فروشگاه دریافت یا ذخیره نمی‌شود.']
   };
   const [defaultTitle,defaultBody]=defaults[type]||['صفحه اطلاعات','اطلاعاتی برای نمایش ثبت نشده است.'];
   const publishedPage=(db.pageContents||[]).find(page=>page.key===type&&page.published);
-  const title=publishedPage?.title||defaultTitle;
+  const title=hermesCopy(publishedPage?.title||defaultTitle);
   let body=publishedPage?.body||defaultBody;
   if(type==='contact'&&!publishedPage){
     const details=[db.settings.phone&&`شماره تماس پشتیبانی: ${db.settings.phone}`,db.settings.address&&`نشانی فروشگاه: ${db.settings.address}`].filter(Boolean);
     body=details.length?`راه‌های تماس ثبت‌شده:\n${details.join('\n')}`:'اطلاعات تماس فروشگاه هنوز توسط مدیریت ثبت نشده است.';
   }
-  const bodyHtml=esc(body).replace(/\r?\n/g,'<br>');
+  const bodyHtml=esc(hermesCopy(body)).replace(/\r?\n/g,'<br>');
   return `${header()}<main class="page container">
     <div class="breadcrumb"><a href="/">خانه</a>　/　<span>${esc(title)}</span></div>
     <div class="panel content-panel-modern">
