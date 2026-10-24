@@ -131,6 +131,9 @@ async function main() {
   assert.match(storefrontSource, /classList\.toggle\('mobile-nav-open',open\)/);
   assert.match(hermesCss, /width: min\(370px, calc\(100vw - 28px\)\)/);
   assert.match(hermesCss, /A consistent antique-gold finish carries through product, cart and checkout flows/);
+  assert.match(hermesCss, /mobile-menu-toggle\.is-open \.bar-1\s*\{[^}]*rotate\(90deg\)/);
+  assert.match(hermesCss, /mobile-menu-toggle\.is-open \.bar-2\s*\{[^}]*opacity:\s*1/);
+  assert.match(hermesCss, /mobile-menu-toggle\.is-open \.bar-3\s*\{[^}]*rotate\(90deg\)/);
 
   const studio = fs.readFileSync(path.join(root,'admin-product-ai.js'),'utf8');
   assert.match(studio, /\(Legacy compatibility markers: ComfyUI \/ Qwen-Image-Edit\)/);

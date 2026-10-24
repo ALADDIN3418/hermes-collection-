@@ -1192,8 +1192,33 @@ body.storefront-mode.mobile-nav-open { overflow: hidden !important; overscroll-b
     outline-offset: 3px;
   }
   body.storefront-mode .store-header-inner { grid-template-columns: 44px minmax(0, 1fr) auto; }
-  body.storefront-mode .mobile-menu-toggle { min-width: 44px !important; width: 44px !important; min-height: 44px !important; height: 44px !important; }
-  body.storefront-mode .mobile-menu-toggle .bar { background: var(--hermes-gold-light) !important; }
+  body.storefront-mode .mobile-menu-toggle {
+    position: relative;
+    display: grid !important;
+    min-width: 44px !important;
+    width: 44px !important;
+    min-height: 44px !important;
+    height: 44px !important;
+    place-items: center;
+  }
+  body.storefront-mode .mobile-menu-toggle .bar {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18px !important;
+    height: 2px !important;
+    margin: 0;
+    background: var(--hermes-gold-light) !important;
+    transform-origin: center;
+    transition: transform .24s cubic-bezier(.2,.8,.2,1), opacity .18s ease;
+  }
+  body.storefront-mode .mobile-menu-toggle .bar-1 { transform: translate(-50%, calc(-50% - 6px)); }
+  body.storefront-mode .mobile-menu-toggle .bar-2 { transform: translate(-50%, -50%); opacity: 1; }
+  body.storefront-mode .mobile-menu-toggle .bar-3 { transform: translate(-50%, calc(-50% + 6px)); }
+  /* Open state: the three strokes form a clear H monogram instead of an X. */
+  body.storefront-mode .mobile-menu-toggle.is-open .bar-1 { transform: translate(calc(-50% - 6px), -50%) rotate(90deg); }
+  body.storefront-mode .mobile-menu-toggle.is-open .bar-2 { transform: translate(-50%, -50%); opacity: 1; }
+  body.storefront-mode .mobile-menu-toggle.is-open .bar-3 { transform: translate(calc(-50% + 6px), -50%) rotate(90deg); }
   body.storefront-mode .mobile-nav-backdrop { z-index: 79 !important; }
 }
 
