@@ -188,7 +188,7 @@ async function main() {
     assert(css.includes('.size-grid{') && css.includes('.size-cell.on{') && css.includes('.manual-upload-row'), 'size-tick + upload styles must be in stage4.css');
   }
 
-  // Estedad variable webfont (SIL OFL 1.1), admin console skin, full homepage categories.
+  // Estedad variable webfont, final luxury art direction, admin console skin, full homepage categories.
   {
     const styles = fs.readFileSync(path.join(root,'styles.css'),'utf8');
     assert(styles.includes("@font-face{font-family:'Estedad'") && styles.includes("url('/fonts/Estedad-VF.woff2')") && styles.includes('font-weight:100 900'), 'Estedad variable @font-face must be declared locally');
@@ -201,6 +201,8 @@ async function main() {
     assert(css.includes('--font-sans: "Estedad"'), 'stage4 --font-sans must prefer Estedad');
     const hermesCss = fs.readFileSync(path.join(root,'hermes-collection.css'),'utf8');
     assert(hermesCss.includes('font-family: "Estedad", Tahoma, sans-serif') && hermesCss.includes('Georgia, "Estedad", serif'), 'storefront Persian text must use Estedad while retaining the Latin serif brand font');
+    assert(hermesCss.includes('--green-emerald: var(--hermes-gold)') && hermesCss.includes('radial-gradient(ellipse 70% 26rem at 50% 0'), 'storefront controls and canvas must share the warm luxury palette');
+    assert(hermesCss.includes('grid-template-columns: repeat(12, minmax(0, 1fr))') && hermesCss.includes('grid-auto-rows: clamp(190px, 18vw, 245px)') && hermesCss.includes('@media (min-width: 641px) and (max-width: 1100px)'), 'homepage collection gallery must use a responsive editorial grid');
     const html = fs.readFileSync(path.join(root,'index.html'),'utf8');
     assert(html.includes('href="/fonts/Estedad-VF.woff2"'), 'Estedad font must be preloaded');
     const server = fs.readFileSync(path.join(root,'local-server.js'),'utf8');
