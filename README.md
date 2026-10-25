@@ -20,7 +20,7 @@
 
 این مقادیر عمومی‌اند و برای Auth مرورگر استفاده می‌شوند. هرگز `SUPABASE_SERVICE_ROLE_KEY`، رمز دیتابیس، GitHub Actions token یا credential پرداخت را به مرورگر ندهید.
 
-در پروژهٔ Supabase متصل، Email provider فعال است، تأیید ایمیل لازم است و Site URL/redirectهای `https://toubashose.ir` و `http://localhost:3000` تنظیم شده‌اند. SMTP اختصاصی هنوز پیکربندی/آزمایش نشده؛ برای تحویل مطمئن ایمیل تأیید و بازیابی در Production باید SMTP دامنهٔ تأییدشده راه‌اندازی شود. ثبت‌نام عمومی فقط حساب `customer` می‌سازد؛ نقش مدیر باید از مسیر مورداعتماد مالک در Supabase به‌روزرسانی شود.
+در پروژهٔ Supabase متصل، Email provider فعال است، تأیید ایمیل لازم است و Site URL روی `https://hermes-collection.vercel.app` است؛ redirectهای تأیید/بازیابی همین دامنه و `http://localhost:3000` تنظیم شده‌اند. SMTP اختصاصی هنوز پیکربندی/آزمایش نشده؛ برای تحویل مطمئن ایمیل تأیید و بازیابی در Production باید SMTP دامنهٔ تأییدشده راه‌اندازی شود. ثبت‌نام عمومی فقط حساب `customer` می‌سازد؛ نقش مدیر باید از مسیر مورداعتماد مالک در Supabase به‌روزرسانی شود.
 
 Migrationهای schema روی پروژهٔ واقعی Supabase با ref `rqdwqrmjwzlpgrxizggw` اعمال و بررسی شده‌اند: ۲۰ جدول عمومی با RLS فعال، RPC سلامت و سفارش، درگاه نهایی BitPay-only، و bucket تصویر آماده‌اند. کاتالوگ آزمایش/محصول خالی مانده و تنظیمات پیش‌فرض با برند Hermes Collection هم‌خوان شده‌اند. در preview محلی `/api/supabase-config` هنوز `configured=false`/`enabled=false` است چون env محلی وجود ندارد؛ این بررسی متغیرهای Vercel را نمی‌بیند، بنابراین پس از تغییر Environment Variables باید Production redeploy و config را بدون نمایش کلیدها بررسی کنید.
 

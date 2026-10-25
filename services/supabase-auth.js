@@ -86,13 +86,13 @@
         g.db.currentUser=null;
         if(previousUserId){for(const key of ['cart','orders','customers','coupons','payments','addresses','users','profiles','favorites'])g.db[key]=[];}
       }
-      if(g.DataProvider?.state?.status==='ready'&&g.db){try{await g.DataProvider.refresh('toubashop-v1',g.db)}catch(refreshError){console.error('Public Supabase state refresh after auth failure:',refreshError)}}
+      if(g.DataProvider?.state?.status==='ready'&&g.db){try{await g.DataProvider.refresh('hermes-collection-v1',g.db)}catch(refreshError){console.error('Public Supabase state refresh after auth failure:',refreshError)}}
       if(g.save)g.save();
       if(render&&g.render)g.render();
       throw error;
     }
     if (g.DataProvider?.state?.status === 'ready' && (previousUserId !== (user?.id || null) || previousRole !== (user?.role || null)) && g.db) {
-      await g.DataProvider.refresh('toubashop-v1', g.db);
+      await g.DataProvider.refresh('hermes-collection-v1', g.db);
     }
     if (g.save) g.save();
     if (render && g.render) g.render();
@@ -185,7 +185,7 @@
     const { error } = await requireClient().auth.signOut();
     if (error) throw error;
     if (g.db) g.db.currentUser = null;
-    if (g.DataProvider?.state?.status === 'ready' && g.db) await g.DataProvider.refresh('toubashop-v1', g.db);
+    if (g.DataProvider?.state?.status === 'ready' && g.db) await g.DataProvider.refresh('hermes-collection-v1', g.db);
     if (g.save) g.save();
     if (g.render) g.render();
   }

@@ -17,7 +17,7 @@
 
 این‌ها تنها مقدارهای Supabase هستند که به کلاینت مرورگر می‌رسند. `SUPABASE_SERVICE_ROLE_KEY`، رمز دیتابیس، GitHub token و کلید API بیت‌پی (`BITPAY_API_KEY`) را هرگز در Browser یا Git قرار ندهید. پس از تغییر Environment Variables، deployment را دوباره بسازید.
 
-در Supabase → Authentication، Email provider فعال است، ثبت‌نام باز است و email confirmation لازم است. Site URL روی `https://toubashose.ir` قرار دارد و allow-list فعلی شامل مسیرهای تأیید/بازیابی همین دامنه و `http://localhost:3000` برای توسعه است. اگر دامنهٔ production عوض شد، هر دو مورد را به‌روز کنید.
+در Supabase → Authentication، Email provider فعال است، ثبت‌نام باز است و email confirmation لازم است. Site URL روی `https://hermes-collection.vercel.app` قرار دارد؛ allow-list دقیقاً مسیرهای `/login?verified=1` و `/reset-password` را برای این دامنه و `http://localhost:3000/login?verified=1` و `http://localhost:3000/reset-password` را برای توسعه مجاز می‌کند. اگر دامنهٔ Production عوض شد، Site URL و هر چهار redirect لازم را به‌روز کنید.
 
 حداقل طول و سیاست password را در Supabase مطابق الزامات حساب تنظیم کنید (فرم سایت حداقل ۱۲ نویسه می‌خواهد). SMTP اختصاصی هنوز پیکربندی نشده است؛ تا زمانی که SMTP دامنهٔ تأییدشده تنظیم و با چند mailbox واقعی آزمایش نشود، تحویل ایمیل تأیید/بازیابی در Production تأییدشده نیست.
 

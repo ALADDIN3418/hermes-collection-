@@ -35,9 +35,9 @@ async function main() {
   assert.equal(empty.orders.length, 0);
   assert.equal(empty.coupons.length, 0);
   assert.equal(empty.customers.length, 0);
-  assert.equal(context.DataProvider.hydrate('toubashop-v1', {products:[{id:'fake'}]}).products.length, 0, 'hydrate must not read an old LocalStorage snapshot or supplied mock seed');
-  await assert.rejects(() => context.DataProvider.load('toubashop-v1', empty), /Supabase/);
-  context.DataProvider.persist('toubashop-v1', empty);
+  assert.equal(context.DataProvider.hydrate('hermes-collection-v1', {products:[{id:'fake'}]}).products.length, 0, 'hydrate must not read an old LocalStorage snapshot or supplied mock seed');
+  await assert.rejects(() => context.DataProvider.load('hermes-collection-v1', empty), /Supabase/);
+  context.DataProvider.persist('hermes-collection-v1', empty);
   assert.equal(localWrites.length, 0, 'shop data must never be persisted as a whole browser snapshot');
 
   // A configured client may hydrate only the records returned by the database adapter.
@@ -56,7 +56,7 @@ async function main() {
     orders:[],coupons:[],customers:[],users:[],settings:target.settings
   }) };
   const liveState = context.DataProvider.createEmptyState();
-  await context.DataProvider.load('toubashop-v1', liveState);
+  await context.DataProvider.load('hermes-collection-v1', liveState);
   assert.equal(context.DataProvider.state.status, 'ready');
   assert.equal(context.DataProvider.state.schemaVersion, '202610030001');
   assert.equal(context.__TOUBA_DATABASE_READY, true);
@@ -67,7 +67,7 @@ async function main() {
 
   // An incompatible or unapplied migration must fail closed rather than show a demo shop.
   context.ToubaAuth.client.rpc = async () => ({data:{schemaVersion:'old-schema'},error:null});
-  await assert.rejects(() => context.DataProvider.refresh('toubashop-v1', liveState), /schema/);
+  await assert.rejects(() => context.DataProvider.refresh('hermes-collection-v1', liveState), /schema/);
   assert.equal(context.__TOUBA_DATABASE_READY, false);
   assert.equal(context.DataProvider.state.status, 'error');
   assert.equal(localWrites.length, 0);
@@ -346,33 +346,31 @@ async function main() {
     assert(doc.includes('URL Configuration') && doc.includes('/reset-password'), 'operator docs explain the Supabase redirect setup (no DB table needed)');
   }
 
-  // v1.1.1→v1.1.3: eNamad trust seal — verbatim-official link contract, admin-swappable code.
+  // Trust marks are store-specific: never show another merchant's certificates by default.
   {
     const st4 = fs.readFileSync(path.join(root,'stage4.js'),'utf8');
+    const idx = fs.readFileSync(path.join(root,'index.html'),'utf8');
     const start = st4.indexOf('class="enamad-seal"');
-    assert(start>0, 'seal anchor exists');
+    assert(start > 0, 'optional store-owned Enamad seal markup remains available');
     const seal = st4.slice(start, st4.indexOf('</a>', start));
-    assert(st4.includes('<div class="footer-enamad" role="group" aria-label="نمادهای اعتماد فروشگاه"><div class="footer-trust-pair">'), 'both trust marks share a separate footer row at the corner');
-    assert(st4.includes('نماد اعتماد الکترونیکی (اینماد)') && st4.includes('گواهی اعتماد بیت‌پی'), 'each trust mark has an explanatory caption underneath');
-    const bitpayStart = st4.indexOf('class="bitpay-seal"');
-    const bitpaySeal = st4.slice(bitpayStart, st4.indexOf('</a>', bitpayStart));
-    assert(bitpayStart > 0 && bitpaySeal.includes('href="https://bitpay.ir/certificate-119478-toubashose.ir" target="_blank"'), 'BitPay seal links to the supplied certificate in a new tab');
-    assert(bitpaySeal.includes('src="https://bitpay.ir/theme/public/images/trusted-logo.svg"'), 'BitPay uses the supplied official trust logo');
-    assert(seal.includes('referrerpolicy="origin" target="_blank" href="https://trustseal.enamad.ir/?id='), 'anchor: official trustseal href + referrer policy, no extra attrs');
-    assert(!seal.includes('noreferrer'), 'rel=noreferrer must NEVER decorate the enamad link (it strips the Referer and breaks domain-bound verification → error 102)');
-    assert(!seal.includes('rel='), 'official snippet keeps rel untouched');
-    assert(seal.includes('src="https://trustseal.enamad.ir/logo.aspx?id='), 'the LIVE dynamic enamad image is primary (their verification requires it)');
+    assert(st4.includes("if(!eId||!eCode)return ''"), 'Enamad seal stays hidden until the owner supplies both credentials');
+    assert(!st4.includes('certificate-119478') && !st4.includes('class="bitpay-seal"'), 'unrelated merchant BitPay certificate is not shown');
+    assert(!st4.includes('8043803') && !st4.includes('KwnE0Oqncs7Kf5559g7IyC9IHDlTnDEE'), 'foreign Enamad credentials are not hard-coded');
+    assert(!idx.includes('name="enamad"') && !idx.includes('22342065'), 'old merchant verification metadata is removed');
+    assert(seal.includes('referrerpolicy="origin" target="_blank" href="https://trustseal.enamad.ir/?id='), 'anchor: official trustseal href + referrer policy');
+    assert(!seal.includes('noreferrer') && !seal.includes('rel='), 'official trustseal keeps Referer intact');
+    assert(seal.includes('src="https://trustseal.enamad.ir/logo.aspx?id='), 'the live dynamic Enamad image is used only with store credentials');
     assert(seal.includes("this.src='/enamad-logo.png'"), 'background-free local mark stays as offline fallback');
     assert(seal.includes('code="${esc(eCode)}"') && seal.includes('loading="lazy"') && seal.includes('style="cursor:pointer"'), 'code attribute + lazy + cursor kept');
-    assert(st4.includes('db.settings.enamad') && seal.includes('${esc(eId)}') && seal.includes('${esc(eCode)}'), 'seal id/Code resolve from admin settings');
+    assert(st4.includes('db.settings.enamad') && seal.includes('${esc(eId)}') && seal.includes('${esc(eCode)}'), 'seal credentials resolve from this store admin settings');
     const authUi = fs.readFileSync(path.join(root,'services/auth-ui.js'),'utf8');
-    assert(authUi.includes('adm-set-enamad-id') && authUi.includes('adm-set-enamad-code'), 'admin settings expose the enamad id + code fields');
-    assert(authUi.includes("enamad:{id:g.document.getElementById('adm-set-enamad-id')?.value.trim()||'',code:g.document.getElementById('adm-set-enamad-code')?.value.trim()||''}"), 'settings save persists the enamad pair');
+    assert(authUi.includes('adm-set-enamad-id') && authUi.includes('adm-set-enamad-code'), 'admin settings expose the Enamad id + code fields');
+    assert(authUi.includes("enamad:{id:g.document.getElementById('adm-set-enamad-id')?.value.trim()||'',code:g.document.getElementById('adm-set-enamad-code')?.value.trim()||''}"), 'settings save persists the Enamad pair');
     const themeCss = fs.readFileSync(path.join(root,'storefront-theme.css'),'utf8');
     assert(themeCss.includes('.store-footer .enamad-seal{display:block;padding:0;border:0;background:none'), 'seal renders background-free');
-    assert(themeCss.includes('height:150px;width:auto;max-width:150px'), 'dynamic seal image sized by height (star-strip ratio varies)');
+    assert(themeCss.includes('height:150px;width:auto;max-width:150px'), 'dynamic seal sized by height');
     const doc = fs.readFileSync(path.join(root,'PRODUCTION_READINESS.md'),'utf8');
-    assert(doc.includes('خطای ۱۰') && doc.includes('noreferrer'), 'docs explain the 102 root cause and the rel rule');
+    assert(doc.includes('متعلق به خود کالکشن هرمس') && doc.includes('با دامنهٔ سایت تطبیق دهید'), 'docs require merchant-owned trust credentials and domain match');
   }
 
   // v1.3.0: BitPay is the ONLY gateway (docs BP_PGW_DOC 2.2); browser never settles.
@@ -393,12 +391,12 @@ async function main() {
     assert(lib.includes('{52}'), 'api key is validated as the documented 52-char string');
     assert(lib.includes('/^[A-Za-z0-9_-]{52}$/'), 'panel keys whose dashes count inside the 52 chars are accepted verbatim');
     assert(lib.includes('apiKeyLength'), 'status exposes the configured key length so a bad paste is self-explanatory');
-    assert(lib.includes("DEFAULT_SITE_ORIGIN = 'https://toubashose.ir'"), 'redirect origin is pinned to the registered store domain (gateway -4 guard)');
+    assert(lib.includes("DEFAULT_SITE_ORIGIN = 'https://hermes-collection.vercel.app'"), 'redirect origin is pinned to the registered store domain (gateway -4 guard)');
     assert(lib.includes('callbackUrl'), 'status exposes the absolute callback URL the panel domain must match');
     const bitpay = require(path.join(root,'lib/bitpay.js'));
     let domainError = null;
     try { bitpay.parseSendResponse('-4'); } catch (error) { domainError = error.message; }
-    assert(domainError && domainError.includes('-4') && domainError.includes('toubashose.ir'), 'gateway error -4 maps to the actionable domain-registration message');
+    assert(domainError && domainError.includes('-4') && domainError.includes('hermes-collection.vercel.app'), 'gateway error -4 maps to the actionable domain-registration message');
     assert(lib.includes('record_bitpay_trans_id'), 'trans_id is recorded once (docs: save it to prevent misuse)');
     assert(lib.includes('verified.ok || verified.alreadyVerified'), 'settlement only on result-second status 1/11');
     const migration = fs.readFileSync(path.join(root,'supabase/migrations/20261025222821_202610170001_bitpay_gateway.sql'),'utf8');

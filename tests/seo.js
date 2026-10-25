@@ -189,7 +189,7 @@ function testBrowserSeo() {
 
   context.render();
   assert.equal(document.title, 'خرید کفش آزمایشی زنانه | کالکشن هرمس');
-  assert.equal(document.querySelector('link[rel="canonical"]').href, 'https://toubashose.ir/product/%DA%A9%D9%81%D8%B4-%D8%A2%D8%B2%D9%85%D8%A7%DB%8C%D8%B4%DB%8C');
+  assert.equal(document.querySelector('link[rel="canonical"]').href, 'https://hermes-collection.vercel.app/product/%DA%A9%D9%81%D8%B4-%D8%A2%D8%B2%D9%85%D8%A7%DB%8C%D8%B4%DB%8C');
   assert.equal(document.querySelector('meta[name="robots"]').getAttribute('content'), 'index, follow');
   assert.equal(document.querySelector('meta[property="og:url"]').getAttribute('content'), document.querySelector('link[rel="canonical"]').href);
   const productGraph = JSON.parse(document.querySelector('#page-jsonld').textContent);
@@ -201,21 +201,21 @@ function testBrowserSeo() {
   context.location = currentLocation;
   context.render();
   assert.equal(document.querySelector('meta[name="robots"]').getAttribute('content'), 'noindex, nofollow');
-  assert.equal(document.querySelector('link[rel="canonical"]').href, 'https://toubashose.ir/checkout');
+  assert.equal(document.querySelector('link[rel="canonical"]').href, 'https://hermes-collection.vercel.app/checkout');
   assert.equal(document.querySelector('#page-jsonld'), null, 'private routes must not retain product JSON-LD');
 
   currentLocation = new URL('https://arena-preview.vercel.app/search?q=%DA%A9%D9%81%D8%B4');
   context.location = currentLocation;
   context.render();
   assert.equal(document.querySelector('meta[name="robots"]').getAttribute('content'), 'noindex, follow');
-  assert.equal(document.querySelector('link[rel="canonical"]').href, 'https://toubashose.ir/search');
+  assert.equal(document.querySelector('link[rel="canonical"]').href, 'https://hermes-collection.vercel.app/search');
 
   currentLocation = new URL('https://arena-preview.vercel.app/category/%DA%A9%D9%81%D8%B4-%D8%B2%D9%86%D8%A7%D9%86%D9%87');
   context.location = currentLocation;
   context.render();
   const categoryGraph = JSON.parse(document.querySelector('#page-jsonld').textContent);
   assert.equal(categoryGraph['@graph'][0]['@type'], 'CollectionPage');
-  assert.equal(categoryGraph['@graph'][0].mainEntity.itemListElement[0].url, 'https://toubashose.ir/product/%DA%A9%D9%81%D8%B4-%D8%A2%D8%B2%D9%85%D8%A7%DB%8C%D8%B4%DB%8C');
+  assert.equal(categoryGraph['@graph'][0].mainEntity.itemListElement[0].url, 'https://hermes-collection.vercel.app/product/%DA%A9%D9%81%D8%B4-%D8%A2%D8%B2%D9%85%D8%A7%DB%8C%D8%B4%DB%8C');
 }
 
 async function run() {
@@ -227,9 +227,9 @@ async function run() {
   assert.equal(productPage.statusCode, 200);
   assert.match(productPage.headers['Content-Type'], /text\/html/);
   assert.match(productPage.body, /<title>خرید کفش آزمایشی زنانه &amp; خاص \| کالکشن هرمس<\/title>/);
-  assert.match(productPage.body, /href="https:\/\/toubashose\.ir\/product\/%DA%A9%D9%81%D8%B4-%D8%A2%D8%B2%D9%85%D8%A7%DB%8C%D8%B4%DB%8C"/);
+  assert.match(productPage.body, /href="https:\/\/hermes-collection\.vercel\.app\/product\/%DA%A9%D9%81%D8%B4-%D8%A2%D8%B2%D9%85%D8%A7%DB%8C%D8%B4%DB%8C"/);
   assert.match(productPage.body, /<h1>کفش آزمایشی زنانه &amp; خاص<\/h1>/);
-  assert.doesNotMatch(productPage.body, /arena-preview\.vercel\.app|toubashoes\.vercel\.app/);
+  assert.doesNotMatch(productPage.body, /arena-preview\.vercel\.app|hermes-collection-[a-z0-9]{7,}-aladdin/i);
   assert.match(productPage.body, /<meta name="robots"[^>]*content="index, follow"/);
   assert.match(productPage.body, /property="product:price:amount"[^>]*content="12500000"/);
   assert.match(productPage.body, /property="product:price:currency"[^>]*content="IRR"/);
@@ -240,7 +240,7 @@ async function run() {
   assert.equal(serverProduct.offers.priceCurrency, 'IRR');
   assert.equal(serverProduct.offers.price, '12500000', 'internal toman amount is converted to IRR for schema');
   assert.equal(serverProduct.offers.availability, 'https://schema.org/InStock');
-  assert.deepEqual(serverProduct.image, ['https://toubashose.ir/images/shoe-test.webp']);
+  assert.deepEqual(serverProduct.image, ['https://hermes-collection.vercel.app/images/shoe-test.webp']);
   assert(calls.some(call => call.table === 'products' && call.url.searchParams.get('is_active') === 'eq.true'));
 
   const categoryPage = await request(handler, `/api/seo?type=category&slug=${encodeURIComponent(CATEGORY.slug)}`);
@@ -270,22 +270,22 @@ async function run() {
   const sitemap = await request(handler, '/api/seo?type=sitemap');
   assert.equal(sitemap.statusCode, 200);
   assert.match(sitemap.headers['Content-Type'], /application\/xml/);
-  assert.match(sitemap.body, /https:\/\/toubashose\.ir\/product\/%DA%A9%D9%81%D8%B4-%D8%A2%D8%B2%D9%85%D8%A7%DB%8C%D8%B4%DB%8C/);
-  assert.match(sitemap.body, /https:\/\/toubashose\.ir\/category\/%DA%A9%D9%81%D8%B4-%D8%B2%D9%86%D8%A7%D9%86%D9%87/);
-  assert.match(sitemap.body, /https:\/\/toubashose\.ir\/shop/);
+  assert.match(sitemap.body, /https:\/\/hermes-collection\.vercel\.app\/product\/%DA%A9%D9%81%D8%B4-%D8%A2%D8%B2%D9%85%D8%A7%DB%8C%D8%B4%DB%8C/);
+  assert.match(sitemap.body, /https:\/\/hermes-collection\.vercel\.app\/category\/%DA%A9%D9%81%D8%B4-%D8%B2%D9%86%D8%A7%D9%86%D9%87/);
+  assert.match(sitemap.body, /https:\/\/hermes-collection\.vercel\.app\/shop/);
   assert.match(sitemap.body, /<lastmod>2026-10-21<\/lastmod>/);
-  assert.doesNotMatch(sitemap.body, /toubashoes\.vercel\.app|\/product\/p\d+|\/category\/empty-category/);
+  assert.doesNotMatch(sitemap.body, /hermes-collection-[a-z0-9]{7,}-aladdin|\/product\/p\d+|\/category\/empty-category/i);
   const robots = fs.readFileSync(path.join(__dirname, '../robots.txt'), 'utf8');
-  assert.match(robots, /https:\/\/toubashose\.ir\/sitemap-products\.xml/);
+  assert.match(robots, /https:\/\/hermes-collection\.vercel\.app\/sitemap-products\.xml/);
   assert.match(robots, /Disallow: \/api\//);
   const staticSitemap = fs.readFileSync(path.join(__dirname, '../sitemap.xml'), 'utf8');
-  assert.doesNotMatch(staticSitemap, /vercel\.app|\/category\/(men|women|sport)|toubashose\.ir\/shop/);
+  assert.doesNotMatch(staticSitemap, /\/category\/(men|women|sport)|hermes-collection\.vercel\.app\/shop/);
 
   const privatePage = await request(handler, '/api/seo?type=private&path=checkout');
   assert.equal(privatePage.statusCode, 200);
   assert.match(privatePage.headers['X-Robots-Tag'], /noindex/);
   assert.match(privatePage.body, /content="noindex, nofollow"/);
-  assert.match(privatePage.body, /href="https:\/\/toubashose\.ir\/checkout"/);
+  assert.match(privatePage.body, /href="https:\/\/hermes-collection\.vercel\.app\/checkout"/);
 
   const missingProductHandler = seoHandler.createHandler({
     env: apiEnv(),
@@ -303,13 +303,13 @@ async function run() {
   });
   const outage = await request(outageHandler, '/api/seo?type=product&slug=shoe');
   assert.equal(outage.statusCode, 200, 'temporary catalog outages must not become false product 404s');
-  assert.match(outage.body, /https:\/\/toubashose\.ir\/product\/shoe/);
+  assert.match(outage.body, /https:\/\/hermes-collection\.vercel\.app\/product\/shoe/);
 
   const fallbackHandler = seoHandler.createHandler({ env: {}, fetchImpl, indexHtml });
   const fallbackSitemap = await request(fallbackHandler, '/api/seo?type=sitemap');
   assert.equal(fallbackSitemap.statusCode, 200);
-  assert.match(fallbackSitemap.body, /https:\/\/toubashose\.ir\//);
-  assert.doesNotMatch(fallbackSitemap.body, /vercel\.app/);
+  assert.match(fallbackSitemap.body, /https:\/\/hermes-collection\.vercel\.app\//);
+  assert.doesNotMatch(fallbackSitemap.body, /hermes-collection-[a-z0-9]{7,}-aladdin/i);
 
   const wrongMethod = await request(handler, '/api/seo?type=sitemap', 'POST');
   assert.equal(wrongMethod.statusCode, 405);
