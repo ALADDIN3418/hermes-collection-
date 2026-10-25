@@ -188,16 +188,23 @@ async function main() {
     assert(css.includes('.size-grid{') && css.includes('.size-cell.on{') && css.includes('.manual-upload-row'), 'size-tick + upload styles must be in stage4.css');
   }
 
-  // v1.0.1b: IRANSans webfont, admin console skin, full homepage categories.
+  // Estedad variable webfont (SIL OFL 1.1), admin console skin, full homepage categories.
   {
     const styles = fs.readFileSync(path.join(root,'styles.css'),'utf8');
-    assert(styles.includes("@font-face{font-family:'IRANSans'") && styles.includes("url('/fonts/IRANSansWeb.woff2')"), 'IRANSans @font-face must ship with local woff2');
-    assert(styles.includes("font-family:'IRANSans','Vazirmatn',Tahoma,sans-serif"), 'body must prefer IRANSans with graceful fallbacks');
-    for (const w of ['','_Light','_Medium','_Bold','_UltraLight']) assert(fs.existsSync(path.join(root,'fonts',`IRANSansWeb${w}.woff2`)), `missing font file: IRANSansWeb${w}.woff2`);
+    assert(styles.includes("@font-face{font-family:'Estedad'") && styles.includes("url('/fonts/Estedad-VF.woff2')") && styles.includes('font-weight:100 900'), 'Estedad variable @font-face must be declared locally');
+    assert(styles.includes("font-family:'Estedad',Tahoma,sans-serif"), 'base body must prefer Estedad with graceful fallbacks');
+    assert(fs.existsSync(path.join(root,'fonts','Estedad-VF.woff2')), 'missing local Estedad variable WOFF2');
+    assert(fs.existsSync(path.join(root,'fonts','Estedad-OFL-1.1.txt')), 'missing Estedad SIL OFL license');
     const build = fs.readFileSync(path.join(root,'scripts/build-vercel.js'),'utf8');
-    assert(build.includes("'fonts/IRANSansWeb.woff2'"), 'fonts must be in the Vercel build whitelist');
+    assert(build.includes("'fonts/Estedad-VF.woff2'") && build.includes("'fonts/Estedad-OFL-1.1.txt'"), 'font and license must be in the Vercel build whitelist');
     const css = fs.readFileSync(path.join(root,'stage4.css'),'utf8');
-    assert(css.includes('--font-sans: IRANSans'), 'stage4 --font-sans must prefer IRANSans');
+    assert(css.includes('--font-sans: "Estedad"'), 'stage4 --font-sans must prefer Estedad');
+    const hermesCss = fs.readFileSync(path.join(root,'hermes-collection.css'),'utf8');
+    assert(hermesCss.includes('font-family: "Estedad", Tahoma, sans-serif') && hermesCss.includes('Georgia, "Estedad", serif'), 'storefront Persian text must use Estedad while retaining the Latin serif brand font');
+    const html = fs.readFileSync(path.join(root,'index.html'),'utf8');
+    assert(html.includes('href="/fonts/Estedad-VF.woff2"'), 'Estedad font must be preloaded');
+    const server = fs.readFileSync(path.join(root,'local-server.js'),'utf8');
+    assert(server.includes("'.woff2':'font/woff2'"), 'local preview server must serve WOFF2 with the correct MIME type');
     const authUi = fs.readFileSync(path.join(root,'services/auth-ui.js'),'utf8');
     assert(authUi.includes("selected==='products'?") && !authUi.includes('افزودن سریع محصول'), 'admin head toolbar must be contextual per section');
     assert(css.includes('body.admin-body{') && css.includes('.auth-admin-head{') && css.includes('backdrop-filter'), 'admin console skin must exist');

@@ -29,7 +29,7 @@ body.storefront-mode[data-theme="light"] {
   --touba-gold: var(--hermes-gold);
   background: var(--hermes-black) !important;
   color: var(--hermes-cream) !important;
-  font-family: "IRANSansWeb", Tahoma, sans-serif;
+  font-family: "Estedad", Tahoma, sans-serif;
 }
 body.storefront-mode[data-theme="light"] { color-scheme: dark; }
 body.storefront-mode #app,
@@ -377,7 +377,7 @@ body.storefront-mode .quick-add-button { background: var(--hermes-gold) !importa
 .hm-story-watermark { position: absolute; right: 0; bottom: -13px; color: rgba(201, 163, 108, .08); font: 700 clamp(42px, 7vw, 92px)/1 Georgia, serif; letter-spacing: .12em; pointer-events: none; }
 .hm-signature { display: flex; flex-direction: column; align-items: center; padding-block: 82px 96px; text-align: center; }
 .hm-signature-ornament { margin-bottom: 11px; color: var(--hermes-gold); font-size: 24px; }
-.hm-signature h2 { margin: 12px 0 6px; color: #f3e6d2; font: 400 clamp(29px, 4vw, 42px)/1.5 Georgia, "IRANSansWeb", serif; }
+.hm-signature h2 { margin: 12px 0 6px; color: #f3e6d2; font: 400 clamp(29px, 4vw, 42px)/1.5 Georgia, "Estedad", serif; }
 .hm-signature p { margin: 0 0 23px; color: #a99f90; font-size: 12px; }
 
 /* Dark and gold surfaces across catalog, forms, cart, and account pages. */
