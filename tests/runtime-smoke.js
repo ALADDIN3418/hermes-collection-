@@ -88,10 +88,19 @@ async function main() {
   assert.equal(fs.existsSync(path.join(root,'data/store.json')), false);
   assert.equal(fs.existsSync(path.join(root,'mock/seed-data.js')), false);
   assert.equal(fs.existsSync(path.join(root,'repositories/mock-repository.js')), false);
-  const liveMigration=fs.readFileSync(path.join(root,'supabase/migrations/202610030001_live_commerce.sql'),'utf8');
+  const liveMigration=fs.readFileSync(path.join(root,'supabase/migrations/20261025222644_202610030001_live_commerce.sql'),'utf8');
   assert.match(liveMigration,/delete from public\.products\s+where sku in/i);
   assert.match(liveMigration,/delete from public\.coupons\s+where upper\(code\) in/i);
   assert.doesNotMatch(liveMigration,/Keep them for reference/i);
+  const catalogSeed=fs.readFileSync(path.join(root,'supabase/migrations/20261025222513_202609280003_seed_data.sql'),'utf8');
+  assert.match(catalogSeed,/intentionally no sample-catalog seed/i);
+  assert.doesNotMatch(catalogSeed,/insert\s+into\s+public\.(categories|products|product_variants|coupons|banners)/i);
+  assert.match(catalogSeed,/select\s+1\s*;/i);
+  const hermesDefaults=fs.readFileSync(path.join(root,'supabase/migrations/20261025222854_202610260001_hermes_collection_defaults.sql'),'utf8');
+  assert.match(hermesDefaults,/where key = 'storeName'[\s\S]*?and value = '"کفش طوبی"'::jsonb/);
+  const retiredGatewayCleanup=fs.readFileSync(path.join(root,'supabase/migrations/20261025223509_202610260002_drop_retired_blupal_rpcs.sql'),'utf8');
+  for(const functionName of ['attach_blupal_payment','settle_blupal_payment','expire_stale_blupal_checkouts'])
+    assert.match(retiredGatewayCleanup,new RegExp(`drop function if exists public\\.${functionName}`,'i'));
 
   const authUiSource = fs.readFileSync(path.join(root,'services/auth-ui.js'),'utf8');
   assert.match(authUiSource, /g\.bannerModal = function/);
@@ -181,23 +190,32 @@ async function main() {
     assert(digits && [...digits[1]].length === 10 && digits[1][0] === '\u06f0' && digits[1][9] === '\u06f9', 'faDigits conversion map must cover all ten Persian digits in order');
     const repo = fs.readFileSync(path.join(root,'repositories/supabase-repository.js'),'utf8');
     assert(repo.includes('function newUuid()') && repo.includes('else row.id = newUuid();'), 'saveVariants must generate uuid ids so NOT NULL(id) can never fire');
-    const migPath = path.join(root,'supabase/migrations/202610060001_variant_id_default.sql');
+    const migPath = path.join(root,'supabase/migrations/20261025222751_202610060001_variant_id_default.sql');
     assert(fs.existsSync(migPath), 'variant id default migration must ship');
     assert(/product_variants[\s\S]*alter column id set default/.test(fs.readFileSync(migPath,'utf8')), 'migration must set product_variants.id default');
     const css = fs.readFileSync(path.join(root,'stage4.css'),'utf8');
     assert(css.includes('.size-grid{') && css.includes('.size-cell.on{') && css.includes('.manual-upload-row'), 'size-tick + upload styles must be in stage4.css');
   }
 
-  // v1.0.1b: IRANSans webfont, admin console skin, full homepage categories.
+  // Estedad variable webfont, final luxury art direction, admin console skin, full homepage categories.
   {
     const styles = fs.readFileSync(path.join(root,'styles.css'),'utf8');
-    assert(styles.includes("@font-face{font-family:'IRANSans'") && styles.includes("url('/fonts/IRANSansWeb.woff2')"), 'IRANSans @font-face must ship with local woff2');
-    assert(styles.includes("font-family:'IRANSans','Vazirmatn',Tahoma,sans-serif"), 'body must prefer IRANSans with graceful fallbacks');
-    for (const w of ['','_Light','_Medium','_Bold','_UltraLight']) assert(fs.existsSync(path.join(root,'fonts',`IRANSansWeb${w}.woff2`)), `missing font file: IRANSansWeb${w}.woff2`);
+    assert(styles.includes("@font-face{font-family:'Estedad'") && styles.includes("url('/fonts/Estedad-VF.woff2')") && styles.includes('font-weight:100 900'), 'Estedad variable @font-face must be declared locally');
+    assert(styles.includes("font-family:'Estedad',Tahoma,sans-serif"), 'base body must prefer Estedad with graceful fallbacks');
+    assert(fs.existsSync(path.join(root,'fonts','Estedad-VF.woff2')), 'missing local Estedad variable WOFF2');
+    assert(fs.existsSync(path.join(root,'fonts','Estedad-OFL-1.1.txt')), 'missing Estedad SIL OFL license');
     const build = fs.readFileSync(path.join(root,'scripts/build-vercel.js'),'utf8');
-    assert(build.includes("'fonts/IRANSansWeb.woff2'"), 'fonts must be in the Vercel build whitelist');
+    assert(build.includes("'fonts/Estedad-VF.woff2'") && build.includes("'fonts/Estedad-OFL-1.1.txt'"), 'font and license must be in the Vercel build whitelist');
     const css = fs.readFileSync(path.join(root,'stage4.css'),'utf8');
-    assert(css.includes('--font-sans: IRANSans'), 'stage4 --font-sans must prefer IRANSans');
+    assert(css.includes('--font-sans: "Estedad"'), 'stage4 --font-sans must prefer Estedad');
+    const hermesCss = fs.readFileSync(path.join(root,'hermes-collection.css'),'utf8');
+    assert(hermesCss.includes('font-family: "Estedad", Tahoma, sans-serif') && hermesCss.includes('Georgia, "Estedad", serif'), 'storefront Persian text must use Estedad while retaining the Latin serif brand font');
+    assert(hermesCss.includes('--green-emerald: var(--hermes-gold)') && hermesCss.includes('radial-gradient(ellipse 70% 26rem at 50% 0'), 'storefront controls and canvas must share the warm luxury palette');
+    assert(hermesCss.includes('grid-template-columns: repeat(12, minmax(0, 1fr))') && hermesCss.includes('grid-auto-rows: clamp(190px, 18vw, 245px)') && hermesCss.includes('@media (min-width: 641px) and (max-width: 1100px)'), 'homepage collection gallery must use a responsive editorial grid');
+    const html = fs.readFileSync(path.join(root,'index.html'),'utf8');
+    assert(html.includes('href="/fonts/Estedad-VF.woff2"'), 'Estedad font must be preloaded');
+    const server = fs.readFileSync(path.join(root,'local-server.js'),'utf8');
+    assert(server.includes("'.woff2':'font/woff2'"), 'local preview server must serve WOFF2 with the correct MIME type');
     const authUi = fs.readFileSync(path.join(root,'services/auth-ui.js'),'utf8');
     assert(authUi.includes("selected==='products'?") && !authUi.includes('افزودن سریع محصول'), 'admin head toolbar must be contextual per section');
     assert(css.includes('body.admin-body{') && css.includes('.auth-admin-head{') && css.includes('backdrop-filter'), 'admin console skin must exist');
@@ -383,13 +401,13 @@ async function main() {
     assert(domainError && domainError.includes('-4') && domainError.includes('toubashose.ir'), 'gateway error -4 maps to the actionable domain-registration message');
     assert(lib.includes('record_bitpay_trans_id'), 'trans_id is recorded once (docs: save it to prevent misuse)');
     assert(lib.includes('verified.ok || verified.alreadyVerified'), 'settlement only on result-second status 1/11');
-    const migration = fs.readFileSync(path.join(root,'supabase/migrations/202610170001_bitpay_gateway.sql'),'utf8');
+    const migration = fs.readFileSync(path.join(root,'supabase/migrations/20261025222821_202610170001_bitpay_gateway.sql'),'utf8');
     assert(migration.includes("check (provider in ('blupal','bitpay','zarinpal','balepay','bluepal'))"), 'provider allowlist keeps retired names as history');
     assert(migration.includes('a payment can only switch to bitpay before any gateway invoice is recorded'), 'trigger: only an invoice-less pending row may flip to bitpay');
     for (const fn of ['attach_bitpay_payment','record_bitpay_trans_id','settle_bitpay_payment','expire_stale_bitpay_checkouts'])
       assert(migration.includes(`public.${fn}(`), `rpc ${fn} exists`);
     assert((migration.match(/from public, anon, authenticated/g)||[]).length >= 3, 'attach/record/settle are service-role only');
-    const only = fs.readFileSync(path.join(root,'supabase/migrations/202610200001_bitpay_only.sql'),'utf8');
+    const only = fs.readFileSync(path.join(root,'supabase/migrations/20261025222849_202610200001_bitpay_only.sql'),'utf8');
     assert(only.includes("values (v_order_id, 'bitpay', 'pending', v_total)"), 'new orders seed straight into the single live gateway');
     assert(only.includes('new payments must use the bitpay provider'), 'only bitpay rows may be written from now on');
     const shared = fs.readFileSync(path.join(root,'lib/supabase-server.js'),'utf8');
@@ -438,7 +456,7 @@ async function main() {
     const pkg = fs.readFileSync(path.join(root,'package.json'),'utf8');
     assert(!pkg.includes('blupal'), 'npm scripts carry no retired-gateway command');
     const doc = fs.readFileSync(path.join(root,'PRODUCTION_READINESS.md'),'utf8');
-    assert(doc.includes('BITPAY_API_KEY') && doc.includes('202610200001_bitpay_only.sql'), 'docs list the exact operator steps');
+    assert(doc.includes('BITPAY_API_KEY') && doc.includes('20261025222849_202610200001_bitpay_only.sql'), 'docs list the exact operator steps');
   }
 
   // Multi-slide upload guards: the product form must accept several files and manage them.

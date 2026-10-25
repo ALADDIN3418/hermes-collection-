@@ -18,7 +18,7 @@ function response() {
 function payload(res) { return JSON.parse(res.body); }
 
 async function main() {
-  const quotaCompatibilityMigration=fs.readFileSync(path.join(__dirname,'../supabase/migrations/202609300001_daily_ai_image_quota_rpc_compat.sql'),'utf8');
+  const quotaCompatibilityMigration=fs.readFileSync(path.join(__dirname,'../supabase/migrations/20261025222529_202609300001_daily_ai_image_quota_rpc_compat.sql'),'utf8');
   assert.match(quotaCompatibilityMigration,/function public\.reserve_ai_image_quota\(\)/);
   assert.match(quotaCompatibilityMigration,/successful_count \+ reserved_count < 50/);
   assert.match(quotaCompatibilityMigration,/notify pgrst, 'reload schema'/i);
