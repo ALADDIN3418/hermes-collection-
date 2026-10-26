@@ -121,6 +121,14 @@ async function main() {
   const layoutCss = fs.readFileSync(path.join(root,'stage4.css'),'utf8');
   const storeCss = fs.readFileSync(path.join(root,'storefront-theme.css'),'utf8');
   const hermesCss = fs.readFileSync(path.join(root,'hermes-collection.css'),'utf8');
+  assert.match(authUiSource, /if \(pathname === '\/admin' \|\| pathname\.startsWith\('\/admin\/'\)\) \{\s*g\.document\.querySelector\('#app'\)\.innerHTML = adminPage\(\);/, 'admin route must preserve the admin-body class set for its route');
+  const adminFinalCss = layoutCss.slice(layoutCss.indexOf('/* Final cascade + mobile polish for the Hermes admin console. */'));
+  assert(adminFinalCss.includes('--paper: var(--adm-surface)'), 'admin theme variables must override the global storefront palette');
+  assert.match(adminFinalCss, /body\.admin-body \.mobile-store-nav[\s\S]*?display: none !important/);
+  assert.match(adminFinalCss, /body\.admin-body \.mobile-bottom-nav[\s\S]*?display: none !important/);
+  assert.match(adminFinalCss, /body\.admin-body \.table-wrap[\s\S]*?overflow-x: auto !important/);
+  assert.match(adminFinalCss, /body\.admin-body \.admin-categorized-drawer[\s\S]*?height: 100dvh !important/);
+  assert.match(adminFinalCss, /@media \(max-width: 640px\)[\s\S]*?body\.admin-body \.form-grid \{ grid-template-columns: minmax\(0, 1fr\) !important;/);
   assert.match(layoutCss, /@media\s*\(max-width:\s*860px\)/);
   assert.match(layoutCss, /@media\s*\(max-width:\s*420px\)/);
   assert.match(layoutCss, /\.mobile-bottom-nav svg[\s\S]*?width:\s*20px/);

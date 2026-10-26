@@ -1183,7 +1183,6 @@
         return;
       }
       if (pathname === '/admin' || pathname.startsWith('/admin/')) {
-        g.document.body.classList.remove('admin-body');
         g.document.querySelector('#app').innerHTML = adminPage();
         const section = new URLSearchParams(g.location.search).get('section') || 'dashboard';
         loadAdminSection(Object.hasOwn(adminSections, section) ? section : 'dashboard');
