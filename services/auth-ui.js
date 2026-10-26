@@ -369,12 +369,12 @@
   }
 
   async function refreshAdminData(section) {
-    await g.DataProvider.refresh('toubashop-v1', getDb());
+    await g.DataProvider.refresh('hermes-collection-v1', getDb());
     await loadAdminSection(section);
   }
   async function refreshDatabase() {
     try {
-      await g.DataProvider.refresh('toubashop-v1', getDb());
+      await g.DataProvider.refresh('hermes-collection-v1', getDb());
       g.toast('داده‌ها با موفقیت از پایگاه داده دوباره دریافت شدند.');
       await loadAdminSection('demo');
     } catch (error) { showActionError(error, 'به‌روزرسانی پایگاه داده انجام نشد.'); }
@@ -663,10 +663,10 @@
     }
     try {
       await saveBulkRows(changed, g.DataRepositories?.products);
-      await g.DataProvider.refresh('toubashop-v1',getDb());
+      await g.DataProvider.refresh('hermes-collection-v1',getDb());
       g.toast(`تغییرات ${changed.length.toLocaleString('fa-IR')} محصول ذخیره شد.`);
       await loadAdminSection('products');
-    } catch (error) { try{await g.DataProvider.refresh('toubashop-v1',getDb())}catch{};showActionError(error,'ذخیرهٔ گروهی محصولات انجام نشد.'); }
+    } catch (error) { try{await g.DataProvider.refresh('hermes-collection-v1',getDb())}catch{};showActionError(error,'ذخیرهٔ گروهی محصولات انجام نشد.'); }
   }
 
   async function bulkApplyCategories() {
@@ -684,10 +684,10 @@
     }
     try {
       await saveBulkRows(changed, g.DataRepositories?.categories);
-      await g.DataProvider.refresh('toubashop-v1',getDb());
+      await g.DataProvider.refresh('hermes-collection-v1',getDb());
       g.toast(`تغییرات ${changed.length.toLocaleString('fa-IR')} دسته‌بندی ذخیره شد.`);
       await loadAdminSection('categories');
-    } catch (error) { try{await g.DataProvider.refresh('toubashop-v1',getDb())}catch{};showActionError(error,'ذخیرهٔ گروهی دسته‌بندی‌ها انجام نشد.'); }
+    } catch (error) { try{await g.DataProvider.refresh('hermes-collection-v1',getDb())}catch{};showActionError(error,'ذخیرهٔ گروهی دسته‌بندی‌ها انجام نشد.'); }
   }
 
   async function loadAdminSection(section) {
@@ -924,7 +924,7 @@
             <div class="field full"><label>معرفی فروشگاه</label><textarea id="adm-set-about">${esc(st.about || '')}</textarea></div>
             <div class="field full"><label>توضیحات SEO</label><textarea id="adm-set-meta">${esc(st.metaDescription || '')}</textarea></div>
             <div class="field full" style="margin-top:6px"><b style="font-size:13px">نماد اعتماد الکترونیکی (اینماد)</b></div>
-            <div class="field"><label>شناسهٔ نماد (id)</label><input id="adm-set-enamad-id" value="${esc(st.enamad?.id || '')}" placeholder="8043803" dir="ltr"></div>
+            <div class="field"><label>شناسهٔ نماد (id)</label><input id="adm-set-enamad-id" value="${esc(st.enamad?.id || '')}" placeholder="شناسهٔ معتبر اینماد" dir="ltr"></div>
             <div class="field"><label>کد لوگو (Code)</label><input id="adm-set-enamad-code" value="${esc(st.enamad?.code || '')}" placeholder="کد ۳۲ رقمی پنل اینماد" dir="ltr"></div>
             <div class="field full"><p class="muted" style="font-size:11.5px;margin:2px 0 0">این کد باید از پنل اینماد (بخش «دریافت لوگو») برای همین دامنهٔ سایت گرفته شود؛ با تغییر دامنه یا تمدید نماد، کد تازه را همین‌جا جایگزین کنید — بدون نیاز به تغییر کد سایت. خالی = مقدار پیش‌فرض فعلی.</p></div>
           </div>
@@ -1183,7 +1183,6 @@
         return;
       }
       if (pathname === '/admin' || pathname.startsWith('/admin/')) {
-        g.document.body.classList.remove('admin-body');
         g.document.querySelector('#app').innerHTML = adminPage();
         const section = new URLSearchParams(g.location.search).get('section') || 'dashboard';
         loadAdminSection(Object.hasOwn(adminSections, section) ? section : 'dashboard');
@@ -1211,7 +1210,7 @@
   (async function initializeApplication() {
     try {
       await auth.start();
-      await g.DataProvider.load('toubashop-v1', getDb());
+      await g.DataProvider.load('hermes-collection-v1', getDb());
       if (auth.currentUser && new URLSearchParams(g.location.search).get('verified') === '1') {
         navigate(auth.currentUser.role === 'admin' || auth.currentUser.role === 'super_admin' ? '/admin' : '/account');
       } else {

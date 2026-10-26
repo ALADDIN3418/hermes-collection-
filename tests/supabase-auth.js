@@ -121,7 +121,7 @@ const path = require('path');
   assert.match(uiApp.innerHTML,/name="email"/);
   uiWindow.location.search='';uiWindow.render();
   assert.match(uiApp.innerHTML,/placeholder="ایمیل حساب کاربری"/);
-  assert.doesNotMatch(uiApp.innerHTML,/admin@toubashoes\.ir/);
+  assert.doesNotMatch(uiApp.innerHTML,/admin@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/i,'no admin email is hard-coded in the login UI');
   const submitButton={disabled:false,textContent:'ورود',dataset:{}};
   const loginForm={fields:{email:'owner@example.com',password:'strong-password'},querySelector(){return submitButton;}};
   await uiWindow.ToubaAuthUI.signIn(loginForm);

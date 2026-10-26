@@ -1,5 +1,5 @@
 /* Canonical, Persian storefront metadata and JSON-LD. Search engines must never inherit a Vercel preview host. */
-const SEO_ORIGIN = 'https://toubashose.ir';
+const SEO_ORIGIN = 'https://hermes-collection.vercel.app';
 const SEO_STORE_NAME = 'کالکشن هرمس';
 const SEO_HOME_TITLE = `خرید اینترنتی کفش زنانه و مردانه | ${SEO_STORE_NAME}`;
 const SEO_HOME_DESCRIPTION = 'کالکشن هرمس؛ انتخابی خاص از کیف و کفش زنانه و مردانه، با جزئیات محصول و موجودی شفاف.';

@@ -29,7 +29,7 @@
   --shadow-hover: 0 20px 35px -5px rgba(12, 29, 20, 0.12), 0 10px 15px -5px rgba(12, 29, 20, 0.06);
   --shadow-floating: 0 25px 50px -12px rgba(6, 17, 10, 0.25);
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --font-sans: IRANSans, Vazirmatn, Tahoma, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Estedad", Tahoma, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 /* Global Reset & Typography */
@@ -7148,3 +7148,316 @@ body.admin-body .cat-order-move{display:inline-flex;align-items:center;gap:5px}
 body.admin-body .cat-order-pos{min-width:22px;text-align:center;font-weight:800;font-size:11.5px;color:var(--adm-muted,#93a197)}
 body.admin-body .cat-order-move .action{padding:4px 9px;line-height:1;font-size:11px}
 body.admin-body .cat-order-move .action:disabled{opacity:.3;cursor:not-allowed}
+
+/* Final cascade + mobile polish for the Hermes admin console. */
+body.admin-body {
+  --cream: var(--adm-bg);
+  --paper: var(--adm-surface);
+  --ink: var(--adm-text);
+  --ink-secondary: var(--adm-muted);
+  --ink-muted: var(--adm-muted);
+  --line: var(--adm-line);
+  --green-emerald: var(--adm-brand);
+  --green-emerald-light: var(--adm-brand-strong);
+  background: radial-gradient(1200px 500px at 80% -10%, rgba(156,194,90,.07), transparent 60%), var(--adm-bg) !important;
+  color: var(--adm-text) !important;
+  overflow-x: visible !important;
+  padding-bottom: 0 !important;
+}
+body.admin-body #app,
+body.admin-body #app > main {
+  width: 100%;
+  min-width: 0;
+  max-width: 100% !important;
+  overflow-x: visible !important;
+}
+body.admin-body .admin-page-container {
+  min-width: 0;
+  max-width: 100% !important;
+  overflow-x: visible !important;
+}
+
+/* Keep the shop shell from competing with the admin toolbar and drawer. */
+body.admin-body .store-header-wrap {
+  position: relative !important;
+  top: auto !important;
+  z-index: 30;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+body.admin-body .store-header-inner {
+  min-height: 60px !important;
+  justify-content: center !important;
+}
+body.admin-body .store-brand {
+  margin-inline: auto;
+  gap: 10px;
+  font-size: 16px;
+}
+body.admin-body .brand-emblem { height: 38px; }
+body.admin-body .brand-emblem img { height: 36px; }
+body.admin-body .mobile-menu-toggle,
+body.admin-body .desktop-store-nav,
+body.admin-body .mobile-store-nav,
+body.admin-body .store-actions,
+body.admin-body #mobile-nav-backdrop,
+body.admin-body .mobile-bottom-nav {
+  display: none !important;
+}
+
+/* Restore the intended dark admin palette after the storefront's global theme layer. */
+body.admin-body .panel,
+body.admin-body .table-wrap,
+body.admin-body .stat-card,
+body.admin-body .chart-card,
+body.admin-body .filter-panel,
+body.admin-body .cart-summary,
+body.admin-body .auth-card {
+  background: var(--adm-surface) !important;
+  border-color: var(--adm-line) !important;
+  color: var(--adm-text) !important;
+  box-shadow: 0 12px 30px rgba(0,0,0,.18) !important;
+}
+body.admin-body .auth-admin-content { color: var(--adm-text) !important; }
+body.admin-body .auth-admin-content :is(h2, h3, h4) {
+  color: var(--adm-text) !important;
+}
+body.admin-body .auth-admin-content h1:not(.ai-studio-title) {
+  color: var(--adm-text) !important;
+}
+body.admin-body .auth-admin-content small[style*="color:#666"],
+body.admin-body .auth-admin-content small[style*="color: #666"],
+body.admin-body .auth-admin-content small[style*="color:#64748b"],
+body.admin-body .auth-admin-content ul[style*="color:#334155"] {
+  color: var(--adm-muted) !important;
+}
+body.admin-body .data-table th {
+  background: #1b261d !important;
+  color: #c9d8c4 !important;
+  border-bottom-color: var(--adm-line) !important;
+}
+body.admin-body .data-table td { border-bottom-color: var(--adm-line) !important; }
+body.admin-body .auth-admin-content .notice {
+  background: rgba(156,194,90,.10) !important;
+  border-color: rgba(156,194,90,.25) !important;
+  color: #cfe3b4 !important;
+}
+body.admin-body .auth-admin-content .notice.error-notice {
+  background: rgba(239,122,109,.10) !important;
+  border-color: rgba(239,122,109,.32) !important;
+  color: #f3c9c3 !important;
+}
+
+body.admin-body input:not([type="checkbox"]):not([type="radio"]),
+body.admin-body select,
+body.admin-body textarea,
+body.admin-body .select {
+  background: #111a15 !important;
+  border-color: var(--adm-line) !important;
+  color: var(--adm-text) !important;
+}
+body.admin-body input::placeholder,
+body.admin-body textarea::placeholder { color: #829184 !important; }
+body.admin-body input[type="checkbox"],
+body.admin-body input[type="radio"] {
+  accent-color: var(--adm-brand);
+}
+body.admin-body .admin-bulk-card {
+  background: var(--adm-surface-2) !important;
+  border-color: var(--adm-line) !important;
+  color: var(--adm-text) !important;
+}
+body.admin-body .admin-bulk-heading > div > b { color: var(--adm-text) !important; }
+body.admin-body .admin-bulk-heading > div > span,
+body.admin-body .admin-bulk-heading > label,
+body.admin-body .admin-bulk-controls label { color: var(--adm-muted) !important; }
+body.admin-body .admin-bulk-controls input,
+body.admin-body .admin-bulk-controls select { max-width: 100%; }
+
+/* The AI product studio is part of the admin console, so keep its panels readable in dark mode. */
+body.admin-body .ai-card,
+body.admin-body .ai-style-option,
+body.admin-body .ai-pill-btn,
+body.admin-body .ai-view-btn,
+body.admin-body .ai-empty-result-state,
+body.admin-body .ai-preview-frame,
+body.admin-body .ai-preservation-notice,
+body.admin-body .ai-progress-status {
+  background: var(--adm-surface-2) !important;
+  border-color: var(--adm-line) !important;
+  color: var(--adm-text) !important;
+}
+body.admin-body .ai-card-head h3,
+body.admin-body .ai-style-option .style-title-row strong,
+body.admin-body .ai-pill-btn strong,
+body.admin-body .ai-setting-group label,
+body.admin-body .ai-empty-result-state h4,
+body.admin-body .ai-drop-text,
+body.admin-body .ai-product-selector-row label { color: var(--adm-text) !important; }
+body.admin-body .ai-style-option.active,
+body.admin-body .ai-pill-btn.active,
+body.admin-body .ai-view-btn.active {
+  background: rgba(156,194,90,.18) !important;
+  border-color: var(--adm-brand) !important;
+  color: var(--adm-brand-strong) !important;
+}
+body.admin-body .ai-pill-btn.active strong,
+body.admin-body .ai-pill-btn.active small,
+body.admin-body .ai-view-btn.active { color: var(--adm-brand-strong) !important; }
+body.admin-body .ai-dropzone,
+body.admin-body .ai-style-option .style-icon {
+  background: #111a15 !important;
+  border-color: var(--adm-line) !important;
+}
+body.admin-body .ai-drop-sub,
+body.admin-body .ai-style-option .style-desc,
+body.admin-body .ai-pill-btn small,
+body.admin-body .ai-preservation-notice { color: var(--adm-muted) !important; }
+body.admin-body .ai-style-option .style-badge {
+  background: rgba(156,194,90,.14) !important;
+  color: var(--adm-brand-strong) !important;
+}
+body.admin-body .ai-progress-status { color: var(--adm-brand-strong) !important; }
+body.admin-body .ai-spinner { border-top-color: var(--adm-brand) !important; }
+
+/* Horizontal data tables remain usable without shrinking controls into unreadable columns. */
+body.admin-body .table-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto !important;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+}
+body.admin-body .data-table {
+  width: max-content;
+  min-width: 580px;
+  max-width: none;
+}
+body.admin-body #modal-root .modal-back {
+  z-index: 120 !important;
+  padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+}
+body.admin-body #modal-root .modal {
+  width: min(680px, 100%);
+  max-height: 90vh;
+  max-height: 90dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(16px, 4vw, 24px);
+}
+body.admin-body #toast {
+  z-index: 130;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+}
+body.admin-body .admin-drawer-overlay { touch-action: none; }
+body.admin-body .admin-categorized-drawer { touch-action: pan-y; overscroll-behavior: contain; }
+
+@media (max-width: 1023px) {
+  body.admin-body .auth-admin-head {
+    position: static !important;
+    top: auto !important;
+    z-index: auto !important;
+  }
+  body.admin-body .admin-nav-bar {
+    position: sticky !important;
+    top: max(8px, env(safe-area-inset-top)) !important;
+    z-index: 80 !important;
+    margin: 0 0 8px !important;
+  }
+  body.admin-body .admin-page-container {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    padding: 12px 14px 28px !important;
+    gap: 12px !important;
+  }
+  body.admin-body .admin-categorized-drawer {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: min(360px, 88vw) !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: 100vh !important;
+    max-height: 100dvh !important;
+    z-index: 111 !important;
+    overflow-y: auto !important;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    border-radius: 18px 0 0 18px;
+  }
+  body.admin-body .admin-drawer-overlay { z-index: 110 !important; }
+  body.admin-body .admin-group-item { min-height: 46px; }
+  body.admin-body .drawer-close-btn { width: 44px; height: 44px; }
+  body.admin-body .auth-admin-content {
+    width: 100%;
+    min-width: 0 !important;
+    padding: 16px 14px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  body.admin-body .admin-page-container { padding-inline: 10px !important; }
+  body.admin-body .auth-admin-head { padding: 12px !important; gap: 10px !important; }
+  body.admin-body .auth-admin-title-box .page-title { font-size: clamp(18px, 5vw, 22px) !important; }
+  body.admin-body .auth-admin-actions { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 7px !important; }
+  body.admin-body .auth-admin-actions .btn {
+    min-height: 44px;
+    padding: 8px 6px !important;
+    font-size: 11.5px !important;
+    line-height: 1.45;
+    white-space: normal;
+  }
+  body.admin-body .admin-hamburger-btn { min-height: 48px; padding-inline: 9px; }
+  body.admin-body .admin-current-chip { max-width: 38%; padding-inline: 7px; font-size: 10px; }
+  body.admin-body .auth-admin-content { padding: 12px 10px !important; border-radius: 14px !important; }
+  body.admin-body .form-grid { grid-template-columns: minmax(0, 1fr) !important; gap: 12px; }
+  body.admin-body .field input,
+  body.admin-body .field select,
+  body.admin-body .field textarea,
+  body.admin-body .admin-bulk-controls input,
+  body.admin-body .admin-bulk-controls select,
+  body.admin-body .shop-toolbar input,
+  body.admin-body .data-table select,
+  body.admin-body .ai-studio-page-wrapper input,
+  body.admin-body .ai-studio-page-wrapper select,
+  body.admin-body .ai-studio-page-wrapper textarea {
+    min-height: 44px;
+    font-size: 16px !important;
+  }
+  body.admin-body .admin-catalog-toolbar { align-items: stretch; }
+  body.admin-body .admin-catalog-actions { width: 100%; }
+  body.admin-body .admin-catalog-actions .btn { width: 100%; min-height: 44px; }
+  body.admin-body .shop-toolbar { align-items: stretch; gap: 8px; }
+  body.admin-body .shop-toolbar input { width: 100%; max-width: none !important; }
+  body.admin-body .shop-toolbar > span { overflow-wrap: anywhere; }
+  body.admin-body .admin-bulk-card { padding: 10px; }
+  body.admin-body .admin-bulk-controls { align-items: stretch; }
+  body.admin-body .admin-bulk-controls label,
+  body.admin-body .admin-bulk-controls select,
+  body.admin-body .admin-bulk-controls input,
+  body.admin-body .admin-bulk-controls button { width: 100%; max-width: none; }
+  body.admin-body .admin-bulk-controls button,
+  body.admin-body .auth-admin-content .btn,
+  body.admin-body .auth-admin-content .action { min-height: 42px; }
+  body.admin-body #modal-root .modal-back {
+    align-items: end;
+    padding: max(10px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom));
+  }
+  body.admin-body #modal-root .modal {
+    width: 100%;
+    max-height: 92vh;
+    max-height: 92dvh;
+    padding: 16px 14px calc(14px + env(safe-area-inset-bottom));
+    border-radius: 18px 18px 10px 10px;
+  }
+  body.admin-body #toast { left: 12px; right: 12px; width: auto; text-align: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.admin-body .admin-categorized-drawer,
+  body.admin-body .admin-drawer-overlay,
+  body.admin-body .admin-group-item { transition: none !important; }
+}

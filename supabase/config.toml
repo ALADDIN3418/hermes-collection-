@@ -1,6 +1,6 @@
 # Supabase CLI project configuration. The remote project is selected by
 # SUPABASE_PROJECT_REF in GitHub Actions, never by a credential in this file.
-project_id = "toubashoes"
+project_id = "hermes-collection"
 
 [db.migrations]
 enabled = true

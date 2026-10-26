@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { serverConfiguration } = require('../lib/supabase-server');
 
-const CANONICAL_ORIGIN = 'https://toubashose.ir';
+const CANONICAL_ORIGIN = 'https://hermes-collection.vercel.app';
 const STORE_NAME = 'کالکشن هرمس';
 const DEFAULT_DESCRIPTION = 'کالکشن هرمس؛ انتخابی خاص از کیف و کفش زنانه و مردانه، با جزئیات محصول و موجودی شفاف.';
 const SITEMAP_STATIC_PATHS = ['/', '/about', '/contact', '/terms', '/privacy'];
