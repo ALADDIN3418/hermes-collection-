@@ -146,7 +146,13 @@ async function main() {
   assert.match(layoutCss, /\.mobile-bottom-nav svg[\s\S]*?width:\s*20px/);
   assert.match(storeCss, /@media\s*\(max-width:\s*860px\)[\s\S]*?mobile-bottom-nav/);
   assert.match(hermesCss, /Mobile-first, full-store refinement/);
-  assert.match(hermesCss, /min-height:\s*clamp\(480px, calc\(100svh - 60px\), 690px\)/);
+  const mobileHeroRules = hermesCss.slice(hermesCss.lastIndexOf('/* Compact mobile hero:'));
+  assert(mobileHeroRules.length > 0, 'mobile hero overrides are appended after inherited desktop and viewport-height rules');
+  assert.match(mobileHeroRules, /@media \(max-width: 640px\)[\s\S]*?body\.storefront-mode \.hm-hero \{[\s\S]*?min-height:\s*0 !important/);
+  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero \{[\s\S]*?flex-direction:\s*column/);
+  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero-image \{[\s\S]*?height:\s*clamp\(180px, 58vw, 250px\)/);
+  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero-lockup \{ display: none; \}/);
+  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero-note,[\s\S]*?body\.storefront-mode \.hm-hero-index \{ display: none; \}/);
   assert.match(hermesCss, /@media \(min-width: 861px\)[\s\S]*?grid-template-columns:\s*minmax\(220px, 260px\) minmax\(0, 1fr\)/);
   assert.match(hermesCss, /font-size:\s*16px !important/);
   assert.match(hermesCss, /min-height:\s*44px/);
