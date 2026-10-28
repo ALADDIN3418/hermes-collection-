@@ -588,7 +588,7 @@
       };
       btn.disabled = true;
       btn.textContent = 'در حال نگارش…';
-      status.style.display = 'block'; status.style.color = '#2e4a2e';
+      status.style.display = 'block'; status.style.color = '#c9a36c';
       status.textContent = 'دستیار در حال آماده‌سازی متن پیشنهادی است…';
       let result = null;
       try {
@@ -673,9 +673,9 @@
           <figcaption class="ai-source-status">عکس مرجع آماده است</figcaption>
         </figure>
         <figure class="ai-final-output" id="ai-product-output-wrap" hidden style="margin:0; width:100%;">
-          <label style="display:block; min-height:34px; color:#26382a; font-size:12px; font-weight:600;">تصویر ویرایش‌شده</label>
+          <label style="display:block; min-height:34px; color:#d6c6ad; font-size:12px; font-weight:600;">تصویر ویرایش‌شده</label>
           <img id="ai-product-output-preview" alt="تصویر استودیویی تولیدشده با Puter.js">
-          <figcaption id="ai-product-output-caption" style="margin-top:9px; color:#26382a; font-size:12px; text-align:center;">خروجی مدل Puter.js</figcaption>
+          <figcaption id="ai-product-output-caption" style="margin-top:9px; color:#d6c6ad; font-size:12px; text-align:center;">خروجی مدل Puter.js</figcaption>
         </figure>
       </div>
       <div class="ai-studio-actions">
@@ -824,7 +824,7 @@
               <span id="ai-backend-name">در حال بارگذاری فهرست مدل‌های تصویر Puter…</span>
               <button type="button" class="btn-text-link" id="ai-puter-connect-btn">🔗 ورود / اتصال به Puter</button>
             </div>
-            <small id="ai-puter-usage-note" style="display:block; margin-top:8px; line-height:1.7; color:#b9c9be;">هزینه و سهمیهٔ تولید بر اساس حساب Puter کاربر اعمال می‌شود.</small>
+            <small id="ai-puter-usage-note" style="display:block; margin-top:8px; line-height:1.7; color:#b7afa2;">هزینه و سهمیهٔ تولید بر اساس حساب Puter کاربر اعمال می‌شود.</small>
           </div>
         </header>
 

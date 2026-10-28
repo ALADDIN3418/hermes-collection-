@@ -121,6 +121,17 @@ async function main() {
   const layoutCss = fs.readFileSync(path.join(root,'stage4.css'),'utf8');
   const storeCss = fs.readFileSync(path.join(root,'storefront-theme.css'),'utf8');
   const hermesCss = fs.readFileSync(path.join(root,'hermes-collection.css'),'utf8');
+  const hermesAdminPalette = hermesCss.slice(hermesCss.indexOf('/* Hermes admin console — replace the inherited Touba emerald palette'));
+  assert.match(hermesAdminPalette, /--adm-brand: var\(--hermes-gold/);
+  assert.match(hermesAdminPalette, /body\.admin-body \.admin-current-chip[\s\S]*?linear-gradient\(135deg, #ead0a4, #c9a36c\)/);
+  assert.match(hermesAdminPalette, /body\.admin-body \.chart \.bar[\s\S]*?linear-gradient\(180deg, #ead0a4, #a77e49\)/);
+  assert.doesNotMatch(hermesAdminPalette, /#9cc25a|#b4d878|rgba\(156,194,90|#8ab24c|#87ac48/i, 'admin console must override the legacy green palette');
+  assert.match(authUiSource, /class="hermes-loading-screen"[\s\S]*?hermes-loader-ring/);
+  assert(authUiSource.includes('src="/hermes-loading-logo.png"'), 'fallback loading animation reuses the supplied Hermes logo');
+  assert.doesNotMatch(authUiSource, /#a6c75e|#cfe8a8|rgba\(166,199,94/, 'loading animation must not retain legacy green accents');
+  const adminAiSource = fs.readFileSync(path.join(root,'admin-product-ai.js'),'utf8');
+  assert(adminAiSource.includes("status.style.color = '#c9a36c'"), 'admin AI feedback uses Hermes gold');
+  assert.doesNotMatch(adminAiSource, /#2e4a2e|#26382a|#b9c9be/, 'admin AI details must not retain the old green text colors');
   assert.match(authUiSource, /if \(pathname === '\/admin' \|\| pathname\.startsWith\('\/admin\/'\)\) \{\s*g\.document\.querySelector\('#app'\)\.innerHTML = adminPage\(\);/, 'admin route must preserve the admin-body class set for its route');
   const adminFinalCss = layoutCss.slice(layoutCss.indexOf('/* Final cascade + mobile polish for the Hermes admin console. */'));
   assert(adminFinalCss.includes('--paper: var(--adm-surface)'), 'admin theme variables must override the global storefront palette');
