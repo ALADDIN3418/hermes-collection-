@@ -124,10 +124,11 @@ async function main() {
   const hermesAdminPalette = hermesCss.slice(hermesCss.indexOf('/* Hermes admin console — replace the inherited Touba emerald palette'));
   assert.match(hermesAdminPalette, /--adm-brand: var\(--hermes-gold/);
   assert.match(hermesAdminPalette, /body\.admin-body \.admin-current-chip[\s\S]*?linear-gradient\(135deg, #ead0a4, #c9a36c\)/);
+  assert.match(hermesAdminPalette, /body\.admin-body \.store-header\s*\{[\s\S]*?background: rgba\(9,8,7,.97\) !important/);
   assert.match(hermesAdminPalette, /body\.admin-body \.chart \.bar[\s\S]*?linear-gradient\(180deg, #ead0a4, #a77e49\)/);
   assert.doesNotMatch(hermesAdminPalette, /#9cc25a|#b4d878|rgba\(156,194,90|#8ab24c|#87ac48/i, 'admin console must override the legacy green palette');
   assert.match(authUiSource, /class="hermes-loading-screen"[\s\S]*?hermes-loader-ring/);
-  assert(authUiSource.includes('src="/hermes-loading-logo.png"'), 'fallback loading animation reuses the supplied Hermes logo');
+  assert(authUiSource.includes('src="/hermes-logo-transparent.png"'), 'fallback loading animation reuses the supplied Hermes logo');
   assert.doesNotMatch(authUiSource, /#a6c75e|#cfe8a8|rgba\(166,199,94/, 'loading animation must not retain legacy green accents');
   const adminAiSource = fs.readFileSync(path.join(root,'admin-product-ai.js'),'utf8');
   assert(adminAiSource.includes("status.style.color = '#c9a36c'"), 'admin AI feedback uses Hermes gold');
@@ -330,9 +331,26 @@ async function main() {
     assert(st4.includes('base.__catArrows'), 'render pipeline must refresh arrow state');
     assert(st4.includes("'chev-r':'") && st4.includes("'chev-l':'"), 'chevron glyphs registered in the icon set');
     assert(themeCss.includes('.cat-arrow{') && themeCss.includes('.cat-row-wrap.has-overflow .cat-arrow{display:grid}') && themeCss.includes('.cat-arrow-start{inset-inline-start:2px}'), 'arrows hidden until overflow, RTL-aware placement');
-    assert(html.includes('class="initial"') && html.includes('initial-ring') && html.includes('<img src="/hermes-loading-logo.png" alt="نشان کالکشن هرمس" width="512" height="512" decoding="async">'), 'splash must show the supplied transparent Hermes emblem at its natural aspect ratio');
-    assert(fs.readFileSync(path.join(root,'scripts/build-vercel.js'),'utf8').includes("'hermes-loading-logo.png'"), 'Vercel build must publish the splash logo asset');
+    assert(html.includes('class="initial"') && html.includes('initial-ring') && html.includes('<img src="/hermes-logo-transparent.png" alt="نشان کالکشن هرمس" width="1254" height="1254" decoding="async">'), 'splash must show the supplied transparent Hermes emblem at its natural aspect ratio');
+    assert(fs.readFileSync(path.join(root,'scripts/build-vercel.js'),'utf8').includes("'hermes-logo-transparent.png'"), 'Vercel build must publish the transparent Hermes logo asset');
+    const spinnerRule = baseCss.match(/\.initial-ring:after\{[^}]+\}/)?.[0] || '';
+    assert(spinnerRule.includes('border-top-color:#c9a36c') && spinnerRule.includes('border-inline-end-color:#c9a36c66'), 'splash spinner must use the Hermes gold accent');
+    assert(!spinnerRule.includes('#8cad4b'), 'splash spinner must not retain the legacy green accent');
     assert(baseCss.includes('.initial-ring:after') && baseCss.includes('@keyframes initial-spin') && baseCss.includes('prefers-reduced-motion'), 'splash spinner defined and motion-safe');
+    const logo = fs.readFileSync(path.join(root,'hermes-logo-transparent.png'));
+    assert.deepStrictEqual(logo.subarray(0,8), Buffer.from([137,80,78,71,13,10,26,10]), 'supplied logo must be a PNG');
+    assert.strictEqual(logo.readUInt32BE(16), 1254, 'supplied logo width must remain 1254px');
+    assert.strictEqual(logo.readUInt32BE(20), 1254, 'supplied logo height must remain 1254px');
+    assert.strictEqual(logo[24], 8, 'supplied logo must preserve 8-bit color depth');
+    assert.strictEqual(logo[25], 6, 'supplied logo must retain an RGBA alpha channel');
+    const idat = [];
+    for (let offset=8; offset<logo.length;) {
+      const length=logo.readUInt32BE(offset), type=logo.toString('ascii',offset+4,offset+8);
+      if (type==='IDAT') idat.push(logo.subarray(offset+8,offset+8+length));
+      offset+=length+12;
+    }
+    const pixels = require('zlib').inflateSync(Buffer.concat(idat));
+    assert.strictEqual(pixels[4], 0, 'supplied logo must include transparent pixels, not a flattened backdrop');
   }
 
   // v1.0.9: exactly ONE boot loader — the logo splash itself covers the whole data-load, then lifts.
@@ -491,7 +509,19 @@ async function main() {
   // Login mark + simplified product-entry flow guards.
   {
     const auth = fs.readFileSync(path.join(root,'services/auth-ui.js'),'utf8');
-    assert(auth.includes('hermes-logo.jpg') && auth.includes('auth-touba-mark'), 'login/signup must show the supplied Hermes Collection logo');
+    assert(auth.includes('hermes-logo-transparent.png') && auth.includes('auth-touba-mark'), 'login/signup must show the supplied Hermes Collection logo');
+    assert.doesNotMatch(auth, /hermes-logo\.jpg|hermes-loading-logo\.png/, 'auth, admin drawer, and fallback loader must avoid opaque legacy logos');
+    for (const file of ['index.html','app.js','stage3.js','stage4.js']) {
+      assert.doesNotMatch(fs.readFileSync(path.join(root,file),'utf8'), /hermes-logo\.jpg|hermes-loading-logo\.png/, `${file} must use the supplied transparent logo`);
+    }
+    for (const file of ['app.js','stage3.js']) {
+      assert(fs.readFileSync(path.join(root,file),'utf8').includes('<span class="brand-mark"><img src="/hermes-logo-transparent.png"'), `${file} legacy header/footer marks must use the supplied logo`);
+    }
+    const baseStyles = fs.readFileSync(path.join(root,'styles.css'),'utf8');
+    assert(baseStyles.includes('.brand-mark img{width:100%;height:100%;object-fit:contain}'), 'legacy brand marks must render the transparent logo without a backing');
+    const storefrontCss = fs.readFileSync(path.join(root,'hermes-collection.css'),'utf8');
+    assert.match(storefrontCss, /body\.storefront-mode \.brand-emblem\s*\{[\s\S]*?background: transparent !important/);
+    assert.match(storefrontCss, /body\.storefront-mode \.brand-emblem img\s*\{[\s\S]*?object-fit: contain/);
     assert(!/font-size:38px;color:#(83a74a|10b981)">♙/.test(auth), 'raw pawn glyph must be gone from auth pages');
     assert(!auth.includes('quickProductModal()') || auth.includes('function quickProductModal') === false, 'admin toolbar must offer one unified add-product button');
     assert(auth.includes('onclick="productModal()">＋'), 'admin catalog toolbar needs the unified add-product button');

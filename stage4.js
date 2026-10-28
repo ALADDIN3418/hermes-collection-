@@ -1,6 +1,6 @@
 /* Hermes Collection Luxury Storefront Presentation Layer 2026 */
 function leafMark(){return `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 39C8 34 9 15 34 8c3 13-1 25-10 31Z"/><path d="M14 34 31 16M22 27c-1-6 0-10 4-14"/></svg>`}
-function brandLogoImg(){return `<img src="/hermes-logo.jpg" alt="" width="128" height="128" decoding="async" onerror="this.outerHTML=leafMark()">`}
+function brandLogoImg(){return `<img src="/hermes-logo-transparent.png" alt="" width="128" height="128" decoding="async" onerror="this.outerHTML=leafMark()">`}
 function brandWordmark(){return `<span class="brand-wordmark" dir="ltr"><b>HERMES</b><small>COLLECTION</small></span>`}
 function hermesCopy(value){return String(value??'').replace(/کفش طوبی/g,'کالکشن هرمس').replace(/طوبی/g,'هرمس')}
 function uiIcon(name){
