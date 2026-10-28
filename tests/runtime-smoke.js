@@ -199,6 +199,21 @@ async function main() {
     assert(mobileUx.includes('mobile-labeled-card-table td::before')&&mobileUx.includes('clip-path: inset(50%)'),'admin and customer cards display field labels while retaining visually-hidden table headers');
   }
 
+  // The global footer keeps only essential navigation and legal links on small screens.
+  {
+    const footerStart=storefrontSource.indexOf('function footer(){');
+    const footerEnd=storefrontSource.indexOf('/* Category cards styled',footerStart);
+    assert(footerStart>=0&&footerEnd>footerStart,'compact footer template boundaries must remain detectable');
+    const footerTemplate=storefrontSource.slice(footerStart,footerEnd);
+    for(const required of ['compact-store-footer','footer-compact-links','/shop','/tracking','/contact','/account/orders','/terms','/privacy'])
+      assert(footerTemplate.includes(required),`compact footer is missing essential item: ${required}`);
+    for(const removed of ['<h3>دسترسی سریع</h3>','<h3>دسته‌بندی‌ها</h3>','<h3>راهنمای مشتریان</h3>','<h3>با ما در ارتباط باشید</h3>','href="/about"','href="/login"','db.settings.address','db.settings.email'])
+      assert(!footerTemplate.includes(removed),`footer retains an unnecessary heading, link, or detail: ${removed}`);
+    assert(footerTemplate.includes("if(!eId||!eCode)return ''")&&!footerTemplate.includes('class="footer-trust">'),'compact footer keeps only owner-configured trust marks and removes the generic trust badge');
+    const compactFooterCss=hermesCss.slice(hermesCss.indexOf('Compact footer:'));
+    assert(compactFooterCss.includes('@media (max-width: 640px)')&&compactFooterCss.includes('grid-template-columns: repeat(2, minmax(0, 1fr))')&&compactFooterCss.includes('min-height: 44px'),'footer links form a compact, touch-friendly mobile grid');
+  }
+
   const studio = fs.readFileSync(path.join(root,'admin-product-ai.js'),'utf8');
   assert.match(studio, /\(Legacy compatibility markers: ComfyUI \/ Qwen-Image-Edit\)/);
   assert.doesNotMatch(studio, /id:\s*['"][^'"]*gemini/i, 'Gemini must not be offered as an image model');

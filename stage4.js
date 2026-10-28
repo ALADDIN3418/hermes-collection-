@@ -238,8 +238,35 @@ if(typeof window !== 'undefined' && typeof document !== 'undefined' && typeof do
 }
 
 function footer(){
-  let cms=db.settings.homepage||{},categories=db.categories.filter(c=>c.active&&c.id!=='sale').slice(0,5);
-  return `<footer class="store-footer"><div class="container"><div class="footer-main"><div class="footer-brand-col"><a class="store-brand footer-brand" href="/"><span class="brand-emblem">${brandLogoImg()}</span>${brandWordmark()}</a><p>قدم‌هایی مطمئن، با انتخابی که هر روز همراه شماست. کیفیت، راحتی و طراحی ماندگار؛ امضای هرمس.</p></div><div><h3>دسترسی سریع</h3><a href="/shop">فروشگاه</a><a href="/about">درباره ما</a><a href="/contact">تماس با ما</a><a href="/tracking">پیگیری سفارش</a></div><div><h3>دسته‌بندی‌ها</h3>${categories.map(c=>`<a href="/category/${encodeURIComponent(c.slug||c.id)}">${esc(c.name)}</a>`).join('')}</div><div><h3>راهنمای مشتریان</h3><a href="/terms">قوانین و شرایط</a><a href="/privacy">حریم خصوصی</a><a href="/account/orders">سفارش‌های من</a><a href="/login">ورود به حساب</a></div><div><h3>با ما در ارتباط باشید</h3>${db.settings.phone?`<p dir="ltr">${esc(db.settings.phone)}</p>`:''}${db.settings.email?`<p dir="ltr">${esc(db.settings.email)}</p>`:''}${db.settings.address?`<p>${esc(db.settings.address)}</p>`:''}${db.settings.phone||db.settings.email||db.settings.address?'':'<p>اطلاعات تماس پس از ثبت در تنظیمات فروشگاه نمایش داده می‌شود.</p>'}<span class="footer-trust">${uiIcon('shield')} خرید از هرمس</span></div></div>${(()=>{const em=db.settings.enamad||{},eId=String(em.id||'').trim(),eCode=String(em.code||'').trim();if(!eId||!eCode)return '';return `<div class="footer-enamad" role="group" aria-label="نماد اعتماد فروشگاه"><div class="footer-trust-pair"><div class="footer-trust-item footer-enamad-item"><a class="enamad-seal" referrerpolicy="origin" target="_blank" href="https://trustseal.enamad.ir/?id=${esc(eId)}&amp;Code=${esc(eCode)}" title="نماد اعتماد الکترونیکی" aria-label="استعلام نماد اعتماد الکترونیکی فروشگاه"><img referrerpolicy="origin" src="https://trustseal.enamad.ir/logo.aspx?id=${esc(eId)}&amp;Code=${esc(eCode)}" alt="" code="${esc(eCode)}" loading="lazy" style="cursor:pointer" onerror="this.onerror=null;this.src='/enamad-logo.png'"></a><span class="footer-trust-caption">نماد اعتماد الکترونیکی (اینماد)</span></div></div></div>`})()}<div class="footer-bottom"><span>${esc(hermesCopy(cms.footerText||'تمامی حقوق برای کالکشن هرمس محفوظ است.'))}</span><span>© ۱۴۰۵　·　ساخته‌شده با توجه به هر قدم</span></div></div></footer><nav class="mobile-bottom-nav" aria-label="میانبرهای فروشگاه"><a class="${navActive('/')?'active':''}" ${navActive('/')?'aria-current="page"':''} href="/">${uiIcon('home')}<span>خانه</span></a><a class="${navActive('/shop')||path().startsWith('/category/')?'active':''}" ${navActive('/shop')||path().startsWith('/category/')?'aria-current="page"':''} href="/shop">${uiIcon('grid')}<span>دسته‌ها</span></a><a class="${navActive('/wishlist')?'active':''}" ${navActive('/wishlist')?'aria-current="page"':''} href="/wishlist">${uiIcon('heart')}<span>علاقه‌مندی</span></a><a class="${navActive('/account')||navActive('/login')?'active':''}" ${navActive('/account')||navActive('/login')?'aria-current="page"':''} href="${db.currentUser?'/account':'/login'}">${uiIcon('user')}<span>حساب من</span></a></nav>`;
+  const cms=db.settings.homepage||{},em=db.settings.enamad||{};
+  const eId=String(em.id||'').trim(),eCode=String(em.code||'').trim();
+  const seal=(()=>{
+    if(!eId||!eCode)return '';
+    return `<div class="footer-enamad" role="group" aria-label="نماد اعتماد فروشگاه"><div class="footer-trust-pair"><div class="footer-trust-item footer-enamad-item"><a class="enamad-seal" referrerpolicy="origin" target="_blank" href="https://trustseal.enamad.ir/?id=${esc(eId)}&amp;Code=${esc(eCode)}" title="نماد اعتماد الکترونیکی" aria-label="استعلام نماد اعتماد الکترونیکی فروشگاه"><img referrerpolicy="origin" src="https://trustseal.enamad.ir/logo.aspx?id=${esc(eId)}&amp;Code=${esc(eCode)}" alt="" code="${esc(eCode)}" loading="lazy" style="cursor:pointer" onerror="this.onerror=null;this.src='/enamad-logo.png'"></a><span class="footer-trust-caption">نماد اعتماد الکترونیکی (اینماد)</span></div></div></div>`;
+  })();
+  return `<footer class="store-footer compact-store-footer"><div class="container compact-footer-inner">
+    <div class="footer-compact-top">
+      <div class="footer-compact-brand">
+        <a class="store-brand footer-brand" href="/"><span class="brand-emblem">${brandLogoImg()}</span>${brandWordmark()}</a>
+        <p>کیف و کفش هرمس؛ انتخابی ماندگار برای هر قدم.</p>
+      </div>
+      <nav class="footer-compact-links" aria-label="پیوندهای ضروری فروشگاه">
+        <a href="/shop">فروشگاه</a>
+        <a href="/tracking">پیگیری سفارش</a>
+        <a href="/contact">تماس با ما</a>
+        <a href="/account/orders">سفارش‌های من</a>
+      </nav>
+    </div>
+    ${seal}
+    <div class="footer-compact-bottom">
+      <nav class="footer-legal-links" aria-label="قوانین و حریم خصوصی">
+        <a href="/terms">قوانین خرید</a>
+        <a href="/privacy">حریم خصوصی</a>
+      </nav>
+      <div class="footer-bottom"><span>${esc(hermesCopy(cms.footerText||'© ۱۴۰۵ کالکشن هرمس'))}</span></div>
+    </div>
+  </div></footer>
+  <nav class="mobile-bottom-nav" aria-label="میانبرهای فروشگاه"><a class="${navActive('/')?'active':''}" ${navActive('/')?'aria-current="page"':''} href="/">${uiIcon('home')}<span>خانه</span></a><a class="${navActive('/shop')||path().startsWith('/category/')?'active':''}" ${navActive('/shop')||path().startsWith('/category/')?'aria-current="page"':''} href="/shop">${uiIcon('grid')}<span>دسته‌ها</span></a><a class="${navActive('/wishlist')?'active':''}" ${navActive('/wishlist')?'aria-current="page"':''} href="/wishlist">${uiIcon('heart')}<span>علاقه‌مندی</span></a><a class="${navActive('/account')||navActive('/login')?'active':''}" ${navActive('/account')||navActive('/login')?'aria-current="page"':''} href="${db.currentUser?'/account':'/login'}">${uiIcon('user')}<span>حساب من</span></a></nav>`;
 }
 
 /* Category cards styled with the same beauty and structure as luxury Product Cards */
