@@ -266,7 +266,7 @@
     const user = auth?.currentUser;
     const isAuthenticatedAdmin = user?.authProvider === 'supabase' && ['admin', 'super_admin', 'ADMIN', 'SUPER_ADMIN'].includes(user.role);
     if (!isAuthenticatedAdmin) {
-      return `${g.header()}<main class="page container"><section class="auth-card"><div style="text-align:center;font-size:38px;color:#10b981">🔒</div><h1>دسترسی مدیریت</h1>${messageBox('برای دسترسی به پنل مدیریت، با حساب معتبر خود وارد شوید.')}<div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap"><a class="btn" style="flex:1;text-align:center" href="/login">ورود به حساب کاربری</a><a class="btn outline" style="flex:1;text-align:center" href="/">بازگشت به فروشگاه</a></div></section></main>${g.footer()}`;
+      return `${g.header()}<main class="page container"><section class="auth-card"><div style="text-align:center;font-size:38px;color:#c9a36c">🔒</div><h1>دسترسی مدیریت</h1>${messageBox('برای دسترسی به پنل مدیریت، با حساب معتبر خود وارد شوید.')}<div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap"><a class="btn" style="flex:1;text-align:center" href="/login">ورود به حساب کاربری</a><a class="btn outline" style="flex:1;text-align:center" href="/">بازگشت به فروشگاه</a></div></section></main>${g.footer()}`;
     }
     const section = new URLSearchParams(g.location.search).get('section') || 'dashboard';
     const selected = Object.hasOwn(adminSections, section) ? section : 'dashboard';
@@ -354,7 +354,7 @@
     g.showModal(`
       <div style="max-width:560px">
         <h3 style="margin:0 0 4px">📦 برچسب ارسال · سفارش ${esc(order.number || order.id)}</h3>
-        ${paid ? '<div class="notice" style="margin:10px 0;background:#e8f4d9;color:#2e5a1c">پرداخت نزد درگاه تأیید شده است — بسته را ارسال کنید و وضعیت را «ارسال شده» بزنید.</div>' : `<div class="notice error-notice" style="margin:10px 0">پرداخت این سفارش هنوز نزد درگاه تأیید نشده (${esc(order.paymentStatus || 'PENDING')}); تا تأییدِ قطعی بسته ارسال نشود.</div>`}
+        ${paid ? '<div class="notice" style="margin:10px 0">پرداخت نزد درگاه تأیید شده است — بسته را ارسال کنید و وضعیت را «ارسال شده» بزنید.</div>' : `<div class="notice error-notice" style="margin:10px 0">پرداخت این سفارش هنوز نزد درگاه تأیید نشده (${esc(order.paymentStatus || 'PENDING')}); تا تأییدِ قطعی بسته ارسال نشود.</div>`}
         <div style="margin-top:6px">${row('گیرنده', order.customer)}${row('موبایل', order.phone)}${row('استان و شهر', [order.province, order.city].filter(Boolean).join(' — '))}${row('آدرس کامل', order.address)}${row('کد پستی', order.postal)}${order.note ? row('یادداشت مشتری', order.note) : ''}${row('روش ارسال', shippingMethodLabel(order))}${row('هزینه ارسال', order.shipping ? toman(order.shipping) : 'رایگان')}${row('مبلغ کل', toman(order.total))}${order.trackingCode ? row('کد رهگیری', order.trackingCode) : ''}</div>
         <div style="margin-top:10px"><b style="font-size:12.5px">اقلام سفارش</b>${items}</div>
         <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap"><button class="btn small" type="button" onclick="ToubaAuthUI.copyShippingLabel('${esc(order.id)}')">کپی برچسب</button><button class="btn outline small" type="button" onclick="closeModal()">بستن</button></div>
@@ -877,9 +877,9 @@
         const paymentEnabled = Boolean(paymentStatus.paymentEnabled);
         target.innerHTML = `
         <div style="display:grid;grid-template-columns:1fr;gap:24px;max-width:960px">
-          <div class="panel" style="background:#fff;border:1px solid #cbd5e1;border-radius:16px;padding:24px">
+          <div class="panel" style="border-radius:16px;padding:24px">
             <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px">
-              <div><h2 style="font-size:18px;margin:0;color:#0f172a">BitPay · درگاه مستقیم بانکی بیت‌پی</h2><small style="color:#64748b">با <code>POST /payment/gateway-send</code> شناسهٔ درگاه ساخته می‌شود، مشتری با <code>GET /payment/gateway-&lt;id_get&gt;-get</code> به صفحهٔ بانک می‌رود و پرداخت فقط با <code>POST /payment/gateway-result-second</code> (وضعیت ۱) روی سرور نهایی می‌شود.</small></div>
+              <div><h2 style="font-size:18px;margin:0;color:#f4eddf">BitPay · درگاه مستقیم بانکی بیت‌پی</h2><small style="color:#b7afa2">با <code>POST /payment/gateway-send</code> شناسهٔ درگاه ساخته می‌شود، مشتری با <code>GET /payment/gateway-&lt;id_get&gt;-get</code> به صفحهٔ بانک می‌رود و پرداخت فقط با <code>POST /payment/gateway-result-second</code> (وضعیت ۱) روی سرور نهایی می‌شود.</small></div>
               <span class="badge ${paymentEnabled ? 'green' : paymentStatus.configured ? 'orange' : 'red'}">${paymentEnabled ? '● فعال' : paymentStatus.configured ? '● پیکربندی شده' : '○ نیازمند تنظیم متغیرهای سرور'}</span>
             </div>
             <div class="form-grid">
@@ -891,9 +891,9 @@
             </div>
             <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap"><button class="btn" type="button" onclick="ToubaAuthUI.checkBitPayStatus()">بررسی پیکربندی</button></div>
           </div>
-          <div class="panel" style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:16px;padding:22px">
+          <div class="panel" style="border-radius:16px;padding:22px">
             <h3 style="margin:0 0 10px">تنظیم امن در Vercel → Settings → Environment Variables</h3>
-            <ul style="margin:0;padding-right:22px;line-height:1.9;color:#334155">
+            <ul style="margin:0;padding-right:22px;line-height:1.9;color:#b7afa2">
               <li><code>BITPAY_API_KEY</code> — کلید ۵۲ کاراکتری «بخش توسعه ← فعال‌سازی API» پنل بیت‌پی (مرچنت‌کد درگاه). این تنها روش احراز است و فقط سمت سرور استفاده می‌شود؛ با scope «Production» تنظیم و سپس Redeploy کنید.</li>
               <li>دامنهٔ دقیق سایت (همان <code>https://…</code> نهایی) باید در پنل بیت‌پی ثبت شده باشد؛ ناهماهنگی باعث خطای درگاه (کد ۴) می‌شود.</li>
               <li><code>SUPABASE_URL</code> و <code>SUPABASE_SERVICE_ROLE_KEY</code> — بدون آن‌ها پرداخت به سفارش متصل نمی‌شود؛ <code>SUPABASE_PUBLISHABLE_KEY</code> برای مرورگر است.</li>
@@ -901,8 +901,8 @@
             </ul>
             <p class="notice" style="margin:14px 0 0">مقادیر محرمانه را در پنل یا مرورگر وارد نکنید. پس از زدن دکمهٔ تسویه، مشتری مستقیماً به صفحهٔ رسمی بانک منتقل می‌شود؛ بازگشت او از صفحهٔ پرداخت هیچ‌گاه دلیل پرداخت نیست — تسویه فقط با استعلام سمت سرور (gateway-result-second) و با تطبیق مبلغ انجام می‌شود و مبلغ هرگز از مرورگر خوانده نمی‌شود.</p>
           </div>
-          <div class="panel" style="background:#fff;border:1px solid #cbd5e1;border-radius:16px;padding:24px">
-            <h3 style="margin:0 0 14px;color:#0f172a">تراکنش‌های بیت‌پی (${paymentsList.length})</h3>
+          <div class="panel" style="border-radius:16px;padding:24px">
+            <h3 style="margin:0 0 14px;color:#f4eddf">تراکنش‌های بیت‌پی (${paymentsList.length})</h3>
             ${paymentsList.length ? adminTable(['شناسه پرداخت','شماره سفارش','مبلغ (تومان)','درگاه','وضعیت','شناسهٔ تراکنش / شماره مرجع'], paymentsList.slice().reverse().map(p => `<tr><td><code>${esc(p.id)}</code></td><td><b>${esc(p.orderId || '—')}</b></td><td>${toman(p.amount || 0)}</td><td><span class="badge green">${p.provider === 'bitpay' ? 'بیت‌پی' : esc(p.provider || '—')}</span></td><td><span class="badge ${p.status === 'SUCCEEDED' ? 'green' : p.status === 'FAILED' ? 'red' : 'orange'}">${p.status === 'SUCCEEDED' ? 'پرداخت موفق' : p.status === 'FAILED' ? 'ناموفق' : 'در انتظار'}</span></td><td><code style="font-size:11px">${esc(p.referenceId || p.authority || '—')}</code></td></tr>`)) : '<div class="notice" style="margin:10px 0">هنوز تراکنشی در پایگاه داده ثبت نشده است.</div>'}
           </div>
         </div>`;;
@@ -939,7 +939,7 @@
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
           <div>
             <h2 style="font-size:18px;margin:0">کتابخانه رسانه‌ها (${medias.length})</h2>
-            <small style="color:#94a3b8">مدیریت تصاویر محصولات، بنرها و پس‌زمینه‌ها</small>
+            <small style="color:#b7afa2">مدیریت تصاویر محصولات، بنرها و پس‌زمینه‌ها</small>
           </div>
           <button class="btn small" onclick="mediaAddModal()">＋ افزودن تصویر جدید</button>
         </div>
@@ -948,10 +948,10 @@
             const url = typeof m === 'string' ? m : (m.url || '/hero-shoe.jpg');
             const alt = typeof m === 'string' ? m : (m.alt || 'تصویر هرمس');
             const id = typeof m === 'string' ? i : (m.id || i);
-            return `<div class="panel" style="background:rgba(8,22,14,0.85);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px">
+            return `<div class="panel" style="border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px">
               <img src="${esc(url)}" alt="${esc(alt)}" style="width:100%;height:130px;object-fit:cover;border-radius:8px" onerror="this.src='/product-shoes.jpg'">
-              <p style="font-size:11px;color:#94a3b8;margin:0;word-break:break-all;line-height:1.4">${esc(alt)}</p>
-              <code style="font-size:10px;color:#34d399;word-break:break-all;direction:ltr;background:rgba(0,0,0,0.3);padding:3px 6px;border-radius:4px">${esc(url)}</code>
+              <p style="font-size:11px;color:#b7afa2;margin:0;word-break:break-all;line-height:1.4">${esc(alt)}</p>
+              <code style="font-size:10px;color:#ead0a4;word-break:break-all;direction:ltr;background:rgba(0,0,0,0.3);padding:3px 6px;border-radius:4px">${esc(url)}</code>
               <div style="display:flex;gap:6px;margin-top:auto">
                 <button class="action" style="flex:1" onclick="navigator.clipboard?.writeText('${esc(url)}');toast('آدرس کپی شد')">کپی URL</button>
                 <button class="action danger" onclick="deleteMediaItem('${id}')">حذف</button>
@@ -972,7 +972,7 @@
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
           <div>
             <h2 style="font-size:18px;margin:0">وضعیت پایگاه داده</h2>
-            <small style="color:#94a3b8">کاتالوگ، مشتریان و عملیات فروشگاه از Supabase بارگذاری می‌شوند.</small>
+            <small style="color:#b7afa2">کاتالوگ، مشتریان و عملیات فروشگاه از Supabase بارگذاری می‌شوند.</small>
           </div>
           <span class="badge ${ready?'green':'red'}" style="padding:6px 12px;font-size:12px">${ready?'● متصل و schema تأییدشده':'● نیازمند بررسی'}</span>
         </div>
@@ -1109,38 +1109,41 @@
   // صفحهٔ انتظار پیش از رسیدن داده‌ها: انیمیشن برند (نه متن اخطار)، تا مشتری هنگام
   // بارگذاریِ اولِ سرورِ سردِ Vercel سایت را ترک نکند. خطای واقعی همچون گذشته fail-closed است.
   function dbLoadingScreen() {
-    return `<main class="tb-load" role="status" aria-live="polite">
+    return `<main class="hermes-loading-screen" role="status" aria-live="polite">
       <style>
-        .tb-load{min-height:100vh;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;background:#07110c;color:#e7f2dd;padding:24px}
-        .tb-load .tb-orbit{position:relative;width:88px;height:88px;display:grid;place-items:center}
-        .tb-load .tb-ring{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(140,173,75,.18);border-top-color:#a6c75e;animation:tb-spin .9s linear infinite}
-        .tb-load .tb-leaf{font-size:32px;color:#a6c75e;animation:tb-bob 1.7s ease-in-out infinite}
-        .tb-load h1{font-size:19px;margin:0;font-weight:700;color:#f2f8e9}
-        .tb-load .tb-sub{margin:8px 0 0;font-size:12.5px;color:#9db38b;display:flex;align-items:center;gap:8px;justify-content:center;flex-wrap:wrap}
-        .tb-load .tb-dots i{display:inline-block;width:5px;height:5px;margin:0 2px;border-radius:50%;background:#a6c75e;animation:tb-jump 1s infinite}
-        .tb-load .tb-dots i:nth-child(2){animation-delay:.15s}
-        .tb-load .tb-dots i:nth-child(3){animation-delay:.3s}
-        .tb-load .tb-cards{display:flex;gap:10px;width:min(680px,92vw)}
-        .tb-load .tb-card{flex:1;border-radius:12px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07);overflow:hidden}
-        .tb-load .tb-photo{height:62px;background:linear-gradient(90deg,rgba(166,199,94,.06) 25%,rgba(166,199,94,.17) 40%,rgba(166,199,94,.06) 65%);background-size:300%;animation:tb-shine 1.4s infinite}
-        .tb-load .tb-line{height:8px;margin:9px 10px;border-radius:6px;background:rgba(255,255,255,.09);animation:tb-fade 1.2s ease-in-out infinite}
-        .tb-load .tb-card .tb-line:last-child{width:58%;margin-bottom:12px}
-        .tb-load .tb-retry{border:1px solid rgba(166,199,94,.3);background:none;color:#7d9070;font-size:11px;border-radius:999px;padding:6px 16px;transition:.2s}
-        .tb-load .tb-retry:hover{color:#cfe8a8;border-color:#a6c75e}
-        @keyframes tb-spin{to{transform:rotate(360deg)}}
-        @keyframes tb-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-        @keyframes tb-jump{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(-5px);opacity:1}}
-        @keyframes tb-fade{0%,100%{opacity:.5}50%{opacity:1}}
-        @keyframes tb-shine{to{background-position:-150% 0}}
-        @media (prefers-reduced-motion:reduce){.tb-load *{animation:none !important}}
+        .hermes-loading-screen{min-height:100vh;min-height:100svh;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;background:radial-gradient(ellipse 72% 48% at 50% 0,rgba(201,163,108,.10),transparent 74%),#080807;color:#f4eddf;padding:max(24px,env(safe-area-inset-top)) 20px max(24px,env(safe-area-inset-bottom));font-family:Estedad,Tahoma,sans-serif}
+        .hermes-loader-orbit{position:relative;width:96px;height:96px;display:grid;place-items:center}
+        .hermes-loader-ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(201,163,108,.22);border-top-color:#ead0a4;box-shadow:0 0 24px rgba(201,163,108,.08);animation:hermes-loader-spin 1.2s linear infinite}
+        .hermes-loader-logo{position:relative;z-index:1;width:68px;height:68px;object-fit:contain;filter:drop-shadow(0 0 15px rgba(201,163,108,.25));animation:hermes-loader-float 2.4s ease-in-out infinite}
+        .hermes-loading-copy{text-align:center;max-width:540px}
+        .hermes-loading-screen h1{font-size:19px;margin:0;font-weight:700;color:#f4eddf;line-height:1.6}
+        .hermes-loading-sub{margin:8px 0 0;font-size:12.5px;color:#b7afa2;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;line-height:1.8}
+        .hermes-loading-dots{display:inline-flex;gap:4px;align-items:center}
+        .hermes-loading-dots i{display:inline-block;width:5px;height:5px;border-radius:50%;background:#c9a36c;animation:hermes-loader-dot 1s ease-in-out infinite}
+        .hermes-loading-dots i:nth-child(2){animation-delay:.15s}
+        .hermes-loading-dots i:nth-child(3){animation-delay:.3s}
+        .hermes-loading-skeleton{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;width:min(680px,92vw)}
+        .hermes-skeleton-card{min-width:0;border-radius:10px;background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(201,163,108,.025));border:1px solid rgba(201,163,108,.14);overflow:hidden}
+        .hermes-skeleton-image{height:62px;background:linear-gradient(100deg,rgba(201,163,108,.035) 18%,rgba(234,208,164,.16) 43%,rgba(201,163,108,.035) 68%);background-size:240% 100%;animation:hermes-loader-shimmer 1.6s ease-in-out infinite}
+        .hermes-skeleton-line{height:7px;margin:9px 10px;border-radius:6px;background:rgba(244,237,223,.09);animation:hermes-loader-breathe 1.5s ease-in-out infinite}
+        .hermes-skeleton-line.short{width:55%;margin-bottom:12px}
+        .hermes-loading-retry{border:1px solid rgba(201,163,108,.35);background:rgba(201,163,108,.06);color:#ead0a4;font:inherit;font-size:11px;border-radius:999px;padding:8px 17px;transition:background .2s,border-color .2s,transform .2s;cursor:pointer}
+        .hermes-loading-retry:hover{background:rgba(201,163,108,.13);border-color:#c9a36c;transform:translateY(-1px)}
+        @keyframes hermes-loader-spin{to{transform:rotate(360deg)}}
+        @keyframes hermes-loader-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+        @keyframes hermes-loader-dot{0%,100%{transform:translateY(0);opacity:.45}50%{transform:translateY(-4px);opacity:1}}
+        @keyframes hermes-loader-breathe{0%,100%{opacity:.45}50%{opacity:.85}}
+        @keyframes hermes-loader-shimmer{to{background-position:-240% 0}}
+        @media(max-width:480px){.hermes-loading-screen{gap:21px;padding-inline:16px}.hermes-loader-orbit{width:84px;height:84px}.hermes-loader-logo{width:60px;height:60px}.hermes-loading-skeleton{grid-template-columns:repeat(2,minmax(0,1fr));max-width:340px}.hermes-skeleton-image{height:48px}}
+        @media(prefers-reduced-motion:reduce){.hermes-loading-screen *{animation:none !important;transition:none !important}}
       </style>
-      <div class="tb-orbit"><span class="tb-ring" aria-hidden="true"></span><span class="tb-leaf" aria-hidden="true">❧</span></div>
-      <div style="text-align:center">
+      <div class="hermes-loader-orbit"><span class="hermes-loader-ring" aria-hidden="true"></span><img class="hermes-loader-logo" src="/hermes-loading-logo.png" alt="" width="80" height="80"></div>
+      <div class="hermes-loading-copy">
         <h1>در حال آماده‌سازی ویترین…</h1>
-        <p class="tb-sub">اطلاعات فروشگاه مستقیم و امن از Supabase خوانده می‌شود؛ صفحه با دریافت کامل تازه می‌شود <span class="tb-dots" aria-hidden="true"><i></i><i></i><i></i></span></p>
+        <p class="hermes-loading-sub">اطلاعات فروشگاه مستقیم و امن از Supabase خوانده می‌شود؛ صفحه با دریافت کامل تازه می‌شود <span class="hermes-loading-dots" aria-hidden="true"><i></i><i></i><i></i></span></p>
       </div>
-      <div class="tb-cards" aria-hidden="true">${'<div class="tb-card"><div class="tb-photo"></div><div class="tb-line"></div><div class="tb-line"></div></div>'.repeat(4)}</div>
-      <button type="button" class="tb-retry" onclick="location.reload()">اگر دیر شد، این را بزن</button>
+      <div class="hermes-loading-skeleton" aria-hidden="true">${'<div class="hermes-skeleton-card"><div class="hermes-skeleton-image"></div><div class="hermes-skeleton-line"></div><div class="hermes-skeleton-line short"></div></div>'.repeat(4)}</div>
+      <button type="button" class="hermes-loading-retry" onclick="location.reload()">اگر دیر شد، دوباره تلاش کنید</button>
     </main>`;
   }
 
