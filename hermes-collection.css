@@ -2637,7 +2637,14 @@ body.admin-body .compact-store-footer .footer-compact-links a { border-color: va
 }
 
 @media (max-width: 380px) {
-  body.storefront-mode .hm-hero-copy > p,
+  body.storefront-mode .hm-hero-copy > p {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    font-size: 9px;
+    line-height: 1.45;
+  }
   body.storefront-mode .hm-hero .hm-button-outline { display: none; }
 }
 

@@ -154,6 +154,7 @@ async function main() {
   assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero-image \{[\s\S]*?position:\s*absolute[\s\S]*?inset:\s*0[\s\S]*?width:\s*100%[\s\S]*?height:\s*100%[\s\S]*?object-position:\s*12% 50%/);
   assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero-inner \{[\s\S]*?position:\s*absolute/);
   assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero-copy \{[\s\S]*?left:\s*18px[\s\S]*?width:\s*38%/);
+  assert.match(mobileHeroRules, /@media \(max-width: 380px\)[\s\S]*?body\.storefront-mode \.hm-hero-copy > p \{[\s\S]*?-webkit-line-clamp:\s*2/);
   assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero-note,[\s\S]*?body\.storefront-mode \.hm-hero-index \{ display: none; \}/);
   assert.match(hermesCss, /@media \(min-width: 861px\)[\s\S]*?grid-template-columns:\s*minmax\(220px, 260px\) minmax\(0, 1fr\)/);
   assert.match(hermesCss, /font-size:\s*16px !important/);
