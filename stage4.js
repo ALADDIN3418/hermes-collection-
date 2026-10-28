@@ -1,6 +1,6 @@
 /* Hermes Collection Luxury Storefront Presentation Layer 2026 */
 function leafMark(){return `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 39C8 34 9 15 34 8c3 13-1 25-10 31Z"/><path d="M14 34 31 16M22 27c-1-6 0-10 4-14"/></svg>`}
-function brandLogoImg(){return `<img src="/hermes-logo.jpg" alt="" width="128" height="128" decoding="async" onerror="this.outerHTML=leafMark()">`}
+function brandLogoImg(){return `<img src="/hermes-logo-transparent.png" alt="" width="128" height="128" decoding="async" onerror="this.outerHTML=leafMark()">`}
 function brandWordmark(){return `<span class="brand-wordmark" dir="ltr"><b>HERMES</b><small>COLLECTION</small></span>`}
 function hermesCopy(value){return String(value??'').replace(/کفش طوبی/g,'کالکشن هرمس').replace(/طوبی/g,'هرمس')}
 function uiIcon(name){
@@ -238,8 +238,35 @@ if(typeof window !== 'undefined' && typeof document !== 'undefined' && typeof do
 }
 
 function footer(){
-  let cms=db.settings.homepage||{},categories=db.categories.filter(c=>c.active&&c.id!=='sale').slice(0,5);
-  return `<footer class="store-footer"><div class="container"><div class="footer-main"><div class="footer-brand-col"><a class="store-brand footer-brand" href="/"><span class="brand-emblem">${brandLogoImg()}</span>${brandWordmark()}</a><p>قدم‌هایی مطمئن، با انتخابی که هر روز همراه شماست. کیفیت، راحتی و طراحی ماندگار؛ امضای هرمس.</p></div><div><h3>دسترسی سریع</h3><a href="/shop">فروشگاه</a><a href="/about">درباره ما</a><a href="/contact">تماس با ما</a><a href="/tracking">پیگیری سفارش</a></div><div><h3>دسته‌بندی‌ها</h3>${categories.map(c=>`<a href="/category/${encodeURIComponent(c.slug||c.id)}">${esc(c.name)}</a>`).join('')}</div><div><h3>راهنمای مشتریان</h3><a href="/terms">قوانین و شرایط</a><a href="/privacy">حریم خصوصی</a><a href="/account/orders">سفارش‌های من</a><a href="/login">ورود به حساب</a></div><div><h3>با ما در ارتباط باشید</h3>${db.settings.phone?`<p dir="ltr">${esc(db.settings.phone)}</p>`:''}${db.settings.email?`<p dir="ltr">${esc(db.settings.email)}</p>`:''}${db.settings.address?`<p>${esc(db.settings.address)}</p>`:''}${db.settings.phone||db.settings.email||db.settings.address?'':'<p>اطلاعات تماس پس از ثبت در تنظیمات فروشگاه نمایش داده می‌شود.</p>'}<span class="footer-trust">${uiIcon('shield')} خرید از هرمس</span></div></div>${(()=>{const em=db.settings.enamad||{},eId=String(em.id||'').trim(),eCode=String(em.code||'').trim();if(!eId||!eCode)return '';return `<div class="footer-enamad" role="group" aria-label="نماد اعتماد فروشگاه"><div class="footer-trust-pair"><div class="footer-trust-item footer-enamad-item"><a class="enamad-seal" referrerpolicy="origin" target="_blank" href="https://trustseal.enamad.ir/?id=${esc(eId)}&amp;Code=${esc(eCode)}" title="نماد اعتماد الکترونیکی" aria-label="استعلام نماد اعتماد الکترونیکی فروشگاه"><img referrerpolicy="origin" src="https://trustseal.enamad.ir/logo.aspx?id=${esc(eId)}&amp;Code=${esc(eCode)}" alt="" code="${esc(eCode)}" loading="lazy" style="cursor:pointer" onerror="this.onerror=null;this.src='/enamad-logo.png'"></a><span class="footer-trust-caption">نماد اعتماد الکترونیکی (اینماد)</span></div></div></div>`})()}<div class="footer-bottom"><span>${esc(hermesCopy(cms.footerText||'تمامی حقوق برای کالکشن هرمس محفوظ است.'))}</span><span>© ۱۴۰۵　·　ساخته‌شده با توجه به هر قدم</span></div></div></footer><nav class="mobile-bottom-nav" aria-label="میانبرهای فروشگاه"><a class="${navActive('/')?'active':''}" ${navActive('/')?'aria-current="page"':''} href="/">${uiIcon('home')}<span>خانه</span></a><a class="${navActive('/shop')||path().startsWith('/category/')?'active':''}" ${navActive('/shop')||path().startsWith('/category/')?'aria-current="page"':''} href="/shop">${uiIcon('grid')}<span>دسته‌ها</span></a><a class="${navActive('/wishlist')?'active':''}" ${navActive('/wishlist')?'aria-current="page"':''} href="/wishlist">${uiIcon('heart')}<span>علاقه‌مندی</span></a><a class="${navActive('/account')||navActive('/login')?'active':''}" ${navActive('/account')||navActive('/login')?'aria-current="page"':''} href="${db.currentUser?'/account':'/login'}">${uiIcon('user')}<span>حساب من</span></a></nav>`;
+  const cms=db.settings.homepage||{},em=db.settings.enamad||{};
+  const eId=String(em.id||'').trim(),eCode=String(em.code||'').trim();
+  const seal=(()=>{
+    if(!eId||!eCode)return '';
+    return `<div class="footer-enamad" role="group" aria-label="نماد اعتماد فروشگاه"><div class="footer-trust-pair"><div class="footer-trust-item footer-enamad-item"><a class="enamad-seal" referrerpolicy="origin" target="_blank" href="https://trustseal.enamad.ir/?id=${esc(eId)}&amp;Code=${esc(eCode)}" title="نماد اعتماد الکترونیکی" aria-label="استعلام نماد اعتماد الکترونیکی فروشگاه"><img referrerpolicy="origin" src="https://trustseal.enamad.ir/logo.aspx?id=${esc(eId)}&amp;Code=${esc(eCode)}" alt="" code="${esc(eCode)}" loading="lazy" style="cursor:pointer" onerror="this.onerror=null;this.src='/enamad-logo.png'"></a><span class="footer-trust-caption">نماد اعتماد الکترونیکی (اینماد)</span></div></div></div>`;
+  })();
+  return `<footer class="store-footer compact-store-footer"><div class="container compact-footer-inner">
+    <div class="footer-compact-top">
+      <div class="footer-compact-brand">
+        <a class="store-brand footer-brand" href="/"><span class="brand-emblem">${brandLogoImg()}</span>${brandWordmark()}</a>
+        <p>کیف و کفش هرمس؛ انتخابی ماندگار برای هر قدم.</p>
+      </div>
+      <nav class="footer-compact-links" aria-label="پیوندهای ضروری فروشگاه">
+        <a href="/shop">فروشگاه</a>
+        <a href="/tracking">پیگیری سفارش</a>
+        <a href="/contact">تماس با ما</a>
+        <a href="/account/orders">سفارش‌های من</a>
+      </nav>
+    </div>
+    ${seal}
+    <div class="footer-compact-bottom">
+      <nav class="footer-legal-links" aria-label="قوانین و حریم خصوصی">
+        <a href="/terms">قوانین خرید</a>
+        <a href="/privacy">حریم خصوصی</a>
+      </nav>
+      <div class="footer-bottom"><span>${esc(hermesCopy(cms.footerText||'© ۱۴۰۵ کالکشن هرمس'))}</span></div>
+    </div>
+  </div></footer>
+  <nav class="mobile-bottom-nav" aria-label="میانبرهای فروشگاه"><a class="${navActive('/')?'active':''}" ${navActive('/')?'aria-current="page"':''} href="/">${uiIcon('home')}<span>خانه</span></a><a class="${navActive('/shop')||path().startsWith('/category/')?'active':''}" ${navActive('/shop')||path().startsWith('/category/')?'aria-current="page"':''} href="/shop">${uiIcon('grid')}<span>دسته‌ها</span></a><a class="${navActive('/wishlist')?'active':''}" ${navActive('/wishlist')?'aria-current="page"':''} href="/wishlist">${uiIcon('heart')}<span>علاقه‌مندی</span></a><a class="${navActive('/account')||navActive('/login')?'active':''}" ${navActive('/account')||navActive('/login')?'aria-current="page"':''} href="${db.currentUser?'/account':'/login'}">${uiIcon('user')}<span>حساب من</span></a></nav>`;
 }
 
 /* Category cards styled with the same beauty and structure as luxury Product Cards */
@@ -387,7 +414,7 @@ function cartPage(){
           <a class="text-link" href="/shop">← ادامه خرید از فروشگاه</a>
         </div>
 
-        <!-- Scrollable items box for mobile to prevent infinite page explosion -->
+        <!-- Cart rows remain in the natural page flow on mobile. -->
         <div class="cart-items-scrollable">
           ${rowsHtml}
         </div>
@@ -412,9 +439,7 @@ function cartPage(){
           ادامه و تسویه حساب ${uiIcon('arrow')}
         </a>
 
-        <div class="cart-security-badge">
-          ${uiIcon('shield')} پرداخت امن مستقیم بانکی با درگاه بیت‌پی
-        </div>
+        <div class="cart-review-note" role="note">پیش از ثبت نهایی، مبلغ کالاها و هزینهٔ ارسال را بازبینی کنید.</div>
       </aside>
     </div>
 
@@ -437,9 +462,9 @@ function wishlistPage(){
 }
 
 function home(){
-  let cms=db.settings.homepage||{},products=db.products.filter(p=>p.active),newest=products.slice().sort((a,b)=>(Date.parse(b.createdAt||b.updatedAt||'')||0)-(Date.parse(a.createdAt||a.updatedAt||'')||0)||Number(String(b.id).match(/\d+$/)?.[0]||0)-Number(String(a.id).match(/\d+$/)?.[0]||0)).slice(0,5),featured=(cms.featuredProductIds||[]).map(product).filter(p=>p?.active),best=(cms.bestSellerProductIds||[]).map(product).filter(p=>p?.active),promo=db.banners.filter(b=>b.active&&(b.position==='home-promo'||b.position==='home')),approved=db.reviews.filter(r=>r.status==='تأیید شده'),averageReviewRating=approved.length?approved.reduce((sum,r)=>sum+Number(r.rating||0),0)/approved.length:0,saleProducts=products.filter(p=>p.oldPrice>p.price),saleDiscount=Math.max(0,...saleProducts.map(discountPercent));
-  if(!featured.length)featured=products.filter(p=>p.featured).slice(0,5);
-  if(!best.length)best=products.filter(p=>p.bestSeller).slice(0,5);
+  let cms=db.settings.homepage||{},products=db.products.filter(p=>p.active),newest=products.slice().sort((a,b)=>(Date.parse(b.createdAt||b.updatedAt||'')||0)-(Date.parse(a.createdAt||a.updatedAt||'')||0)||Number(String(b.id).match(/\d+$/)?.[0]||0)-Number(String(a.id).match(/\d+$/)?.[0]||0)).slice(0,4),featured=(cms.featuredProductIds||[]).map(product).filter(p=>p?.active),best=(cms.bestSellerProductIds||[]).map(product).filter(p=>p?.active),promo=db.banners.filter(b=>b.active&&(b.position==='home-promo'||b.position==='home')),approved=db.reviews.filter(r=>r.status==='تأیید شده'),averageReviewRating=approved.length?approved.reduce((sum,r)=>sum+Number(r.rating||0),0)/approved.length:0,saleProducts=products.filter(p=>p.oldPrice>p.price),saleDiscount=Math.max(0,...saleProducts.map(discountPercent));
+  if(!featured.length)featured=products.filter(p=>p.featured).slice(0,4);
+  if(!best.length)best=products.filter(p=>p.bestSeller).slice(0,4);
   const defaultHeroTitle='خرید اینترنتی کفش زنانه و مردانه';
   let heroTitle=(!cms.heroTitle||cms.heroTitle==='قدم‌هایی مطمئن با کفش هرمس'||cms.heroTitle==='راحتی، استایل و کیفیت در هر قدم')?defaultHeroTitle:cms.heroTitle;
   let heroTitleMarkup=heroTitle===defaultHeroTitle?'خرید اینترنتی کفش<br><em>زنانه و مردانه</em>':esc(heroTitle);
@@ -496,8 +521,8 @@ function home(){
   <section class="trust-section lux-cream-trust" aria-label="مزایای خرید از هرمس">
     <div class="container trust-grid lux-cream-trust-grid">
       <div class="trust-item lux-cream-trust-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><circle cx="12" cy="16" r="1"/></svg>
-        <div><b>پرداخت امن</b><span>با تأیید خودکار تراکنش از درگاه بیت‌پی</span></div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h12v18l-2.5-1.7L12 21l-3.5-1.7L6 21z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>
+        <div><b>مبلغ شفاف</b><span>هزینهٔ ارسال و مبلغ نهایی پیش از ثبت سفارش نمایش داده می‌شود</span></div>
       </div>
       <div class="trust-item lux-cream-trust-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 13v-2a8 8 0 0 1 16 0v2"/><path d="M4 13h3v6H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 1-2Zm16 0h-3v6h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-1-2Z"/></svg>
@@ -521,7 +546,7 @@ function home(){
   ${categorySection}
 
   <section class="products-section container latest-products-section"><div class="section-heading"><div><span class="section-eyebrow">تازه‌های هرمس</span><h2>جدیدترین محصولات</h2><p>مدل‌های تازه‌رسیده برای قدم بعدی شما.</p></div><a href="/shop?sort=newest">همهٔ تازه‌رسیده‌ها <span>←</span></a></div><div class="lux-product-grid">${newest.map(card).join('')||'<div class="empty-state">به‌زودی مدل‌های تازه در اینجا قرار می‌گیرند.</div>'}</div></section>
-  <section class="products-section container"><div class="section-heading"><div><span class="section-eyebrow">منتخب برای شما</span><h2>انتخاب‌های ویژه هرمس</h2><p>مدل‌هایی که راحتی، کیفیت و سادگی را کنار هم می‌آورند.</p></div><a href="/shop">مشاهده همه محصولات <span>←</span></a></div><div class="lux-product-grid">${featured.slice(0,5).map(card).join('')||'<div class="empty-state">به‌زودی انتخاب‌های ویژه در اینجا قرار می‌گیرند.</div>'}</div></section><section class="collection-banner container"><div class="collection-visual"><img src="${esc(bannerImage)}" alt="کالکشن کفش‌های هرمس" loading="lazy" width="800" height="520"></div><div class="collection-content"><span class="section-eyebrow">از کالکشن تازه دیدن کنید</span><h2>قدم بعدی را<br><em>متفاوت بردار</em></h2><p>${esc(banner?.subtitle||'کفش مناسب استایل و روزهای شما؛ با کیفیتی که ارزش انتخاب دارد.')}</p><a class="btn collection-button" href="${esc(banner?.linkUrl||'/shop')}">${esc(banner?.buttonText||'مشاهده کالکشن')} ${uiIcon('arrow')}</a><span class="collection-watermark">HERMES</span></div></section><section class="products-section container bestseller-section"><div class="section-heading"><div><span class="section-eyebrow">محبوب همراهان هرمس</span><h2>پرفروش‌های این روزها</h2></div><a href="/shop">رفتن به فروشگاه <span>←</span></a></div><div class="lux-product-grid">${best.slice(0,5).map(card).join('')}</div></section><section class="why-section"><div class="container"><div class="section-heading light-heading"><div><span class="section-eyebrow">چرا هرمس؟</span><h2>کیفیت را در هر قدم حس کنید</h2></div><p>از انتخاب مواد اولیه تا لحظه‌ای که سفارش به دست شما می‌رسد، به جزئیات اهمیت می‌دهیم.</p></div><div class="why-grid">${(cms.advantages||[]).slice(0,4).map((x,i)=>`<article class="why-card"><span class="why-number">۰${i+1}</span><span class="why-icon">${[uiIcon('shield'),uiIcon('heart'),uiIcon('support'),uiIcon('truck')][i]}</span><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p></article>`).join('')}</div></div></section><section class="about-section container"><div class="about-photo-wrap"><img src="${esc(heroImage)}" alt="جزئیات کیفیت کفش هرمس" loading="lazy" width="760" height="650"><span class="about-photo-caption">کیفیت؛ از اولین قدم</span></div><div class="about-copy"><span class="section-eyebrow">آشنایی با ما</span><h2>درباره کفش هرمس</h2><p>${esc(cms.aboutText||db.settings.about||'اطلاعات معرفی فروشگاه هنوز ثبت نشده است.')}</p><a class="btn about-button" href="/about">بیشتر درباره ما ${uiIcon('arrow')}</a><div class="about-signature">هرمس <span>· قدم‌هایی مطمئن</span></div></div></section>${approved.length?`<section class="reviews-section"><div class="container"><div class="section-heading"><div><span class="section-eyebrow">از زبان همراهان ما</span><h2>تجربه خرید مشتریان</h2></div><span class="review-summary">${'★'.repeat(Math.round(averageReviewRating))+'☆'.repeat(Math.max(0,5-Math.round(averageReviewRating)))} <small>${averageReviewRating.toLocaleString('fa-IR',{minimumFractionDigits:1,maximumFractionDigits:1})} از ۵ · ${approved.length.toLocaleString('fa-IR')} دیدگاه تأییدشده</small></span></div><div class="review-grid">${approved.slice(0,3).map(r=>`<article class="customer-review"><div class="review-top"><span class="review-avatar">${esc((r.name||'م').trim().slice(0,1))}</span><div><b>${esc(r.name)}</b><span>${esc(r.product||'خریدار هرمس')}</span></div><div class="review-stars" aria-label="${Number(r.rating)||0} از ۵ ستاره">${'★'.repeat(Number(r.rating)||0)}${'☆'.repeat(Math.max(0,5-(Number(r.rating)||0)))}</div></div><p>«${esc(r.text)}»</p><time>${r.createdAt?new Intl.DateTimeFormat('fa-IR',{year:'numeric',month:'long',day:'numeric'}).format(new Date(r.createdAt)):'خریدار کفش هرمس'}</time></article>`).join('')}</div></div></section>`:''}<section class="newsletter-section"><div class="container newsletter-card"><div class="newsletter-leaf">${brandLogoImg()}</div><div class="newsletter-copy"><span class="section-eyebrow">همراه هرمس باشید</span><h2>از تخفیف‌های ویژه باخبر شوید</h2><p>خبر کالکشن‌های تازه و پیشنهادهای ویژه را زودتر دریافت کنید.</p></div><form class="newsletter-form" onsubmit="event.preventDefault();subscribeNewsletter(this)"><label class="sr-only" for="newsletter-contact">موبایل یا ایمیل</label><input id="newsletter-contact" name="contact" required placeholder="شماره موبایل یا ایمیل شما"><button type="submit">عضویت <span>←</span></button></form></div></section></main>${footer()}`;
+  <section class="products-section container home-secondary-collection"><div class="section-heading"><div><span class="section-eyebrow">منتخب برای شما</span><h2>انتخاب‌های ویژه هرمس</h2><p>مدل‌هایی که راحتی، کیفیت و سادگی را کنار هم می‌آورند.</p></div><a href="/shop">مشاهده همه محصولات <span>←</span></a></div><p class="home-scroll-hint">برای دیدن مدل‌های بیشتر، ردیف را افقی حرکت دهید.</p><div class="lux-product-grid home-secondary-grid" role="region" tabindex="0" aria-label="انتخاب‌های ویژه؛ برای دیدن مدل‌های بیشتر به‌صورت افقی حرکت کنید">${featured.slice(0,4).map(card).join('')||'<div class="empty-state">به‌زودی انتخاب‌های ویژه در اینجا قرار می‌گیرند.</div>'}</div></section><section class="collection-banner container"><div class="collection-visual"><img src="${esc(bannerImage)}" alt="کالکشن کفش‌های هرمس" loading="lazy" width="800" height="520"></div><div class="collection-content"><span class="section-eyebrow">از کالکشن تازه دیدن کنید</span><h2>قدم بعدی را<br><em>متفاوت بردار</em></h2><p>${esc(banner?.subtitle||'کفش مناسب استایل و روزهای شما؛ با کیفیتی که ارزش انتخاب دارد.')}</p><a class="btn collection-button" href="${esc(banner?.linkUrl||'/shop')}">${esc(banner?.buttonText||'مشاهده کالکشن')} ${uiIcon('arrow')}</a><span class="collection-watermark">HERMES</span></div></section><section class="products-section container bestseller-section home-secondary-collection"><div class="section-heading"><div><span class="section-eyebrow">محبوب همراهان هرمس</span><h2>پرفروش‌های این روزها</h2></div><a href="/shop">رفتن به فروشگاه <span>←</span></a></div><p class="home-scroll-hint">برای دیدن مدل‌های بیشتر، ردیف را افقی حرکت دهید.</p><div class="lux-product-grid home-secondary-grid" role="region" tabindex="0" aria-label="پرفروش‌های هرمس؛ برای دیدن مدل‌های بیشتر به‌صورت افقی حرکت کنید">${best.slice(0,4).map(card).join('')}</div></section><section class="why-section"><div class="container"><div class="section-heading light-heading"><div><span class="section-eyebrow">چرا هرمس؟</span><h2>کیفیت را در هر قدم حس کنید</h2></div><p>از انتخاب مواد اولیه تا لحظه‌ای که سفارش به دست شما می‌رسد، به جزئیات اهمیت می‌دهیم.</p></div><div class="why-grid">${(cms.advantages||[]).slice(0,4).map((x,i)=>`<article class="why-card"><span class="why-number">۰${i+1}</span><span class="why-icon">${[uiIcon('shield'),uiIcon('heart'),uiIcon('support'),uiIcon('truck')][i]}</span><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p></article>`).join('')}</div></div></section><section class="about-section container"><div class="about-photo-wrap"><img src="${esc(heroImage)}" alt="جزئیات کیفیت کفش هرمس" loading="lazy" width="760" height="650"><span class="about-photo-caption">کیفیت؛ از اولین قدم</span></div><div class="about-copy"><span class="section-eyebrow">آشنایی با ما</span><h2>درباره کفش هرمس</h2><p>${esc(cms.aboutText||db.settings.about||'اطلاعات معرفی فروشگاه هنوز ثبت نشده است.')}</p><a class="btn about-button" href="/about">بیشتر درباره ما ${uiIcon('arrow')}</a><div class="about-signature">هرمس <span>· قدم‌هایی مطمئن</span></div></div></section>${approved.length?`<section class="reviews-section"><div class="container"><div class="section-heading"><div><span class="section-eyebrow">از زبان همراهان ما</span><h2>تجربه خرید مشتریان</h2></div><span class="review-summary">${'★'.repeat(Math.round(averageReviewRating))+'☆'.repeat(Math.max(0,5-Math.round(averageReviewRating)))} <small>${averageReviewRating.toLocaleString('fa-IR',{minimumFractionDigits:1,maximumFractionDigits:1})} از ۵ · ${approved.length.toLocaleString('fa-IR')} دیدگاه تأییدشده</small></span></div><div class="review-grid">${approved.slice(0,3).map(r=>`<article class="customer-review"><div class="review-top"><span class="review-avatar">${esc((r.name||'م').trim().slice(0,1))}</span><div><b>${esc(r.name)}</b><span>${esc(r.product||'خریدار هرمس')}</span></div><div class="review-stars" aria-label="${Number(r.rating)||0} از ۵ ستاره">${'★'.repeat(Number(r.rating)||0)}${'☆'.repeat(Math.max(0,5-(Number(r.rating)||0)))}</div></div><p>«${esc(r.text)}»</p><time>${r.createdAt?new Intl.DateTimeFormat('fa-IR',{year:'numeric',month:'long',day:'numeric'}).format(new Date(r.createdAt)):'خریدار کفش هرمس'}</time></article>`).join('')}</div></div></section>`:''}<section class="newsletter-section"><div class="container newsletter-card"><div class="newsletter-leaf">${brandLogoImg()}</div><div class="newsletter-copy"><span class="section-eyebrow">همراه هرمس باشید</span><h2>از تخفیف‌های ویژه باخبر شوید</h2><p>خبر کالکشن‌های تازه و پیشنهادهای ویژه را زودتر دریافت کنید.</p></div><form class="newsletter-form" onsubmit="event.preventDefault();subscribeNewsletter(this)"><label class="sr-only" for="newsletter-contact">موبایل یا ایمیل</label><input id="newsletter-contact" name="contact" required placeholder="شماره موبایل یا ایمیل شما"><button type="submit">عضویت <span>←</span></button></form></div></section></main>${footer()}`;
 }
 
 async function subscribeNewsletter(form){
@@ -549,11 +574,28 @@ async function toggleFav(el,id){
   if(path()==='/wishlist')render();
 }
 
-function showModal(content,title='کالکشن هرمس'){
-  let root=$('#modal-root');
-  root.innerHTML=`<div class="modal-back" role="presentation" onclick="if(event.target===this)closeModal()"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="dialog-title" tabindex="-1"><div class="modal-head"><h2 id="dialog-title">${esc(title)}</h2><button class="close" aria-label="بستن پنجره" onclick="closeModal()">×</button></div>${content}</div></div>`;
-  root.querySelector('[role="dialog"]')?.focus();
+let __modalReturnFocus = null;
+function closeModal(){
+  const root=document.querySelector('#modal-root');
+  const wasOpen=Boolean(root?.querySelector('[role="dialog"]'));
+  if(root)root.innerHTML='';
+  document.body?.classList.remove('modal-open');
+  const returnFocus=__modalReturnFocus;
+  __modalReturnFocus=null;
+  if(wasOpen&&returnFocus?.isConnected&&!returnFocus.closest?.('[inert]')){
+    try{returnFocus.focus({preventScroll:true})}catch(error){returnFocus.focus()}
+  }
 }
+function showModal(content,title='کالکشن هرمس'){
+  const root=$('#modal-root');
+  if(!root)return;
+  if(!root.querySelector('[role="dialog"]'))__modalReturnFocus=document.activeElement;
+  root.innerHTML=`<div class="modal-back" role="presentation" onclick="if(event.target===this)closeModal()"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="dialog-title" tabindex="-1"><div class="modal-head"><h2 id="dialog-title">${esc(title)}</h2><button class="close" aria-label="بستن پنجره" onclick="closeModal()">×</button></div>${content}</div></div>`;
+  document.body?.classList.add('modal-open');
+  const dialog=root.querySelector('[role="dialog"]');
+  try{dialog?.focus({preventScroll:true})}catch(error){dialog?.focus()}
+}
+window.closeModal=closeModal;
 
 function showSizeGuide(){
   showModal(`<div class="size-guide-content"><p>برای انتخاب دقیق، پاشنه را به دیوار تکیه دهید و بلندترین فاصله انگشت تا دیوار را اندازه بگیرید. اگر بین دو سایز هستید، سایز بزرگ‌تر را انتخاب کنید.</p><div class="size-guide-table-wrap"><table class="size-guide-table"><thead><tr><th>سایز</th><th>طول تقریبی پا</th><th>پیشنهاد</th></tr></thead><tbody><tr><td>۳۷–۳۸</td><td>۲۳ تا ۲۴ سانتی‌متر</td><td>زنانه</td></tr><tr><td>۳۹–۴۰</td><td>۲۴٫۵ تا ۲۵٫۵ سانتی‌متر</td><td>زنانه / مردانه</td></tr><tr><td>۴۱–۴۲</td><td>۲۶ تا ۲۷ سانتی‌متر</td><td>مردانه</td></tr><tr><td>۴۳–۴۴</td><td>۲۷٫۵ تا ۲۸٫۵ سانتی‌متر</td><td>مردانه</td></tr></tbody></table></div><small>این اندازه‌ها راهنمای تقریبی هستند؛ قالب مدل‌ها ممکن است کمی متفاوت باشد.</small></div>`,`راهنمای انتخاب سایز`);
@@ -638,12 +680,13 @@ function animatedRender(isPageTransition=false){
   }
 
   const doRender=()=>{
+    if(document.body?.classList.contains('filter-sheet-open'))closeShopFilters({restoreFocus:false});
+    if(document.body?.classList.contains('modal-open'))closeModal();
     const adminRoute=location.pathname==='/admin'||location.pathname.startsWith('/admin/');
     const body=document.body;
-    if(body?.classList){if(adminRoute)body.classList.remove('storefront-mode');else body.classList.add('storefront-mode');body.classList.remove('has-commerce-sticky')}
+    if(body?.classList){if(adminRoute){body.classList.remove('storefront-mode');body.classList.add('admin-body')}else{body.classList.add('storefront-mode');body.classList.remove('admin-body')}body.classList.remove('has-commerce-sticky')}
     if(body?.dataset)body.dataset.route=location.pathname;
     if(adminRoute&&window.ToubaAuthUI?.adminPage){
-      document.body.classList.remove('admin-body');
       appEl.innerHTML=window.ToubaAuthUI.adminPage();
       const s=new URLSearchParams(location.search).get('section')||'dashboard';
       if(window.ToubaAuthUI?.loadAdminSection){
@@ -660,6 +703,9 @@ function animatedRender(isPageTransition=false){
     let mainContent=appEl?.querySelector?.('main');
     if(mainContent&&!mainContent.id)mainContent.id='main-content';
     if(appEl?.querySelector?.('.mobile-product-bar, .mobile-cart-sticky-bar'))body?.classList?.add('has-commerce-sticky');
+    syncShopFilterPanelState();
+    enhanceMobileRecordTables(document);
+    syncMobileKeyboardState();
     if(!adminRoute)bindProductGallerySwipe();
     if(typeof updateSEO==='function'){
       updateSEO();
@@ -763,9 +809,19 @@ function hermesHome(){
   const allProducts=(db.products||[]).filter(item=>item.active);
   const cms=db.settings?.homepage||{};
   const featuredIds=Array.isArray(cms.featuredProductIds)?cms.featuredProductIds:[];
+  const byNewest=(a,b)=>(Date.parse(b.createdAt||b.updatedAt||'')||0)-(Date.parse(a.createdAt||a.updatedAt||'')||0)||Number(String(b.id).match(/\d+$/)?.[0]||0)-Number(String(a.id).match(/\d+$/)?.[0]||0);
   let featured=featuredIds.map(product).filter(item=>item?.active);
   if(!featured.length)featured=allProducts.filter(item=>item.featured||item.bestSeller);
-  if(!featured.length)featured=allProducts.slice().sort((a,b)=>(Date.parse(b.createdAt||b.updatedAt||'')||0)-(Date.parse(a.createdAt||a.updatedAt||'')||0)).slice(0,4);
+  if(!featured.length)featured=allProducts.slice().sort(byNewest).slice(0,4);
+  const primaryIds=new Set(featured.slice(0,4).map(item=>String(item.id)));
+  const newest=allProducts.slice().sort(byNewest).filter(item=>!primaryIds.has(String(item.id))).slice(0,4);
+  const bestIds=Array.isArray(cms.bestSellerProductIds)?cms.bestSellerProductIds:[];
+  let best=bestIds.map(product).filter(item=>item?.active);
+  if(!best.length)best=allProducts.filter(item=>item.bestSeller);
+  best=best.filter(item=>!primaryIds.has(String(item.id))).slice(0,4);
+  const secondaryShelf=(title,items,href,label)=>items.length?`<section class="hm-products-section container home-secondary-collection"><div class="hm-section-heading"><div><span class="hm-eyebrow">THE HERMES EDIT</span><h2>${title}</h2></div><a class="hm-text-link" href="${href}">مشاهده همه <span>←</span></a></div><p class="home-scroll-hint">برای دیدن مدل‌های بیشتر، ردیف را افقی حرکت دهید.</p><div class="lux-product-grid hm-product-grid home-secondary-grid" role="region" tabindex="0" aria-label="${label}؛ برای دیدن مدل‌های بیشتر به‌صورت افقی حرکت کنید">${items.map(card).join('')}</div></section>`:'';
+  const newestShelf=secondaryShelf('تازه‌های کالکشن',newest,'/shop?sort=newest','تازه‌های کالکشن');
+  const bestShelf=secondaryShelf('پرفروش‌های هرمس',best,'/shop','پرفروش‌های هرمس');
   const categoryUrl=(fallback,pattern)=>{
     const match=(db.categories||[]).find(category=>category.active&&pattern.test(`${category.id||''} ${category.slug||''} ${category.name||''}`));
     return match?`/category/${encodeURIComponent(match.slug||match.id)}`:`/shop?category=${encodeURIComponent(fallback)}`;
@@ -777,7 +833,7 @@ function hermesHome(){
     {id:'sneakers',label:'کالکشن روزمره',en:'EVERYDAY EDIT',note:'برای قدم‌های بی‌تکلف',image:'/touba-hero.jpg',pos:'72% center',pattern:/روزمره|اسپرت|sneaker|sport|daily/i}
   ];
   const collectionCards=collections.map((item,index)=>`<a class="hm-category-card hm-category-card-${index+1}" href="${categoryUrl(item.id,item.pattern)}" aria-label="دیدن ${esc(item.label)}"><img src="${item.image}" alt="${esc(item.label)} — کالکشن هرمس" loading="lazy" style="object-position:${item.pos}"><span class="hm-category-shade"></span><span class="hm-category-number">0${index+1}</span><span class="hm-category-copy"><small>${item.en}</small><b>${item.label}</b><em>${item.note}</em></span><span class="hm-category-arrow" aria-hidden="true">↙</span></a>`).join('');
-  const productSection=allProducts.length?`<section class="hm-products-section container" id="new-arrivals"><div class="hm-section-heading"><div><span class="hm-eyebrow">THE HERMES EDIT</span><h2>تازه‌های کالکشن</h2><p>مدل‌های ثبت‌شده در ویترین فروشگاه</p></div><a class="hm-text-link" href="/shop">مشاهده همه <span>←</span></a></div><div class="lux-product-grid hm-product-grid">${featured.slice(0,4).map(card).join('')}</div></section>`:`<section class="hm-products-section container" id="new-arrivals"><div class="hm-empty-catalog"><div class="hm-empty-seal">H</div><div><span class="hm-eyebrow">THE COLLECTION</span><h2>ویترین محصولات</h2><p>محصولات و موجودی واقعی فروشگاه پس از اتصال کاتالوگ نمایش داده می‌شوند.</p></div><a class="hm-button hm-button-outline" href="/shop">رفتن به فروشگاه <span>←</span></a></div></section>`;
+  const productSection=allProducts.length?`<section class="hm-products-section container" id="new-arrivals"><div class="hm-section-heading"><div><span class="hm-eyebrow">THE HERMES EDIT</span><h2>انتخاب‌های ویژه هرمس</h2><p>مدل‌های منتخب برای سلیقه‌های متمایز</p></div><a class="hm-text-link" href="/shop">مشاهده همه <span>←</span></a></div><div class="lux-product-grid hm-product-grid">${featured.slice(0,4).map(card).join('')}</div></section>`:`<section class="hm-products-section container" id="new-arrivals"><div class="hm-empty-catalog"><div class="hm-empty-seal">H</div><div><span class="hm-eyebrow">THE COLLECTION</span><h2>ویترین محصولات</h2><p>محصولات و موجودی واقعی فروشگاه پس از اتصال کاتالوگ نمایش داده می‌شوند.</p></div><a class="hm-button hm-button-outline" href="/shop">رفتن به فروشگاه <span>←</span></a></div></section>`;
   return `${header()}<main class="hermes-home">
     <section class="hm-hero" aria-label="HERMES COLLECTION — کالکشن هرمس">
       <img class="hm-hero-image" src="/hermes-editorial-hero.jpg" alt="کیف دستی و کفش پاشنه‌بلند در قاب طلایی، کالکشن هرمس" width="1536" height="864" fetchpriority="high">
@@ -809,6 +865,8 @@ function hermesHome(){
     </section>
 
     ${productSection}
+    ${newestShelf}
+    ${bestShelf}
 
     <section class="hm-story-section"><div class="container hm-story-grid">
       <div class="hm-story-image"><img src="/touba-bag-editorial.jpg" alt="نمای نزدیک کیف چرمی با جزئیات ظریف" loading="lazy" width="1254" height="1254"><span class="hm-story-image-caption" dir="ltr">HERMES COLLECTION · 01</span></div>
@@ -843,18 +901,90 @@ animatedRender(true);
 /* ==========================================================================
    Modern Luxury Views: Shop, Checkout, Tracking, Content
    ========================================================================== */
+let __shopFilterReturnFocus=null;
+let __shopFilterInertRestore=[];
+function isMobileShopFilter(){return window.matchMedia?window.matchMedia('(max-width: 860px)').matches:window.innerWidth<=860}
+function setElementInert(element,value){
+  if(!element)return;
+  if('inert' in element)element.inert=Boolean(value);
+  if(value)element.setAttribute('inert','');else element.removeAttribute('inert');
+}
+function shopFilterFocusable(panel){
+  return Array.from(panel.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'))
+    .filter(element=>!element.closest('[hidden],[aria-hidden="true"],[inert]')&&(element.getClientRects().length>0||element===document.activeElement));
+}
+function setShopFilterBackgroundInert(panel,enabled){
+  if(enabled){
+    const main=panel?.closest('main'),layout=panel?.closest('.shop-layout');
+    const nodes=[document.querySelector('.store-header-wrap'),document.querySelector('.store-footer'),document.querySelector('.mobile-bottom-nav'),
+      ...Array.from(main?.children||[]).filter(element=>element!==layout),layout?.querySelector('.shop-main-section')];
+    const unique=[...new Set(nodes.filter(element=>element&&!element.contains(panel)))];
+    __shopFilterInertRestore=unique.map(element=>[element,element.hasAttribute('inert'),element.getAttribute('aria-hidden')]);
+    unique.forEach(element=>{setElementInert(element,true);element.setAttribute('aria-hidden','true')});
+    return;
+  }
+  __shopFilterInertRestore.forEach(([element,wasInert,ariaHidden])=>{
+    if(!element?.isConnected)return;
+    setElementInert(element,wasInert);
+    if(ariaHidden===null)element.removeAttribute('aria-hidden');else element.setAttribute('aria-hidden',ariaHidden);
+  });
+  __shopFilterInertRestore=[];
+}
+function syncShopFilterPanelState(){
+  const panel=document.querySelector('#shop-filters');
+  if(!panel){
+    if(document.body?.classList.contains('filter-sheet-open'))closeShopFilters({restoreFocus:false});
+    return;
+  }
+  const mobile=isMobileShopFilter(),open=panel.classList.contains('drawer-open');
+  if(open&&!mobile){closeShopFilters({restoreFocus:false});return;}
+  if(open){
+    panel.inert=false;panel.removeAttribute('inert');panel.removeAttribute('aria-hidden');
+    panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-labelledby','shop-filters-title');
+  }else{
+    panel.classList.remove('drawer-open');panel.removeAttribute('role');panel.removeAttribute('aria-modal');
+    panel.inert=mobile;
+    if(mobile){panel.setAttribute('inert','');panel.setAttribute('aria-hidden','true');}
+    else{panel.removeAttribute('inert');panel.removeAttribute('aria-hidden');}
+  }
+}
 function openShopFilters(){
-  let panel=document.querySelector('#shop-filters'),backdrop=document.querySelector('#shop-filter-backdrop'),button=document.querySelector('.filter-open');
-  if(panel)panel.classList.add('drawer-open');
-  if(backdrop){backdrop.classList.add('show');backdrop.setAttribute('aria-hidden','false')}
+  const panel=document.querySelector('#shop-filters'),backdrop=document.querySelector('#shop-filter-backdrop'),button=document.querySelector('.filter-open');
+  if(!panel||!isMobileShopFilter())return;
+  __shopFilterReturnFocus=button||document.activeElement;
+  panel.inert=false;panel.removeAttribute('inert');panel.removeAttribute('aria-hidden');
+  panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-labelledby','shop-filters-title');
+  panel.classList.add('drawer-open');
+  if(backdrop){backdrop.classList.add('show');backdrop.setAttribute('aria-hidden','false');}
   if(button)button.setAttribute('aria-expanded','true');
   document.body.classList.add('filter-sheet-open');
+  setShopFilterBackgroundInert(panel,true);
+  const focusPanel=()=>{
+    const first=panel.querySelector('.filter-close')||shopFilterFocusable(panel)[0]||panel;
+    try{first.focus({preventScroll:true})}catch(error){first.focus()}
+  };
+  if(window.requestAnimationFrame)window.requestAnimationFrame(focusPanel);else window.setTimeout(focusPanel,0);
 }
-function closeShopFilters(){
-  document.querySelector('#shop-filters')?.classList.remove('drawer-open');
-  let backdrop=document.querySelector('#shop-filter-backdrop');if(backdrop){backdrop.classList.remove('show');backdrop.setAttribute('aria-hidden','true')}
-  let button=document.querySelector('.filter-open');if(button)button.setAttribute('aria-expanded','false');
+function closeShopFilters(options={}){
+  const panel=document.querySelector('#shop-filters'),backdrop=document.querySelector('#shop-filter-backdrop'),button=document.querySelector('.filter-open');
+  const wasOpen=Boolean(panel?.classList.contains('drawer-open'));
+  panel?.classList.remove('drawer-open');
+  if(panel){panel.removeAttribute('role');panel.removeAttribute('aria-modal');panel.removeAttribute('aria-labelledby');}
+  if(backdrop){backdrop.classList.remove('show');backdrop.setAttribute('aria-hidden','true');}
+  if(button)button.setAttribute('aria-expanded','false');
   document.body.classList.remove('filter-sheet-open');
+  setShopFilterBackgroundInert(panel,false);
+  if(panel){
+    const mobile=isMobileShopFilter();
+    panel.inert=mobile;
+    if(mobile){panel.setAttribute('inert','');panel.setAttribute('aria-hidden','true');}
+    else{panel.removeAttribute('inert');panel.removeAttribute('aria-hidden');}
+  }
+  const returnFocus=__shopFilterReturnFocus||button;
+  __shopFilterReturnFocus=null;
+  if(options.restoreFocus!==false&&wasOpen&&returnFocus?.isConnected&&!returnFocus.closest?.('[inert]')){
+    try{returnFocus.focus({preventScroll:true})}catch(error){returnFocus.focus()}
+  }
 }
 function openShopSortSheet(){
   const options=[['popular','محبوب‌ترین'],['newest','جدیدترین'],['cheap','ارزان‌ترین'],['expensive','گران‌ترین']];
@@ -893,11 +1023,11 @@ function modernShop(forceCategory = "") {
     </div>
 
     <div class="shop-toolbar">
-      <button type="button" class="btn outline small filter-open" onclick="openShopFilters()" aria-controls="shop-filters" aria-expanded="false">
+      <button type="button" class="btn outline small filter-open" onclick="openShopFilters()" aria-controls="shop-filters" aria-haspopup="dialog" aria-expanded="false">
         ${uiIcon("sliders")} فیلترها
       </button>
       <span id="shop-result-count" class="shop-result-count" aria-live="polite"></span>
-      <button type="button" class="btn outline small mobile-sort-trigger" onclick="openShopSortSheet()">مرتب‌سازی</button>
+      <button type="button" class="btn outline small mobile-sort-trigger" onclick="openShopSortSheet()" aria-haspopup="dialog">مرتب‌سازی</button>
       <div class="shop-sort-wrap">
         <label for="shop-sort">مرتب‌سازی:</label>
         <select id="shop-sort" onchange="setShopSort(this.value)">
@@ -910,11 +1040,11 @@ function modernShop(forceCategory = "") {
     </div>
 
     <div class="shop-layout">
-      <div id="shop-filter-backdrop" class="shop-filter-backdrop" aria-hidden="true" onclick="closeShopFilters()"></div>
-      <aside class="filter-panel" id="shop-filters" aria-label="فیلتر محصولات">
+      <div id="shop-filter-backdrop" class="shop-filter-backdrop" role="presentation" aria-hidden="true" onclick="closeShopFilters()"></div>
+      <aside class="filter-panel" id="shop-filters" aria-label="فیلتر محصولات" tabindex="-1">
         <div class="filter-header">
-          <h3>فیلتر محصولات</h3>
-          <button type="button" class="filter-close" onclick="closeShopFilters()">✕ بستن</button>
+          <h3 id="shop-filters-title">فیلتر محصولات</h3>
+          <button type="button" class="filter-close" onclick="closeShopFilters()" aria-label="بستن فیلتر محصولات">✕ بستن</button>
         </div>
 
         <div class="filter-group">
@@ -1264,7 +1394,7 @@ function modernCheckout() {
           <div class="summary-line total"><span>مبلغ قابل پرداخت</span><b>${toman(tot.total)}</b></div>
         </div>
         <div class="checkout-trust-features">
-          <span>${uiIcon("shield")} مبلغ و روش پرداخت پیش از ثبت نهایی نمایش داده می‌شود.</span>
+          <span>${uiIcon("check")} مبلغ و روش پرداخت پیش از ثبت نهایی نمایش داده می‌شود.</span>
           <span>${uiIcon("truck")} بسته‌بندی ایمن و امکان پیگیری سفارش.</span>
         </div>
       </aside>
@@ -1333,3 +1463,128 @@ function modernContentPage(type) {
     </div>
   </main>${footer()}`;
 }
+
+/* Mobile accessibility/usability hooks: keep overlays modal, admin data readable, and
+   persistent commerce/navigation controls out of the on-screen keyboard's way. */
+function trapOverlayTab(event,root){
+  const focusable=Array.from(root.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'))
+    .filter(element=>!element.closest('[hidden],[aria-hidden="true"],[inert]')&&(element.getClientRects().length>0||element===document.activeElement));
+  if(!focusable.length){event.preventDefault();root.focus();return;}
+  const first=focusable[0],last=focusable[focusable.length-1],active=document.activeElement;
+  if(event.shiftKey&&(active===first||!root.contains(active))){event.preventDefault();last.focus();}
+  else if(!event.shiftKey&&(active===last||!root.contains(active))){event.preventDefault();first.focus();}
+}
+function installOverlayKeyboardA11y(){
+  if(window.__hermesOverlayA11yBound)return;
+  window.__hermesOverlayA11yBound=true;
+  document.addEventListener('keydown',event=>{
+    const modal=document.querySelector('#modal-root [role="dialog"]');
+    const filter=document.querySelector('#shop-filters.drawer-open[role="dialog"]');
+    const activeOverlay=modal||filter;
+    if(!activeOverlay)return;
+    if(event.key==='Escape'){
+      event.preventDefault();
+      if(modal)closeModal();else closeShopFilters();
+      return;
+    }
+    if(event.key==='Tab')trapOverlayTab(event,activeOverlay);
+  });
+}
+function syncMobileKeyboardState(){
+  const body=document.body,viewport=window.visualViewport,active=document.activeElement;
+  if(!body?.classList)return;
+  const mobile=window.matchMedia?window.matchMedia('(max-width: 860px)').matches:window.innerWidth<=860;
+  const editable=Boolean(active?.matches?.('input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="hidden"]),textarea,select,[contenteditable="true"]'));
+  const threshold=Math.max(120,window.innerHeight*.18);
+  const viewportReduced=Boolean(viewport&&(window.innerHeight-viewport.height>threshold||viewport.height<window.innerHeight*.76));
+  const screenThreshold=Math.max(180,window.innerHeight*.25);
+  const screenReduced=Boolean(window.screen?.height&&window.screen.height-window.innerHeight>screenThreshold);
+  const keyboardOpen=mobile&&editable&&(viewportReduced||screenReduced),wasOpen=body.classList.contains('mobile-keyboard-open');
+  body.classList.toggle('mobile-keyboard-open',keyboardOpen);
+  if(keyboardOpen&&!wasOpen&&active?.isConnected){
+    const reveal=()=>{
+      if(document.activeElement!==active)return;
+      const rect=active.getBoundingClientRect(),top=viewport?.offsetTop||0,bottom=top+(viewport?.height||window.innerHeight);
+      if(rect.top<top||rect.bottom>bottom-16)active.scrollIntoView?.({block:'nearest',behavior:'auto'});
+    };
+    if(window.requestAnimationFrame)window.requestAnimationFrame(reveal);else window.setTimeout(reveal,0);
+  }
+}
+function installMobileKeyboardA11y(){
+  if(window.__hermesKeyboardA11yBound)return;
+  window.__hermesKeyboardA11yBound=true;
+  let blurTimer=0;
+  document.addEventListener('focusin',syncMobileKeyboardState);
+  document.addEventListener('focusout',()=>{window.clearTimeout(blurTimer);blurTimer=window.setTimeout(syncMobileKeyboardState,160);});
+  window.addEventListener('resize',syncMobileKeyboardState);
+  window.visualViewport?.addEventListener('resize',syncMobileKeyboardState);
+  window.visualViewport?.addEventListener('scroll',syncMobileKeyboardState);
+  syncMobileKeyboardState();
+}
+function enhanceMobileRecordTables(root=document){
+  if(!document.body?.classList||!root?.querySelectorAll)return;
+  const isAdmin=document.body.classList.contains('admin-body');
+  const selector=isAdmin
+    ? '#app .admin-page-container .table-wrap .data-table, #modal-root .table-wrap .data-table'
+    : '#app .table-wrap .customer-orders-mobile-card-table';
+  const tables=root.querySelectorAll(selector);
+  tables.forEach(table=>{
+    const headerRow=table.tHead?.rows?.[0]||table.querySelector('thead tr');
+    if(!headerRow)return;
+    const tableClass=isAdmin?'admin-mobile-card-table':'customer-orders-mobile-card-table';
+    const wrapperClass=isAdmin?'admin-mobile-card-table-wrap':'customer-orders-table-wrap';
+    table.setAttribute('role','table');
+    if(table.tHead)table.tHead.setAttribute('role','rowgroup');
+    const labels=Array.from(headerRow.cells||[]).map((cell,index)=>{
+      if(cell.tagName==='TH'){
+        if(!cell.hasAttribute('scope'))cell.setAttribute('scope','col');
+        cell.setAttribute('role','columnheader');
+      }
+      return cell.textContent.trim().replace(/\s+/g,' ')||`ستون ${index+1}`;
+    });
+    table.classList.add('mobile-labeled-card-table',tableClass);
+    table.dataset.mobileLayout='cards';
+    table.closest('.table-wrap')?.classList.add('mobile-labeled-card-table-wrap',wrapperClass);
+    Array.from(table.tBodies||[]).forEach(tbody=>{
+      tbody.setAttribute('role','rowgroup');
+      Array.from(tbody.rows||[]).forEach(row=>{
+        row.setAttribute('role','row');
+        Array.from(row.cells||[]).forEach((cell,index)=>{
+          if(cell.tagName!=='TD'||cell.colSpan>1)return;
+          cell.setAttribute('role','cell');
+          const label=labels[index]||`ستون ${index+1}`;
+          if(cell.dataset.label!==label)cell.dataset.label=label;
+        });
+      });
+    });
+  });
+}
+function installMobileRecordTableObserver(){
+  if(window.__hermesMobileTableObserver||!document.body)return;
+  enhanceMobileRecordTables(document);
+  if(typeof MutationObserver==='undefined')return;
+  let queued=false;
+  const observer=new MutationObserver(()=>{
+    if(queued)return;
+    queued=true;
+    const run=()=>{queued=false;enhanceMobileRecordTables(document);};
+    if(window.requestAnimationFrame)window.requestAnimationFrame(run);else window.setTimeout(run,0);
+  });
+  observer.observe(document.body,{childList:true,subtree:true});
+  window.__hermesMobileTableObserver=observer;
+}
+function installShopFilterA11y(){
+  if(window.__hermesShopFilterA11yBound)return;
+  window.__hermesShopFilterA11yBound=true;
+  window.addEventListener('resize',()=>{
+    const panel=document.querySelector('#shop-filters');
+    if(panel?.classList.contains('drawer-open')&&!isMobileShopFilter())closeShopFilters({restoreFocus:false});
+    else syncShopFilterPanelState();
+  });
+}
+installOverlayKeyboardA11y();
+installMobileKeyboardA11y();
+installMobileRecordTableObserver();
+installShopFilterA11y();
+syncShopFilterPanelState();
+enhanceMobileRecordTables(document);

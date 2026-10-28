@@ -124,10 +124,11 @@ async function main() {
   const hermesAdminPalette = hermesCss.slice(hermesCss.indexOf('/* Hermes admin console — replace the inherited Touba emerald palette'));
   assert.match(hermesAdminPalette, /--adm-brand: var\(--hermes-gold/);
   assert.match(hermesAdminPalette, /body\.admin-body \.admin-current-chip[\s\S]*?linear-gradient\(135deg, #ead0a4, #c9a36c\)/);
+  assert.match(hermesAdminPalette, /body\.admin-body \.store-header\s*\{[\s\S]*?background: rgba\(9,8,7,.97\) !important/);
   assert.match(hermesAdminPalette, /body\.admin-body \.chart \.bar[\s\S]*?linear-gradient\(180deg, #ead0a4, #a77e49\)/);
   assert.doesNotMatch(hermesAdminPalette, /#9cc25a|#b4d878|rgba\(156,194,90|#8ab24c|#87ac48/i, 'admin console must override the legacy green palette');
   assert.match(authUiSource, /class="hermes-loading-screen"[\s\S]*?hermes-loader-ring/);
-  assert(authUiSource.includes('src="/hermes-loading-logo.png"'), 'fallback loading animation reuses the supplied Hermes logo');
+  assert(authUiSource.includes('src="/hermes-logo-transparent.png"'), 'fallback loading animation reuses the supplied Hermes logo');
   assert.doesNotMatch(authUiSource, /#a6c75e|#cfe8a8|rgba\(166,199,94/, 'loading animation must not retain legacy green accents');
   const adminAiSource = fs.readFileSync(path.join(root,'admin-product-ai.js'),'utf8');
   assert(adminAiSource.includes("status.style.color = '#c9a36c'"), 'admin AI feedback uses Hermes gold');
@@ -145,7 +146,18 @@ async function main() {
   assert.match(layoutCss, /\.mobile-bottom-nav svg[\s\S]*?width:\s*20px/);
   assert.match(storeCss, /@media\s*\(max-width:\s*860px\)[\s\S]*?mobile-bottom-nav/);
   assert.match(hermesCss, /Mobile-first, full-store refinement/);
-  assert.match(hermesCss, /min-height:\s*clamp\(480px, calc\(100svh - 60px\), 690px\)/);
+  const mobileHeroRules = hermesCss.slice(hermesCss.lastIndexOf('/* Compact mobile hero:'));
+  assert(mobileHeroRules.length > 0, 'mobile hero overrides are appended after inherited desktop and viewport-height rules');
+  assert.match(mobileHeroRules, /@media \(max-width: 640px\)[\s\S]*?body\.storefront-mode \.hm-hero \{[\s\S]*?height:\s*clamp\(220px, 62vw, 300px\)[\s\S]*?min-height:\s*220px !important/);
+  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero \{[\s\S]*?border:\s*1px solid rgba\(225, 200, 159, \.76\)/);
+  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero::after \{[\s\S]*?inset:\s*7px[\s\S]*?border:\s*1px solid rgba\(234, 208, 164, \.44\)/);
+  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero-image \{[\s\S]*?position:\s*absolute[\s\S]*?inset:\s*0[\s\S]*?width:\s*100%[\s\S]*?height:\s*100%[\s\S]*?object-position:\s*12% 50%/);
+  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero-inner \{[\s\S]*?position:\s*absolute/);
+  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero-copy \{[\s\S]*?left:\s*18px[\s\S]*?width:\s*38%/);
+  assert.match(mobileHeroRules, /@media \(max-width: 380px\)[\s\S]*?body\.storefront-mode \.hm-hero-copy > p \{[\s\S]*?-webkit-line-clamp:\s*2/);
+  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero \.hm-button-outline \{[\s\S]*?min-height:\s*44px/);
+  assert.doesNotMatch(mobileHeroRules, /hm-hero \.hm-button-outline\s*\{\s*display:\s*none/);
+  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero-note,[\s\S]*?body\.storefront-mode \.hm-hero-index \{ display: none; \}/);
   assert.match(hermesCss, /@media \(min-width: 861px\)[\s\S]*?grid-template-columns:\s*minmax\(220px, 260px\) minmax\(0, 1fr\)/);
   assert.match(hermesCss, /font-size:\s*16px !important/);
   assert.match(hermesCss, /min-height:\s*44px/);
@@ -162,6 +174,56 @@ async function main() {
   assert.match(hermesCss, /mobile-menu-toggle\.is-open \.bar-1\s*\{[^}]*rotate\(90deg\)/);
   assert.match(hermesCss, /mobile-menu-toggle\.is-open \.bar-2\s*\{[^}]*opacity:\s*1/);
   assert.match(hermesCss, /mobile-menu-toggle\.is-open \.bar-3\s*\{[^}]*rotate\(90deg\)/);
+
+  // Mobile usability refinements: short home shelves, accessible dialogs,
+  // keyboard-safe fixed bars, and labeled admin record cards.
+  {
+    const homeStart=storefrontSource.indexOf('function hermesHome(){');
+    const homeEnd=storefrontSource.indexOf('window.header=header;',homeStart);
+    assert(homeStart>=0&&homeEnd>homeStart,'homepage template boundaries must remain detectable');
+    const homeTemplate=storefrontSource.slice(homeStart,homeEnd);
+    assert(homeTemplate.includes('featured.slice(0,4)')&&homeTemplate.includes('newest=allProducts.slice().sort(byNewest)'),'homepage primary grid and secondary collection data are capped to small sets');
+    assert(homeTemplate.includes('home-secondary-collection')&&homeTemplate.includes('home-secondary-grid')&&homeTemplate.includes('newestShelf')&&homeTemplate.includes('bestShelf'),'active homepage secondary collections become swipe shelves');
+    assert(homeTemplate.includes('برای دیدن مدل‌های بیشتر، ردیف را افقی حرکت دهید')&&homeTemplate.includes('aria-label="${label}؛'),'horizontal shelves have a visible and accessible browse hint');
+    assert(!/بیت‌پی|BitPay|پرداخت امن/.test(homeTemplate),'homepage trust strip does not make an unverified gateway/security claim');
+    const cartStart=storefrontSource.indexOf('function cartPage(){');
+    const cartEnd=storefrontSource.indexOf('function home(){',cartStart);
+    const cartTemplate=storefrontSource.slice(cartStart,cartEnd);
+    assert(cartTemplate.includes('cart-review-note')&&!cartTemplate.includes('cart-security-badge'),'cart uses a neutral order-review note, not an unverified trust badge');
+    assert(!cartTemplate.includes('پرداخت امن مستقیم بانکی با درگاه بیت‌پی'),'cart does not present the unverified gateway as a trust seal');
+    assert(storefrontSource.includes('aria-haspopup="dialog"')&&storefrontSource.includes('shop-filters-title'),'filter and sort controls identify the mobile dialog');
+    assert(storefrontSource.includes("panel.setAttribute('aria-modal','true')")&&storefrontSource.includes("event.key==='Escape'"),'filter sheet is modal, Escape-dismissible, and keyboard-managed');
+    assert(storefrontSource.includes("panel.inert=mobile")&&storefrontSource.includes('setShopFilterBackgroundInert(panel,true)')&&storefrontSource.includes("element.setAttribute('aria-hidden','true')"),'closed filters are inert and open filters isolate background content');
+    assert(storefrontSource.includes('function closeModal()')&&storefrontSource.includes('trapOverlayTab'),'modal dialogs restore focus and trap keyboard navigation');
+    assert(storefrontSource.includes('window.visualViewport')&&storefrontSource.includes('mobile-keyboard-open')&&storefrontSource.includes('active.scrollIntoView'),'mobile keyboard detection hides fixed navigation and reveals focused fields');
+    assert(storefrontSource.includes('function enhanceMobileRecordTables')&&storefrontSource.includes('admin-mobile-card-table')&&storefrontSource.includes('cell.dataset.label'),'admin tables acquire semantic row labels for mobile cards');
+    assert(storefrontSource.includes("if(adminRoute){body.classList.remove('storefront-mode');body.classList.add('admin-body')}"),'admin render retains the black-and-gold admin theme and card-table scope');
+    assert(storefrontSource.includes('new MutationObserver')&&storefrontSource.includes("cell.setAttribute('role','cell')"),'dynamically loaded admin rows preserve accessible table semantics');
+    const authUi=fs.readFileSync(path.join(root,'services/auth-ui.js'),'utf8');
+    assert(authUi.includes('customer-orders-mobile-card-table')&&storefrontSource.includes('#app .table-wrap .customer-orders-mobile-card-table'),'customer order history is included in responsive card conversion');
+    const mobileUx=hermesCss.slice(hermesCss.indexOf('Consolidated mobile UX layer'));
+    assert(mobileUx.includes('cart-items-scrollable')&&mobileUx.includes('max-height: none !important'),'mobile cart no longer nests a fixed-height scroll container');
+    assert(mobileUx.includes('home-secondary-grid > .lux-product-card')&&mobileUx.includes('scroll-snap-type: inline mandatory'),'secondary home collections use snap-scrolling horizontal shelves');
+    assert(mobileUx.includes('mobile-keyboard-open .mobile-bottom-nav'),'bottom navigation and commerce bars hide while the virtual keyboard is open');
+    assert(mobileUx.includes('favorite-button')&&mobileUx.includes('width: 44px !important')&&mobileUx.includes('compact-qty-stepper button'),'important mobile controls meet the 44px touch target');
+    assert(mobileUx.includes('lux-cream-trust-item span')&&mobileUx.includes('font-size: 12px !important'),'small trust/support copy is raised to readable mobile size');
+    assert(mobileUx.includes('mobile-labeled-card-table td::before')&&mobileUx.includes('clip-path: inset(50%)'),'admin and customer cards display field labels while retaining visually-hidden table headers');
+  }
+
+  // The global footer keeps only essential navigation and legal links on small screens.
+  {
+    const footerStart=storefrontSource.indexOf('function footer(){');
+    const footerEnd=storefrontSource.indexOf('/* Category cards styled',footerStart);
+    assert(footerStart>=0&&footerEnd>footerStart,'compact footer template boundaries must remain detectable');
+    const footerTemplate=storefrontSource.slice(footerStart,footerEnd);
+    for(const required of ['compact-store-footer','footer-compact-links','/shop','/tracking','/contact','/account/orders','/terms','/privacy'])
+      assert(footerTemplate.includes(required),`compact footer is missing essential item: ${required}`);
+    for(const removed of ['<h3>دسترسی سریع</h3>','<h3>دسته‌بندی‌ها</h3>','<h3>راهنمای مشتریان</h3>','<h3>با ما در ارتباط باشید</h3>','href="/about"','href="/login"','db.settings.address','db.settings.email'])
+      assert(!footerTemplate.includes(removed),`footer retains an unnecessary heading, link, or detail: ${removed}`);
+    assert(footerTemplate.includes("if(!eId||!eCode)return ''")&&!footerTemplate.includes('class="footer-trust">'),'compact footer keeps only owner-configured trust marks and removes the generic trust badge');
+    const compactFooterCss=hermesCss.slice(hermesCss.indexOf('Compact footer:'));
+    assert(compactFooterCss.includes('@media (max-width: 640px)')&&compactFooterCss.includes('grid-template-columns: repeat(2, minmax(0, 1fr))')&&compactFooterCss.includes('min-height: 44px'),'footer links form a compact, touch-friendly mobile grid');
+  }
 
   const studio = fs.readFileSync(path.join(root,'admin-product-ai.js'),'utf8');
   assert.match(studio, /\(Legacy compatibility markers: ComfyUI \/ Qwen-Image-Edit\)/);
@@ -330,9 +392,26 @@ async function main() {
     assert(st4.includes('base.__catArrows'), 'render pipeline must refresh arrow state');
     assert(st4.includes("'chev-r':'") && st4.includes("'chev-l':'"), 'chevron glyphs registered in the icon set');
     assert(themeCss.includes('.cat-arrow{') && themeCss.includes('.cat-row-wrap.has-overflow .cat-arrow{display:grid}') && themeCss.includes('.cat-arrow-start{inset-inline-start:2px}'), 'arrows hidden until overflow, RTL-aware placement');
-    assert(html.includes('class="initial"') && html.includes('initial-ring') && html.includes('<img src="/hermes-loading-logo.png" alt="نشان کالکشن هرمس" width="512" height="512" decoding="async">'), 'splash must show the supplied transparent Hermes emblem at its natural aspect ratio');
-    assert(fs.readFileSync(path.join(root,'scripts/build-vercel.js'),'utf8').includes("'hermes-loading-logo.png'"), 'Vercel build must publish the splash logo asset');
+    assert(html.includes('class="initial"') && html.includes('initial-ring') && html.includes('<img src="/hermes-logo-transparent.png" alt="نشان کالکشن هرمس" width="1254" height="1254" decoding="async">'), 'splash must show the supplied transparent Hermes emblem at its natural aspect ratio');
+    assert(fs.readFileSync(path.join(root,'scripts/build-vercel.js'),'utf8').includes("'hermes-logo-transparent.png'"), 'Vercel build must publish the transparent Hermes logo asset');
+    const spinnerRule = baseCss.match(/\.initial-ring:after\{[^}]+\}/)?.[0] || '';
+    assert(spinnerRule.includes('border-top-color:#c9a36c') && spinnerRule.includes('border-inline-end-color:#c9a36c66'), 'splash spinner must use the Hermes gold accent');
+    assert(!spinnerRule.includes('#8cad4b'), 'splash spinner must not retain the legacy green accent');
     assert(baseCss.includes('.initial-ring:after') && baseCss.includes('@keyframes initial-spin') && baseCss.includes('prefers-reduced-motion'), 'splash spinner defined and motion-safe');
+    const logo = fs.readFileSync(path.join(root,'hermes-logo-transparent.png'));
+    assert.deepStrictEqual(logo.subarray(0,8), Buffer.from([137,80,78,71,13,10,26,10]), 'supplied logo must be a PNG');
+    assert.strictEqual(logo.readUInt32BE(16), 1254, 'supplied logo width must remain 1254px');
+    assert.strictEqual(logo.readUInt32BE(20), 1254, 'supplied logo height must remain 1254px');
+    assert.strictEqual(logo[24], 8, 'supplied logo must preserve 8-bit color depth');
+    assert.strictEqual(logo[25], 6, 'supplied logo must retain an RGBA alpha channel');
+    const idat = [];
+    for (let offset=8; offset<logo.length;) {
+      const length=logo.readUInt32BE(offset), type=logo.toString('ascii',offset+4,offset+8);
+      if (type==='IDAT') idat.push(logo.subarray(offset+8,offset+8+length));
+      offset+=length+12;
+    }
+    const pixels = require('zlib').inflateSync(Buffer.concat(idat));
+    assert.strictEqual(pixels[4], 0, 'supplied logo must include transparent pixels, not a flattened backdrop');
   }
 
   // v1.0.9: exactly ONE boot loader — the logo splash itself covers the whole data-load, then lifts.
@@ -491,7 +570,19 @@ async function main() {
   // Login mark + simplified product-entry flow guards.
   {
     const auth = fs.readFileSync(path.join(root,'services/auth-ui.js'),'utf8');
-    assert(auth.includes('hermes-logo.jpg') && auth.includes('auth-touba-mark'), 'login/signup must show the supplied Hermes Collection logo');
+    assert(auth.includes('hermes-logo-transparent.png') && auth.includes('auth-touba-mark'), 'login/signup must show the supplied Hermes Collection logo');
+    assert.doesNotMatch(auth, /hermes-logo\.jpg|hermes-loading-logo\.png/, 'auth, admin drawer, and fallback loader must avoid opaque legacy logos');
+    for (const file of ['index.html','app.js','stage3.js','stage4.js']) {
+      assert.doesNotMatch(fs.readFileSync(path.join(root,file),'utf8'), /hermes-logo\.jpg|hermes-loading-logo\.png/, `${file} must use the supplied transparent logo`);
+    }
+    for (const file of ['app.js','stage3.js']) {
+      assert(fs.readFileSync(path.join(root,file),'utf8').includes('<span class="brand-mark"><img src="/hermes-logo-transparent.png"'), `${file} legacy header/footer marks must use the supplied logo`);
+    }
+    const baseStyles = fs.readFileSync(path.join(root,'styles.css'),'utf8');
+    assert(baseStyles.includes('.brand-mark img{width:100%;height:100%;object-fit:contain}'), 'legacy brand marks must render the transparent logo without a backing');
+    const storefrontCss = fs.readFileSync(path.join(root,'hermes-collection.css'),'utf8');
+    assert.match(storefrontCss, /body\.storefront-mode \.brand-emblem\s*\{[\s\S]*?background: transparent !important/);
+    assert.match(storefrontCss, /body\.storefront-mode \.brand-emblem img\s*\{[\s\S]*?object-fit: contain/);
     assert(!/font-size:38px;color:#(83a74a|10b981)">♙/.test(auth), 'raw pawn glyph must be gone from auth pages');
     assert(!auth.includes('quickProductModal()') || auth.includes('function quickProductModal') === false, 'admin toolbar must offer one unified add-product button');
     assert(auth.includes('onclick="productModal()">＋'), 'admin catalog toolbar needs the unified add-product button');

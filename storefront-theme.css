@@ -1622,8 +1622,8 @@ body.storefront-mode .gallery-thumb.selected{outline:2px solid var(--touba-brand
 body.storefront-mode .empty{color:var(--touba-muted)!important}
 body.storefront-mode .empty-cart-box p{color:var(--touba-muted)}
 
-/* در تم تیره نشانِ سبز لوگو با درخشش ملایم از پس‌زمینه جدا می‌شود. */
-body.storefront-mode[data-theme="dark"] .auth-touba-mark{filter:drop-shadow(0 0 18px rgba(140,173,75,.30)) brightness(1.18) saturate(1.05)}
+/* شفافیت نشان در تم تیره حفظ می‌شود و درخشش ملایم طلایی دارد. */
+body.storefront-mode[data-theme="dark"] .auth-touba-mark{filter:drop-shadow(0 0 18px rgba(201,163,108,.28)) brightness(1.12)}
 body.storefront-mode .pf-adv-hint{color:var(--touba-subtle)}
 
 /* نوار اسلایدهای فرم محصول در تم تیره (مودال‌های داخل ویترین). */
