@@ -148,10 +148,12 @@ async function main() {
   assert.match(hermesCss, /Mobile-first, full-store refinement/);
   const mobileHeroRules = hermesCss.slice(hermesCss.lastIndexOf('/* Compact mobile hero:'));
   assert(mobileHeroRules.length > 0, 'mobile hero overrides are appended after inherited desktop and viewport-height rules');
-  assert.match(mobileHeroRules, /@media \(max-width: 640px\)[\s\S]*?body\.storefront-mode \.hm-hero \{[\s\S]*?min-height:\s*0 !important/);
-  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero \{[\s\S]*?flex-direction:\s*column/);
-  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero-image \{[\s\S]*?height:\s*clamp\(180px, 58vw, 250px\)/);
-  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero-lockup \{ display: none; \}/);
+  assert.match(mobileHeroRules, /@media \(max-width: 640px\)[\s\S]*?body\.storefront-mode \.hm-hero \{[\s\S]*?height:\s*clamp\(220px, 62vw, 300px\)[\s\S]*?min-height:\s*220px !important/);
+  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero \{[\s\S]*?border:\s*1px solid rgba\(225, 200, 159, \.76\)/);
+  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero::after \{[\s\S]*?inset:\s*7px[\s\S]*?border:\s*1px solid rgba\(234, 208, 164, \.44\)/);
+  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero-image \{[\s\S]*?position:\s*absolute[\s\S]*?inset:\s*0[\s\S]*?width:\s*100%[\s\S]*?height:\s*100%[\s\S]*?object-position:\s*12% 50%/);
+  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero-inner \{[\s\S]*?position:\s*absolute/);
+  assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero-copy \{[\s\S]*?left:\s*18px[\s\S]*?width:\s*38%/);
   assert.match(mobileHeroRules, /body\.storefront-mode \.hm-hero-note,[\s\S]*?body\.storefront-mode \.hm-hero-index \{ display: none; \}/);
   assert.match(hermesCss, /@media \(min-width: 861px\)[\s\S]*?grid-template-columns:\s*minmax\(220px, 260px\) minmax\(0, 1fr\)/);
   assert.match(hermesCss, /font-size:\s*16px !important/);
