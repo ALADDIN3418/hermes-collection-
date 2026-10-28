@@ -1344,8 +1344,8 @@ body.storefront-mode .compact-cart-variant { color: #a99f90; }
 body.storefront-mode .free-shipping-track { background: #27221a; }
 body.storefront-mode .free-shipping-fill { background: linear-gradient(90deg, #a77f49, #ead0a4); }
 body.storefront-mode .free-shipping-icon svg,
-body.storefront-mode .cart-security-badge svg { stroke: var(--hermes-gold); }
-body.storefront-mode .cart-security-badge { color: #b2a694; }
+body.storefront-mode .cart-review-note svg { stroke: var(--hermes-gold); }
+body.storefront-mode .cart-review-note { color: #b2a694; }
 body.storefront-mode .checkout-totals-modern .summary-line.total { border-color: rgba(201, 163, 108, .28); }
 body.storefront-mode .form-grid .field input,
 body.storefront-mode .form-grid .field select,
@@ -2039,4 +2039,341 @@ body.admin-body .skip-link { background: var(--adm-brand) !important; color: #17
 body.admin-body .nav-progress-bar {
   background: linear-gradient(90deg,#a77e49,var(--adm-brand),var(--adm-brand-strong)) !important;
   box-shadow: 0 0 12px rgba(201,163,108,.42),0 0 4px rgba(201,163,108,.24) !important;
+}
+
+/* -------------------------------------------------------------------------
+   Consolidated mobile UX layer — touch sizing, compact catalog shelves,
+   accessible admin cards, and keyboard-safe fixed navigation.
+   Keep new narrow-screen overrides here to avoid another layer of scattered
+   breakpoint patches across the older presentation stylesheets.
+   ------------------------------------------------------------------------- */
+body.storefront-mode.modal-open,
+body.admin-body.modal-open {
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+body.storefront-mode .cart-review-note {
+  color: var(--hermes-muted) !important;
+  font-size: 12px;
+  line-height: 1.8;
+}
+body.storefront-mode .home-scroll-hint { display: none; }
+
+@media (max-width: 860px) {
+  /* Let the cart grow with its rows instead of making a nested touch scroller. */
+  body.storefront-mode .cart-items-scrollable {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    overscroll-behavior: auto !important;
+    padding-inline: 0 !important;
+  }
+
+  /* The filter panel is a true modal sheet only while open. */
+  body.storefront-mode .filter-panel:not(.drawer-open) {
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+  body.storefront-mode .filter-panel.drawer-open {
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  /* A focused mobile field should have the visual viewport, not fixed bars. */
+  body.storefront-mode.mobile-keyboard-open .mobile-bottom-nav,
+  body.storefront-mode.mobile-keyboard-open .mobile-product-bar,
+  body.storefront-mode.mobile-keyboard-open .mobile-cart-sticky-bar {
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: translateY(120%) !important;
+  }
+  body.storefront-mode.mobile-keyboard-open,
+  body.storefront-mode.mobile-keyboard-open.has-commerce-sticky {
+    padding-bottom: env(safe-area-inset-bottom) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  /* One authoritative small-screen touch target for header and product actions. */
+  body.storefront-mode .mobile-menu-toggle,
+  body.storefront-mode .minimal-actions .minimal-btn,
+  body.storefront-mode .minimal-actions .search-submit-btn,
+  body.storefront-mode .store-search {
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+  }
+  body.storefront-mode .store-search.search-open { width: auto !important; }
+  body.storefront-mode .store-actions { gap: 2px !important; }
+  body.storefront-mode .favorite-button {
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+  }
+  body.storefront-mode .quick-add-button {
+    display: grid !important;
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+  }
+  body.storefront-mode .mobile-nav-close { width: 44px !important; height: 44px !important; }
+  body.storefront-mode .mobile-product-bar .btn,
+  body.storefront-mode .mobile-cart-sticky-bar .btn,
+  body.storefront-mode .mobile-sticky-checkout-btn { min-height: 44px !important; }
+  body.storefront-mode .filter-open,
+  body.storefront-mode .mobile-sort-trigger,
+  body.storefront-mode .filter-close,
+  body.storefront-mode .detail-actions > .btn,
+  body.storefront-mode .checkout-step-actions > .btn {
+    min-height: 44px !important;
+  }
+  body.storefront-mode .filter-checkbox-label,
+  body.storefront-mode .filter-pills label,
+  body.storefront-mode .size-pill-label {
+    min-height: 44px;
+  }
+  body.storefront-mode .size-guide-link,
+  body.storefront-mode .checkout-review-edit {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding-inline: 8px;
+  }
+  body.storefront-mode .mobile-bottom-nav a { font-size: 12px !important; }
+  body.storefront-mode .lux-editorial-actions .lux-pill-btn {
+    min-height: 44px !important;
+    height: auto !important;
+    padding-block: 10px !important;
+    font-size: 12px !important;
+  }
+  body.storefront-mode .lux-cream-trust-item span,
+  body.storefront-mode .trust-item span {
+    font-size: 12px !important;
+    line-height: 1.65 !important;
+  }
+  body.storefront-mode .lux-cream-trust-item b,
+  body.storefront-mode .trust-item b { font-size: 12.5px !important; }
+  body.storefront-mode .lux-feat-item { font-size: 12px !important; }
+  body.storefront-mode .checkout-timeline li { font-size: 12px !important; }
+  body.storefront-mode .checkout-timeline-label { line-height: 1.55; }
+  body.storefront-mode .lux-product-name { font-size: 13px !important; }
+  body.storefront-mode .product-view-link { font-size: 12px !important; }
+  body.storefront-mode .footer-main a:not(.store-brand) { min-height: 44px !important; }
+
+  /* Primary merchandise stays a two-column grid; secondary collections become
+     one-card-and-a-peek swipe shelves with visible scroll affordance. */
+  body.storefront-mode .home-secondary-collection .home-scroll-hint {
+    display: block;
+    margin: 0 0 10px;
+    color: var(--hermes-muted);
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  body.storefront-mode .home-secondary-grid {
+    display: flex !important;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    gap: 12px !important;
+    margin: 0 -2px;
+    padding: 4px 2px 14px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    direction: rtl;
+    scroll-snap-type: inline mandatory;
+    scroll-padding-inline: 12px;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--hermes-gold) transparent;
+  }
+  body.storefront-mode .home-secondary-grid > .lux-product-card {
+    flex: 0 0 min(76vw, 280px);
+    scroll-snap-align: start;
+  }
+  body.storefront-mode .home-secondary-grid:focus-visible {
+    outline: 2px solid var(--hermes-gold);
+    outline-offset: 3px;
+  }
+  body.storefront-mode .home-secondary-grid > .empty-state {
+    flex: 0 0 100%;
+  }
+  body.storefront-mode .home-secondary-grid::-webkit-scrollbar { height: 4px; }
+  body.storefront-mode .home-secondary-grid::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: var(--hermes-gold);
+  }
+
+  /* Reflow each cart line to two comfortable rows at phone widths. */
+  body.storefront-mode .compact-cart-row {
+    display: grid !important;
+    grid-template-columns: 50px minmax(0, 1fr);
+    grid-template-areas: "thumb details" "controls controls";
+    align-items: center;
+    gap: 8px 10px !important;
+  }
+  body.storefront-mode .compact-cart-thumb { grid-area: thumb; }
+  body.storefront-mode .compact-cart-details { grid-area: details; }
+  body.storefront-mode .compact-cart-ctrls {
+    grid-area: controls;
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px !important;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(201,163,108,.22) !important;
+  }
+  body.storefront-mode .compact-qty-stepper {
+    height: 44px !important;
+    flex: 0 0 auto;
+  }
+  body.storefront-mode .compact-qty-stepper button {
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+  }
+  body.storefront-mode .compact-qty-stepper span { width: 26px; }
+  body.storefront-mode .compact-delete-btn {
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+  }
+  body.storefront-mode .compact-row-total {
+    min-width: 0;
+    white-space: nowrap;
+    font-size: 12px;
+  }
+  body.storefront-mode .cart-review-note { padding-inline: 4px; text-align: center; }
+
+  /* Convert admin and customer-order tables into labeled record cards without losing table headers. */
+  body.admin-body .mobile-labeled-card-table-wrap,
+  body.storefront-mode .mobile-labeled-card-table-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  body.admin-body .mobile-labeled-card-table,
+  body.storefront-mode .mobile-labeled-card-table {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    table-layout: fixed;
+    border: 0 !important;
+    border-collapse: separate !important;
+    border-spacing: 0;
+    background: transparent !important;
+  }
+  body.admin-body .mobile-labeled-card-table thead,
+  body.storefront-mode .mobile-labeled-card-table thead {
+    position: absolute !important;
+    display: block !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0,0,0,0) !important;
+    clip-path: inset(50%) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+  body.admin-body .mobile-labeled-card-table tbody,
+  body.storefront-mode .mobile-labeled-card-table tbody {
+    display: grid !important;
+    gap: 10px;
+    width: 100%;
+  }
+  body.admin-body .mobile-labeled-card-table tr,
+  body.storefront-mode .mobile-labeled-card-table tr {
+    display: grid !important;
+    width: 100%;
+    margin: 0 !important;
+    padding: 10px 13px;
+    border: 1px solid var(--hermes-line) !important;
+    border-radius: 13px;
+    background: linear-gradient(150deg, #15130f, #100f0d) !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,.18);
+  }
+  body.admin-body .mobile-labeled-card-table td,
+  body.storefront-mode .mobile-labeled-card-table td {
+    display: grid !important;
+    grid-template-columns: minmax(88px, 32%) minmax(0, 1fr);
+    align-items: start;
+    gap: 9px;
+    min-width: 0;
+    padding: 8px 0 !important;
+    border: 0 !important;
+    border-bottom: 1px solid rgba(201,163,108,.12) !important;
+    color: var(--hermes-cream) !important;
+    font-size: 12.5px !important;
+    line-height: 1.7;
+    text-align: start;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+  }
+  body.admin-body .mobile-labeled-card-table td::before,
+  body.storefront-mode .mobile-labeled-card-table td::before {
+    content: attr(data-label);
+    color: var(--hermes-muted);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.65;
+  }
+  body.admin-body .mobile-labeled-card-table td:last-child,
+  body.storefront-mode .mobile-labeled-card-table td:last-child { border-bottom: 0 !important; }
+  body.admin-body .mobile-labeled-card-table td[colspan],
+  body.storefront-mode .mobile-labeled-card-table td[colspan] {
+    display: block !important;
+    padding: 18px 8px !important;
+    border: 0 !important;
+    text-align: center;
+  }
+  body.admin-body .mobile-labeled-card-table td[colspan]::before,
+  body.storefront-mode .mobile-labeled-card-table td[colspan]::before { content: none; }
+  body.admin-body .mobile-labeled-card-table td[data-label*="عملیات"],
+  body.storefront-mode .mobile-labeled-card-table td[data-label*="عملیات"] {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+  body.admin-body .mobile-labeled-card-table td[data-label*="عملیات"]::before,
+  body.storefront-mode .mobile-labeled-card-table td[data-label*="عملیات"]::before {
+    flex: 0 0 100%;
+    margin-bottom: 2px;
+  }
+  body.admin-body .mobile-labeled-card-table td button,
+  body.admin-body .mobile-labeled-card-table td a.btn,
+  body.admin-body .mobile-labeled-card-table td select,
+  body.storefront-mode .mobile-labeled-card-table td button,
+  body.storefront-mode .mobile-labeled-card-table td a.btn,
+  body.storefront-mode .mobile-labeled-card-table td select {
+    min-height: 44px !important;
+    max-width: 100%;
+    padding-inline: 9px;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  body.storefront-mode .home-secondary-grid > .lux-product-card { flex-basis: 78vw; }
+  body.storefront-mode .compact-cart-row { grid-template-columns: 46px minmax(0, 1fr); }
+  body.storefront-mode .compact-cart-thumb { width: 46px; height: 46px; min-width: 46px; }
+  body.storefront-mode .compact-cart-ctrls { gap: 6px !important; }
+  body.storefront-mode .compact-row-total { font-size: 11px; }
+  body.storefront-mode .checkout-timeline li { font-size: 11.5px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.storefront-mode .home-secondary-grid { scroll-behavior: auto !important; }
+  body.storefront-mode .mobile-bottom-nav,
+  body.storefront-mode .mobile-product-bar,
+  body.storefront-mode .mobile-cart-sticky-bar { transition: none !important; }
 }

@@ -3425,7 +3425,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   padding-bottom: 10px;
   border-bottom: 1px solid var(--line);
 }
-.cart-security-badge {
+.cart-review-note {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3435,7 +3435,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   margin-top: 14px;
   text-align: center;
 }
-.cart-security-badge svg {
+.cart-review-note svg {
   width: 14px;
   height: 14px;
   stroke: var(--green-emerald);

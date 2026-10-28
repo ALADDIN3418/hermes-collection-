@@ -164,6 +164,41 @@ async function main() {
   assert.match(hermesCss, /mobile-menu-toggle\.is-open \.bar-2\s*\{[^}]*opacity:\s*1/);
   assert.match(hermesCss, /mobile-menu-toggle\.is-open \.bar-3\s*\{[^}]*rotate\(90deg\)/);
 
+  // Mobile usability refinements: short home shelves, accessible dialogs,
+  // keyboard-safe fixed bars, and labeled admin record cards.
+  {
+    const homeStart=storefrontSource.indexOf('function hermesHome(){');
+    const homeEnd=storefrontSource.indexOf('window.header=header;',homeStart);
+    assert(homeStart>=0&&homeEnd>homeStart,'homepage template boundaries must remain detectable');
+    const homeTemplate=storefrontSource.slice(homeStart,homeEnd);
+    assert(homeTemplate.includes('featured.slice(0,4)')&&homeTemplate.includes('newest=allProducts.slice().sort(byNewest)'),'homepage primary grid and secondary collection data are capped to small sets');
+    assert(homeTemplate.includes('home-secondary-collection')&&homeTemplate.includes('home-secondary-grid')&&homeTemplate.includes('newestShelf')&&homeTemplate.includes('bestShelf'),'active homepage secondary collections become swipe shelves');
+    assert(homeTemplate.includes('برای دیدن مدل‌های بیشتر، ردیف را افقی حرکت دهید')&&homeTemplate.includes('aria-label="${label}؛'),'horizontal shelves have a visible and accessible browse hint');
+    assert(!/بیت‌پی|BitPay|پرداخت امن/.test(homeTemplate),'homepage trust strip does not make an unverified gateway/security claim');
+    const cartStart=storefrontSource.indexOf('function cartPage(){');
+    const cartEnd=storefrontSource.indexOf('function home(){',cartStart);
+    const cartTemplate=storefrontSource.slice(cartStart,cartEnd);
+    assert(cartTemplate.includes('cart-review-note')&&!cartTemplate.includes('cart-security-badge'),'cart uses a neutral order-review note, not an unverified trust badge');
+    assert(!cartTemplate.includes('پرداخت امن مستقیم بانکی با درگاه بیت‌پی'),'cart does not present the unverified gateway as a trust seal');
+    assert(storefrontSource.includes('aria-haspopup="dialog"')&&storefrontSource.includes('shop-filters-title'),'filter and sort controls identify the mobile dialog');
+    assert(storefrontSource.includes("panel.setAttribute('aria-modal','true')")&&storefrontSource.includes("event.key==='Escape'"),'filter sheet is modal, Escape-dismissible, and keyboard-managed');
+    assert(storefrontSource.includes("panel.inert=mobile")&&storefrontSource.includes('setShopFilterBackgroundInert(panel,true)')&&storefrontSource.includes("element.setAttribute('aria-hidden','true')"),'closed filters are inert and open filters isolate background content');
+    assert(storefrontSource.includes('function closeModal()')&&storefrontSource.includes('trapOverlayTab'),'modal dialogs restore focus and trap keyboard navigation');
+    assert(storefrontSource.includes('window.visualViewport')&&storefrontSource.includes('mobile-keyboard-open')&&storefrontSource.includes('active.scrollIntoView'),'mobile keyboard detection hides fixed navigation and reveals focused fields');
+    assert(storefrontSource.includes('function enhanceMobileRecordTables')&&storefrontSource.includes('admin-mobile-card-table')&&storefrontSource.includes('cell.dataset.label'),'admin tables acquire semantic row labels for mobile cards');
+    assert(storefrontSource.includes("if(adminRoute){body.classList.remove('storefront-mode');body.classList.add('admin-body')}"),'admin render retains the black-and-gold admin theme and card-table scope');
+    assert(storefrontSource.includes('new MutationObserver')&&storefrontSource.includes("cell.setAttribute('role','cell')"),'dynamically loaded admin rows preserve accessible table semantics');
+    const authUi=fs.readFileSync(path.join(root,'services/auth-ui.js'),'utf8');
+    assert(authUi.includes('customer-orders-mobile-card-table')&&storefrontSource.includes('#app .table-wrap .customer-orders-mobile-card-table'),'customer order history is included in responsive card conversion');
+    const mobileUx=hermesCss.slice(hermesCss.indexOf('Consolidated mobile UX layer'));
+    assert(mobileUx.includes('cart-items-scrollable')&&mobileUx.includes('max-height: none !important'),'mobile cart no longer nests a fixed-height scroll container');
+    assert(mobileUx.includes('home-secondary-grid > .lux-product-card')&&mobileUx.includes('scroll-snap-type: inline mandatory'),'secondary home collections use snap-scrolling horizontal shelves');
+    assert(mobileUx.includes('mobile-keyboard-open .mobile-bottom-nav'),'bottom navigation and commerce bars hide while the virtual keyboard is open');
+    assert(mobileUx.includes('favorite-button')&&mobileUx.includes('width: 44px !important')&&mobileUx.includes('compact-qty-stepper button'),'important mobile controls meet the 44px touch target');
+    assert(mobileUx.includes('lux-cream-trust-item span')&&mobileUx.includes('font-size: 12px !important'),'small trust/support copy is raised to readable mobile size');
+    assert(mobileUx.includes('mobile-labeled-card-table td::before')&&mobileUx.includes('clip-path: inset(50%)'),'admin and customer cards display field labels while retaining visually-hidden table headers');
+  }
+
   const studio = fs.readFileSync(path.join(root,'admin-product-ai.js'),'utf8');
   assert.match(studio, /\(Legacy compatibility markers: ComfyUI \/ Qwen-Image-Edit\)/);
   assert.doesNotMatch(studio, /id:\s*['"][^'"]*gemini/i, 'Gemini must not be offered as an image model');
